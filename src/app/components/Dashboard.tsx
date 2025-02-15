@@ -47,7 +47,7 @@ export default function Dashboard() {
 
         <p className="font-semibold text-4xl text-[#333333] mb-6">Dashboard</p>
         {/* notification */}
-     <div className="w-full max-w-4xl  ml-4 gap-1 mb-11 flex items-center ">
+     <div className="w-full   ml-4 gap-1 mb-11 flex items-center ">
    <div>  <CircleAlert className="h-4 w-4 text-[#8A8B9F]" /></div>
         <div><p className="text-sm font-normal text-[#8A8B9F]  ">
         You can top up your wallet by doing a transfer from your

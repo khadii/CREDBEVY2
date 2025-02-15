@@ -14,7 +14,7 @@ export default function Bigcard({ balance, accountNumber, onFundClick }: WalletB
 
   return (
     <div className="w-full mx-auto px-10 py-9 bg-[#156064] rounded-lg flex justify-between items-center text-white 
-                    transition-transform duration-300 hover:scale-105 shadow-lg">
+                    transition-transform duration-300 shadow-lg">
       <div>
         <h3 className="text-base font-semibold">Wallet Balance</h3>
         <p className="text-4xl font-semibold mt-2">
