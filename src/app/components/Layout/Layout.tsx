@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className='w-full '>
       <div className='flex  flex-col w-full justify-center'>
         <div className=' flex flex-row'>
-          <div className='basis-1/5 bg-[#1C1C28] '>
+          <div className='basis-1/5 bg-[#1C1C28]   '>
             <Sidebar />
           </div>
           
