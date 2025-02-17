@@ -47,6 +47,9 @@ const BarChartComponent = ({
         fill={fillColor}
         rx={10} // Rounded corners
         ry={10}
+        // style={{ boxShadow: 'none' }}
+      
+        
       />
     );
   };
@@ -83,6 +86,13 @@ const BarChartComponent = ({
           tickLine={false}
           tick={{ fill: "#333333", fontSize: 12 }}
         />
+         <Tooltip content={<CustomTooltip />}
+          wrapperStyle={{ backgroundColor: 'transparent', border: 'none',height:257,}}
+          // contentStyle={{ backgroundColor: 'white', borderRadius: '8px', padding: '10px' }}
+          // itemStyle={{ color: 'blue' }}
+          // labelStyle={{ fontWeight: 'bold', color: 'black' }}
+          cursor={{  strokeWidth: 0,}}
+          offset={15} />
         {/* {tooltip && <Tooltip content={<CustomTooltip />} />} */}
         <Bar
           dataKey="revenue"
@@ -99,7 +109,9 @@ const BarChartComponent = ({
               // enableBackground={'blue'}
             />
           )} */}
+        
         </Bar>
+       
       </RechartsBarChart>
     </ResponsiveContainer>
   );
@@ -109,7 +121,7 @@ const BarChartComponent = ({
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm shadow-md">
+      <div className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm ">
         ₦{payload[0].value}M
       </div>
     );

@@ -33,7 +33,7 @@ export function Sidebar() {
   const line = "/Image/Line.svg";
 
   return (
-    <div className="flex    flex-col bg-[#1C1C28] text-white">
+    <div className="flex flex-col bg-[#1C1C28] text-white  min-h-[360dvh] ">
          <div className="w-full flex justify-center pt-12 ">
               <img src={logo2} alt="Credbevy Logo" className="h-7 w-auto" />
             </div>
@@ -41,7 +41,7 @@ export function Sidebar() {
               <img src={line} alt="Credbevy Logo" className="h-2 w-40" />
             </div>
 
-      <nav className="space-y-6 px-3 min-h-[2427dvh] ">
+      <nav className="space-y-6 px-3 sticky top-1 ">
         {navigation.map((item) => {
           const Icon = item.icon;
           return (

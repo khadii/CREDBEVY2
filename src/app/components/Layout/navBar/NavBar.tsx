@@ -6,14 +6,14 @@ export default function TopBar() {
     const userimg = "/Image/Ellipse.svg";
     const search = "/Image/search.svg";
   return (
-    <div className="flex items-center justify-between pt-5 w-full pr-20 pl-10 mb-20 ">
+    <div className="flex items-center justify-between pt-5 w-full pr-20 pl-10 bg-white ">
       {/* Search Bar */}
       <div className="flex items-center ">
     <div>
     <img
             src={search}
             alt="Profile"
-            className="w-4 h-4 rounded-full aspect-square"
+            className="w-4 h-4 rounded-full aspect-squarez"
           />
     </div>
         <input
