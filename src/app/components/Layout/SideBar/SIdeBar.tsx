@@ -12,7 +12,7 @@ export function Sidebar() {
   const line = "/Image/Line.svg";
 
   return (
-    <div className="flex flex-col bg-[#1C1C28] text-white sticky top-0 pb-6 md:w-64"> {/* Set a fixed width */}
+    <div className="flex flex-col bg-[#1C1C28] text-white sticky top-0 pb-6 md:min-w-64 w-full"> {/* Set a fixed width */}
       <div className="w-full flex justify-center pt-12">
         <img src={logo2} alt="Credbevy Logo" className="h-[34px] w-auto" />
       </div>

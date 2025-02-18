@@ -4,14 +4,14 @@ import TopBar from './navBar/NavBar';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='w-full flex justify-center '>
-      <div className='flex  flex-col w-full justify-center items-center'>
+    <div className='w-full'>
+      <div className='flex  flex-col w-full'>
         <div className=' flex flex-row'>
-          <div className=' bg-[#1C1C28] md:w-64 '>
+          <div className=' bg-[#1C1C28] md:min-w-64 '>
             <Sidebar />
           </div>
           
-          <div className='flex flex-col  w-6xl'>
+          <div className='flex flex-col  min-w-6xl w-full'>
             <div className='sticky top-0 bg-white z-50'><TopBar /></div>
             <div className='px-[27px]  mt-20 bg-[#FAFAFA]'>
               {children}
