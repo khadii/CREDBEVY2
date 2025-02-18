@@ -18,7 +18,7 @@ interface LoanPerformanceProps {
 
 const LoanPerformance: React.FC<LoanPerformanceProps> = ({ loanData, title, description }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 pb-8 w-full">
+<div className="bg-white border rounded-lg pl-[16px] pr-[24px] pb-[38px] pt-[22px] w-full h-[500px]">
       {/* Header */}
       <div className="mb-16">
         <h2 className="text-lg font-semibold text-[#333333] mb-1">{title}</h2>

@@ -6,7 +6,7 @@ export default function TopBar() {
     const userimg = "/Image/Ellipse.svg";
     const search = "/Image/search.svg";
   return (
-    <div className="flex items-center justify-between pt-5 w-full pr-20 pl-10 bg-white ">
+    <div className="flex items-center justify-between h-[72px] w-full  bg-white  pr-[76px] pl-[41px]">
       {/* Search Bar */}
       <div className="flex items-center ">
     <div>
@@ -24,7 +24,7 @@ export default function TopBar() {
       </div>
 
       {/* Notification & Profile */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 w-full justify-end">
         {/* Notification Icon */}
         <div className="relative">
           <Bell className="text-gray-500" size={20} />

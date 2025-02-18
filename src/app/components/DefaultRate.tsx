@@ -23,8 +23,8 @@ export default function DefaultRatePage() {
   return (
     <RevenueChart
       chartData={chartData}
-      title="Revenue Generated"
-      description="Total revenue earned through loan transactions."
+      title="Default Rate"
+      description="Total unpaid loan value."
       totalRevenue="₦ 20,000,000.00"
       revenueChange="(30,00)"
       lineColor="#0F4C5C"

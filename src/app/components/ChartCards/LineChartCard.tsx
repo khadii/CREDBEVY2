@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import YearModal from "../Yearmodal";
 import LineChartComponent from "../LineChart";
+import { ChevronDown } from "lucide-react";
 
 interface ChartData {
   month: string;
@@ -55,30 +56,25 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
   }, []);
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full">
+    <div className="bg-white border rounded-lg pl-[20px] pr-[24px] pb-[38px] pt-[22px] w-full">
       {/* Header */}
-      <div className="flex justify-between items-center mb-10">
-        <div>
-          <h2 className="text-lg font-semibold text-[#333333] mb-1">{title}</h2>
-          <p className="font-medium text-sm text-[#333333] mb-3">
-            {description}
-          </p>
-          <p className="text-2xl font-bold text-[#333333]">{totalRevenue}</p>
-
-          {revenueChange && (
-            <p className="text-xs font-semibold text-green-800 mt-1">
-              {revenueChange}
-            </p>
-          )}
-        </div>
-        <div className="relative">
+      <div className="flex justify-between items-center mb-[33px]">
+        <div className="w-full">
+        <div className="flex justify-between items-center w-full">
+         <div><h2 className="text-lg font-bold text-[#333333] mb-1">
+            {title}
+          </h2></div>
+          <div className="relative justify-end flex">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="border border-gray-300 rounded-md p-2 text-sm text-[#333333]"
+            className="bg-[#F8F8F8] rounded-md py-[10px] text-sm pl-[20px] pr-[15px] text-[#333333] flex gap-[27px] font-bold  items-center justify-center w-full"
           >
-            {selectedYear} ▼
+         <div>
+         {selectedYear}
+         </div>
+         <div> <ChevronDown size={20}/></div>
           </button>
-
+          
           {/* Year Selection Modal */}
           {isModalOpen && (
             <div className="absolute" ref={modalRef}>
@@ -90,11 +86,21 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
             </div>
           )}
         </div>
+         </div>
+          <p className="font-medium text-sm text-[#333333] mb-3">
+            {description}
+          </p>
+          <p className="text-2xl font-bold text-[#333333]">{totalRevenue}</p>
+          <p className="text-xs font-semibold text-green-800 mt-1">
+              {revenueChange}
+            </p>
+        </div>
+      
       </div>
 
       {/* Chart */}
-      <div className="w-full">
-        <LineChartComponent data={chartData} lineColor={lineColor} />
+      <div className="">
+      <LineChartComponent data={chartData} lineColor={lineColor} />
       </div>
     </div>
   );

@@ -19,14 +19,14 @@ const LoanRequestActions: React.FC<LoanRequestActionsProps> = ({
       <div className="flex gap-4">
         <button
           onClick={onSearchClick}
-          className="flex items-center gap-2 px-4 py-2 border rounded-lg bg-white text-[#8A8B9F] font-semibold text-xs"
+          className="flex items-center gap-2 pr-[46px] pl-[17px] py-3 border rounded-lg bg-white text-[#8A8B9F] font-bold text-xs"
         >
           <LucideSearch size={16} color="#8A8B9F" />
           Search Request
         </button>
         <button
           onClick={onFilterClick}
-          className="flex items-center gap-2 px-4 py-2 border rounded-lg bg-white text-[#8A8B9F] font-semibold text-xs"
+          className="flex items-center gap-2 pr-[49px]  pl-[17px]  py-2 border rounded-lg bg-white text-[#8A8B9F] font-bold text-xs"
         >
           <ListFilter size={16} color="#8A8B9F" />
           Filter

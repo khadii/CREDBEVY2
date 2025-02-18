@@ -19,9 +19,9 @@ const ProgressBarComponent = ({
 
   return (
     <div className="mb-4">
-      <div className="flex justify-between items-center mb-1">
+      <div className="flex justify-between items-center mb-3">
         <span className="text-sm text-[#333333]">{label}</span>
-        <span className="text-sm " style={{ color }}>{`₦${value.toLocaleString()}`}</span>
+        <span className="text-sm " style={{ color }}>{value.toLocaleString()}</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div

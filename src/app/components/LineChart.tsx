@@ -22,7 +22,7 @@ const LineChartComponent = ({
   showGrid = true,
 }: LineChartComponentProps) => {
   return (
-    <ResponsiveContainer width="100%" height={257}>
+    <ResponsiveContainer width="100%" height={280}>
       <RechartsLineChart
         data={data}
         // margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
@@ -60,8 +60,8 @@ const LineChartComponent = ({
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white shadow-lg rounded-lg p-3">
-        <p className="text-sm text-[#333333]">{`${payload[0].value}%`}</p>
+      <div className="bg-black shadow-lg rounded-lg p-2">
+        <p className="text-sm text-white">{`${payload[0].value}%`}</p>
       </div>
     );
   }

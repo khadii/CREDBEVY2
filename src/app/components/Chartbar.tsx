@@ -45,8 +45,8 @@ const BarChartComponent = ({
         width={width}
         height={height}
         fill={fillColor}
-        rx={10} // Rounded corners
-        ry={10}
+        rx={5} // Rounded corners
+        ry={5}
         // style={{ boxShadow: 'none' }}
       
         
@@ -70,7 +70,7 @@ const BarChartComponent = ({
   };
 
   return (
-    <ResponsiveContainer width="100%" height={257}>
+    <ResponsiveContainer width="100%" height={280}>
       <RechartsBarChart data={data}>
         <XAxis
           dataKey="name"
@@ -84,6 +84,7 @@ const BarChartComponent = ({
           stroke="#888888"
           axisLine={false}
           tickLine={false}
+          width={30}
           tick={{ fill: "#333333", fontSize: 12 }}
         />
          <Tooltip content={<CustomTooltip />}
@@ -91,8 +92,9 @@ const BarChartComponent = ({
           // contentStyle={{ backgroundColor: 'white', borderRadius: '8px', padding: '10px' }}
           // itemStyle={{ color: 'blue' }}
           // labelStyle={{ fontWeight: 'bold', color: 'black' }}
-          cursor={{  strokeWidth: 0,}}
-          offset={15} />
+          // cursor={{  strokeWidth: 0,}}
+          // offset={15}
+           />
         {/* {tooltip && <Tooltip content={<CustomTooltip />} />} */}
         <Bar
           dataKey="revenue"

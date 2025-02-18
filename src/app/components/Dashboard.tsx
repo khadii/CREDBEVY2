@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleAlert, DollarSign } from "lucide-react";
+import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
 import React from "react";
 import Bigcard from "./BigCard";
 import Card from "./Card";
@@ -13,6 +13,8 @@ import LoanPerformancePage from "./Loanperformance";
 import EqualHeightContainer from "./equator";
 import LoanRequestActions from "./Search";
 import LoanRequests from "./Loantable";
+import { TbCurrencyNaira } from "react-icons/tb";
+import { LuSquareActivity } from "react-icons/lu";
 
 export default function Dashboard() {
   const handleSearchClick = () => {
@@ -30,7 +32,7 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
   return (
-    <section className="w-full  bg-white pb-20 ">
+    <section className="w-full  bg-[#FAFAFA] pb-20 ">
       <div className="">
         {/* title */}
 
@@ -57,7 +59,7 @@ export default function Dashboard() {
           />
         </div>
         <div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {stats.map((stat, index) => (
               <Card
                 key={index}
@@ -93,20 +95,20 @@ export default function Dashboard() {
 const stats = [
   {
     title: "Total Revenue generated",
-    amount: "₦ 20,000,000",
+    amount: "₦ 20,000",
     percentage: "15.00%",
-    icon: <DollarSign size={24} className="text-gray-500" />,
+    icon: <TbCurrencyNaira size={'14px'} className="text-gray-500" />,
   },
   {
     title: "Total Loan Disbursed",
-    amount: "₦ 20,000,000",
+    amount: "₦ 20,000",
     percentage: "15.00%",
-    icon: <DollarSign size={24} className="text-gray-500" />,
+    icon: <TbCurrencyNaira size={'14px'} className="text-gray-500" />,
   },
   {
     title: "Total Loan Volume",
-    amount: "₦ 3,000,000,000",
+    amount: "₦ 3,000,00",
     percentage: "15.00%",
-    icon: <TrendingUp size={24} className="text-gray-500" />,
+    icon: <SquareActivity   size={14} className="text-gray-500" />,
   },
 ];

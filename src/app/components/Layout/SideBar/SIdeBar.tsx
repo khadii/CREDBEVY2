@@ -3,29 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutGrid,
-  Wallet,
-  Package,
-  FileText,
-  History,
-  BarChart3,
-  Users,
-  Grid,
-  Settings,
-} from "lucide-react";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutGrid },
-  { name: "Financials", href: "/financials", icon: Wallet },
-  { name: "Loan Products", href: "/loan-products", icon: Package },
-  { name: "Loan Request", href: "/loan-request", icon: FileText },
-  { name: "Loan History", href: "/loan-history", icon: History },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Customers", href: "/customers", icon: Users },
-  { name: "Integrations", href: "/integrations", icon: Grid },
-  { name: "Settings", href: "/settings", icon: Settings },
-];
+
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -33,31 +12,35 @@ export function Sidebar() {
   const line = "/Image/Line.svg";
 
   return (
-    <div className="flex flex-col bg-[#1C1C28] text-white sticky top-0  pb-6 ">
-         <div className="w-full flex justify-center pt-12 ">
-              <img src={logo2} alt="Credbevy Logo" className="h-7 w-auto" />
-            </div>
-            <div className="w-full flex justify-center mt-7 h-full">
-              <img src={line} alt="Credbevy Logo" className="h-2 w-40" />
-            </div>
+    <div className="flex flex-col bg-[#1C1C28] text-white sticky top-0 pb-6 md:w-64"> {/* Set a fixed width */}
+      <div className="w-full flex justify-center pt-12">
+        <img src={logo2} alt="Credbevy Logo" className="h-[34px] w-auto" />
+      </div>
+      <div className="w-full flex justify-center mt-7 h-full">
+        <img src={line} alt="Credbevy Logo" className="h-[1px] w-40" />
+      </div>
 
-      <nav className="space-y-6 px-3  ">
-        {navigation.map((item) => {
-          const Icon = item.icon;
+      <nav className="space-y-12 px-3">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href;
+          const iconSrc = isActive ? item.activeIcon : item.icon;
+
           return (
             <Link
-              key={item.name}
+              key={item.id}
               href={item.href}
-              className={`group flex items-center rounded-lg px-3 py-2 text-sm font-medium mt-10 hover:bg-[#EDFEFF] hover:text-[#156064] hover:font-bold  hover:text-base ${
-                pathname === item.href ? "bg-[#EDFEFF] text-[#156064] font-bold  text-base" : "text-gray-300 text-base font-medium"
+              className={`group flex items-center rounded-[4px] px-[26px] py-3 text-base font-meduim mt-16 ${
+                isActive ? "bg-[#EDFEFF] text-[#156064] font-bold text-base" : "text-gray-300 text-base font-meduim"
               }`}
             >
-              <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
-        
-          <p className="hidden md:block">
-          {item.name}
-          </p>
-            
+              <Image
+                src={iconSrc}
+                alt={item.name}
+                width={20}
+                height={20}
+                className="mr-3 h-5 w-5 flex-shrink-0"
+              />
+              <p className="hidden md:block">{item.name}</p>
             </Link>
           );
         })}
@@ -65,3 +48,68 @@ export function Sidebar() {
     </div>
   );
 }
+const menuItems = [
+  {
+    id: 1091,
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: "/icons/category.svg",
+    activeIcon: "/icons/category-active.svg",
+  },
+  {
+    id: 1092,
+    name: "Financials",
+    href: "/dashboard/financials",
+    icon: "/icons/empty-wallet.svg",
+    activeIcon: "/icons/empty-wallet-active.svg",
+  },
+  {
+    id: 1093,
+    name: "Loan Products",
+    href: "/dashboard/loan-products",
+    icon: "/icons/chart.svg",
+    activeIcon: "/icons/chart-active.svg",
+  },
+  {
+    id: 1094,
+    name: "Loan Request",
+    href: "/dashboard/loan-request",
+    icon: "/icons/shopping-cart.svg",
+    activeIcon: "/icons/shopping-cart-active.svg",
+  },
+  {
+    id: 1095,
+    name: "Loan History",
+    href: "/dashboard/loan-history",
+    icon: "/icons/bag.svg",
+    activeIcon: "/icons/bag-active.svg",
+  },
+  {
+    id: 1096,
+    name: "Analytics",
+    href: "/dashboard/analytics",
+    icon: "/icons/diagram.svg",
+    activeIcon: "/icons/diagram.svg",
+  },
+  {
+    id: 1097,
+    name: "Customers",
+    href: "/dashboard/customers",
+    icon: "/icons/profile-2user.svg",
+    activeIcon: "/icons/profile-2user-active.svg",
+  },
+  {
+    id: 1098,
+    name: "Integrations",
+    href: "/dashboard/integrations",
+    icon: "/icons/bubble.svg",
+    activeIcon: "/icons/bubble.svg",
+  },
+  {
+    id: 1099,
+    name: "Settings",
+    href: "/dashboard/settings",
+    icon: "/icons/setting-2.svg",
+    activeIcon: "/icons/setting-2-active.svg",
+  },
+];

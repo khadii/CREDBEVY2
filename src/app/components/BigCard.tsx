@@ -14,10 +14,10 @@ export default function Bigcard({ balance, accountNumber, onFundClick }: WalletB
 
   return (
     <div className="w-full mx-auto px-10 py-9 bg-[#156064] rounded-lg flex justify-between items-center text-white 
-                    transition-transform duration-300 shadow-lg">
+                    transition-transform duration-300 ">
       <div>
-        <h3 className="text-base font-semibold">Wallet Balance</h3>
-        <p className="text-4xl font-semibold mt-2">
+        <h3 className="text-base font-bold">Wallet Balance</h3>
+        <p className="text-4xl font-bold mt-2">
           ₦ {isHidden ? "***********" : balance}
         </p>
         <p className="text-xs mt-3 text-white font-medium">
@@ -25,9 +25,10 @@ export default function Bigcard({ balance, accountNumber, onFundClick }: WalletB
         </p>
         <button 
           onClick={onFundClick} 
-          className="mt-4 flex items-center px-2 py-2 bg-white text-[#333333] font-semibold text-[10px] rounded-md shadow"
+          className="mt-4 flex items-center px-[10px] py-2 bg-white text-[#333333]  rounded-[4px] gap-1"
         >
-          + Fund Wallet
+         <p className="text-[16px] font-bold "> + </p>
+         <p className="font-bold text-[10px]"> Fund Wallet</p>
         </button>
       </div>
       <button onClick={() => setIsHidden(!isHidden)} className="mr-20">
