@@ -38,7 +38,7 @@ export default function Dashboard() {
 
         <p className="font-semibold text-4xl text-[#333333] mb-6">Dashboard</p>
         {/* notification */}
-        <div className="w-full pl-[15px] pr-[117px] gap-1 mb-6 flex items-center py-[20px] border border-gray-200 ">
+        <div className="w-full py-4 md:py-0 md:h-[59px] pl-[16px] pr-[117px] gap-1 mb-6 flex items-center justify-center border border-gray-200 rounded-[4px] ">
           <div>
             {" "}
             <CircleAlert className="h-4 w-4 text-[#8A8B9F]" />
