@@ -59,12 +59,12 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
                 <input type="checkbox" /> Name
               </div>
             </th>
-            <th className="py-3 px-6">Average Income</th>
-            <th className="py-3 px-6">Amount Requested</th>
-            <th className="py-3 px-6">C:\B</th>
-            <th className="py-3 px-6">LR</th>
-            <th className="py-3 px-6">Duration</th>
-            <th className="py-3 px-6">Quick Actions</th>
+            <th className="py-3 px-6 truncate">Average Income</th>
+            <th className="py-3 px-6 truncate">Amount Requested</th>
+            <th className="py-3 px-6 truncate">C.S</th>
+            <th className="py-3 px-6 truncate">I.R</th>
+            <th className="py-3 px-6 truncate">Duration</th>
+            <th className="py-3 px-6 truncate">Quick Actions</th>
           </tr>
         </thead>
 
