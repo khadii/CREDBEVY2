@@ -87,7 +87,7 @@ export default function Dashboard() {
             onFilterClick={handleFilterClick}
             onSeeAllClick={handleSeeAllClick}
           />
-          {/* <LoanRequests/> */}
+          <LoanRequests/>
         </div>
       </div>
     </section>

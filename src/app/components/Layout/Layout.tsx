@@ -7,11 +7,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className='w-full'>
       <div className='flex  flex-col w-full'>
         <div className=' flex flex-row'>
-          <div className=' bg-[#24262D] md:min-w-64 '>
+          <div className=' bg-[#24262D] md:max-w-64 '>
             <Sidebar />
           </div>
           
-          <div className='flex flex-col  min-w-6xl w-full'>
+          <div className='flex flex-col   w-full'>
             <div className='sticky top-0 bg-white z-50'><TopBar /></div>
             <div className='px-[27px]  pt-20 bg-[#FAFAFA]'>
               {children}

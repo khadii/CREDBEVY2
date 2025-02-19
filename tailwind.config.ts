@@ -16,6 +16,7 @@ export default {
       screens: {
         sm: "772px", // Custom sm breakpoint at 772px
         md: "1040px", // Custom md breakpoint at 1040px
+        lg: "1350px", // Custom lg breakpoint (Set this to your desired value)
       },
     },
   },

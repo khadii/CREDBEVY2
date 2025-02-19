@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { LucideThumbsUp, LucideThumbsDown, LucideChevronDown } from "lucide-react";
+import {
+  LucideThumbsUp,
+  LucideThumbsDown,
+  LucideChevronDown,
+  Dot,
+  Circle,
+} from "lucide-react";
+import { FaCircle } from "react-icons/fa";
 
 interface TableProps {
   headers: string[];
@@ -23,66 +30,95 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
   return (
-    <div className="bg-white rounded-lg shadow border-t-[1px] mt-3 border-b-[1px]">
-      <div className="flex justify-between items-center pb-8 py-2 px-6 border-b-[1px]">
+    <div className="bg-white rounded-lg  mt-3  w-full ">
+      <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
         <div>
           <div className="grid grid-cols-3 w-full gap-3">
             <h2 className="text-lg font-semibold flex items-center col-span-2 text-[#333333]">
               {titleProps.mainTitle}
             </h2>
-            <span className="text-xs font-medium bg-[#fdfcfd] items-center border border-[#F1CFF4] justify-center rounded-full col-span-1 text-[#156064] flex">
+            <span className="text-xs font-medium bg-[#FEF1FFAD] items-center border border-[#F1CFF4] justify-center rounded-full col-span-1 text-[#156064] flex">
               {titleProps.requestCount}
             </span>
           </div>
-          <p className="text-[#333333] text-sm font-medium">{titleProps.subtitle}</p>
+          <p className="text-[#333333] text-sm font-medium">
+            {titleProps.subtitle}
+          </p>
         </div>
         <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-bold">
           Bulk Action <LucideChevronDown size={16} />
         </button>
       </div>
-      <table className="w-full text-left border-collapse">
-        <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-semibold text-xs">
-          <tr>
-            <th className="px-6">
-              <input type="checkbox" />
+      <table className="w-full text-left ">
+        <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-semibold text-xs border">
+          <tr className="h-[44px]">
+            <th className="pl-[27px] py-3 px-6">
+              <div className="flex items-center gap-4 h-full">
+                {" "}
+                {/* Increased gap */}
+                <input type="checkbox" /> Name
+              </div>
             </th>
-            {headers.map((header, index) => (
-              <th key={index} className="px-6 py-2">
-                {header}
-              </th>
-            ))}
+            <th className="py-3 px-6">Average Income</th>
+            <th className="py-3 px-6">Amount Requested</th>
+            <th className="py-3 px-6">C:\B</th>
+            <th className="py-3 px-6">LR</th>
+            <th className="py-3 px-6">Duration</th>
+            <th className="py-3 px-6">Quick Actions</th>
           </tr>
         </thead>
+
         <tbody className="text-[#333333] font-medium text-sm">
           {data.map((req, index) => (
-            <tr key={index} className="border-t odd:bg-gray-100 even:bg-white">
-              <td className="px-6 py-6">
-                <input type="checkbox" />
+            <tr
+              key={index}
+              className="border-t odd:bg-gray-100 even:bg-white h-[72px]"
+            >
+              <td className="pl-[27px] py-4 px-6">
+                <div className="flex items-center gap-4 h-full">
+                  {" "}
+                  {/* Increased gap */}
+                  <input type="checkbox" />
+                  <img
+                    src="https://bit.ly/dan-abramov"
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <p className="truncate max-w-[140px]">{req.name}</p>
+                </div>
               </td>
-              <td className="w-full py-6 flex items-center gap-2">
-                <img
-                  src="https://bit.ly/dan-abramov"
-                  alt="avatar"
-                  className="w-8 h-8 rounded-full"
-                />
-                {req.name}
+              <td className="truncate max-w-[120px] py-4 px-6">{req.income}</td>
+              <td className="truncate max-w-[120px] py-4 px-6">{req.amount}</td>
+              <td className="truncate max-w-[75px] py-4 px-6">{req.cs}</td>
+              <td className="truncate max-w-[85px] py-4 px-6">{req.ir}</td>
+              <td className="truncate max-w-[110px] py-4 px-6">
+                {req.duration}
               </td>
-              <td className="px-6 py-6">{req.income}</td>
-              <td className="px-6 py-6">{req.amount}</td>
-              <td className="px-6 py-6">{req.cs}</td>
-              <td className="px-6 py-6">{req.ir}</td>
-              <td className="px-6 py-6">{req.duration}</td>
-              <td className="px-6 py-6">
+              <td className="truncate max-w-[154px] py-4 px-4">
                 {req.status === "Interested" && (
-                  <span className="text-green-500">🟢 Interested</span>
+                  <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-extrabold">
+                    <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
+                    Interested 
+                  </button>
                 )}
                 {req.status === "Not Interested" && (
-                  <span className="text-red-500">🔴 Not Interested</span>
+                  <button className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold">
+                   <FaCircle className="text-[#E33A24] w-2 h-2 mr-1" />
+                    Not interested
+                  </button>
                 )}
                 {!req.status && (
-                  <div className="flex gap-2">
-                    <LucideThumbsUp className="text-green-500 cursor-pointer" />
-                    <LucideThumbsDown className="text-red-500 cursor-pointer" />
+                  <div className="flex w-full justify-between max-w-[70px]">
+                    {" "}
+                    {/* Increased gap */}
+                    <LucideThumbsUp
+                      size={24}
+                      className="text-green-500 cursor-pointer"
+                    />
+                    <LucideThumbsDown
+                      size={24}
+                      className="text-red-500 cursor-pointer"
+                    />
                   </div>
                 )}
               </td>
@@ -90,6 +126,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg border-t-0 rounded-t-none"></div>
     </div>
   );
 };
