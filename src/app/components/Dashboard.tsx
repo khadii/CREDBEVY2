@@ -40,7 +40,7 @@ export default function Dashboard() {
           Dashboard
         </p>
         {/* notification */}
-        <div className="w-full pl-[16px] py-4 md:py-0 md:h-[59px] min-w-[#FFFFFF] gap-1 mb-6 flex items-center   bg-whitw  rounded-[4px]  ">
+        <div className="w-full pl-[16px] py-4 md:py-0 md:h-[59px] min-w-[#FFFFFF] gap-1 mb-6 flex items-center   bg-white  rounded-[4px]  ">
           <div>
             {" "}
             <CircleAlert className="h-4 w-4 text-[#8A8B9F]" />
@@ -97,13 +97,13 @@ export default function Dashboard() {
 const stats = [
   {
     title: "Total Revenue generated",
-    amount: "₦ 20,000,000.00",
+    amount: "₦  20,000,000.00",
     percentage: "15.00%",
     icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
   },
   {
     title: "Total Loan Disbursed",
-    amount: "₦ 20,000,000.00", // Removed ₦
+    amount: "₦  20,000,000.00", // Removed ₦
     percentage: "15.00%",
     icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
   },
