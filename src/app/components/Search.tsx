@@ -15,7 +15,7 @@ const LoanRequestActions: React.FC<LoanRequestActionsProps> = ({
   onSeeAllClick,
 }) => {
   return (
-    <div className="flex justify-between items-center mt-6 bg-white">
+    <div className="flex justify-between items-center mt-6 bg-[#FAFAFA]">
       <div className="flex gap-4">
         <button
           onClick={onSearchClick}

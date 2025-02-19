@@ -12,15 +12,15 @@ export function Sidebar() {
   const line = "/Image/Line.svg";
 
   return (
-    <div className="flex flex-col bg-[#1C1C28] text-white sticky top-0 pb-6 md:min-w-64 w-full"> {/* Set a fixed width */}
-      <div className="w-full flex justify-center pt-12">
+    <div className="flex flex-col bg-[#24262D] text-white sticky top-0 pb-6 md:min-w-64 w-full"> {/* Set a fixed width */}
+      <div className="w-full flex justify-center pt-12 ">
         <img src={logo2} alt="Credbevy Logo" className="h-[34px] w-auto" />
       </div>
-      <div className="w-full flex justify-center mt-7 h-full">
+      <div className="w-full flex justify-center mt-7 h-full mb-[49px]">
         <img src={line} alt="Credbevy Logo" className="h-[1px] w-40" />
       </div>
 
-      <nav className="space-y-12 px-3">
+      <nav className=" px-3">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           const iconSrc = isActive ? item.activeIcon : item.icon;
@@ -29,7 +29,7 @@ export function Sidebar() {
             <Link
               key={item.id}
               href={item.href}
-              className={`group flex items-center rounded-[4px] px-[26px] py-3 text-base font-meduim mt-16 ${
+              className={`group flex items-center rounded-[4px] px-[26px] py-3 text-base mb-6 font-meduim ${
                 isActive ? "bg-[#EDFEFF] text-[#156064] font-bold text-base" : "text-gray-300 text-base font-meduim"
               }`}
             >

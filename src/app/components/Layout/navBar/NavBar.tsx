@@ -1,20 +1,16 @@
 "use client";
 
-import { Search, Bell } from "lucide-react";
+import { Search, Bell, LucideSearch } from "lucide-react";
 
 export default function TopBar() {
     const userimg = "/Image/Ellipse.svg";
     const search = "/Image/search.svg";
   return (
-    <div className="flex items-center justify-between h-[72px] w-full  bg-white  pr-[76px] pl-[41px]">
+    <div className="flex items-center justify-between h-full min-h-[72px] w-full  bg-white  pr-[76px] pl-[41px]">
       {/* Search Bar */}
       <div className="flex items-center ">
     <div>
-    <img
-            src={search}
-            alt="Profile"
-            className="w-4 h-4 rounded-full aspect-squarez"
-          />
+     <LucideSearch size={16} color="#8A8B9F" />
     </div>
         <input
           type="search"
