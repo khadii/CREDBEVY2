@@ -34,18 +34,18 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
         <div>
           <div className="grid grid-cols-3 w-full gap-3">
-            <h2 className="text-lg font-semibold flex items-center col-span-2 text-[#333333]">
+            <h2 className="text-lg font-bold flex items-center col-span-2 text-[#333333]">
               {titleProps.mainTitle}
             </h2>
-            <span className="text-xs font-medium bg-[#FEF1FFAD] items-center border border-[#F1CFF4] justify-center rounded-full col-span-1 text-[#156064] flex">
+            <span className="text-xs font-semibold bg-[#FEF1FFAD] items-center border border-[#F1CFF4] justify-center rounded-full col-span-1 text-[#156064] flex">
               {titleProps.requestCount}
             </span>
           </div>
-          <p className="text-[#333333] text-sm font-medium">
+          <p className="text-[#333333] text-sm font-semibold">
             {titleProps.subtitle}
           </p>
         </div>
-        <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-bold">
+        <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold">
           Bulk Action <LucideChevronDown size={16} />
         </button>
       </div>
@@ -68,7 +68,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
           </tr>
         </thead>
 
-        <tbody className="text-[#333333] font-medium text-sm">
+        <tbody className="text-[#333333] font-semibold text-sm">
           {data.map((req, index) => (
             <tr
               key={index}
@@ -96,7 +96,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
               </td>
               <td className="truncate max-w-[154px] py-4 px-4">
                 {req.status === "Interested" && (
-                  <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-extrabold">
+                  <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold">
                     <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
                     Interested 
                   </button>
@@ -108,16 +108,16 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
                   </button>
                 )}
                 {!req.status && (
-                  <div className="flex w-full justify-between max-w-[70px]">
+                  <div className="flex w-full gap-[27px]">
                     {" "}
                     {/* Increased gap */}
                     <LucideThumbsUp
                       size={24}
-                      className="text-green-500 cursor-pointer"
+                      className="text-[#067647] cursor-pointer"
                     />
                     <LucideThumbsDown
                       size={24}
-                      className="text-red-500 cursor-pointer"
+                      className="text-[#B42318] cursor-pointer"
                     />
                   </div>
                 )}
