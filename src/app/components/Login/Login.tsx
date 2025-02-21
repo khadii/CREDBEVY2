@@ -38,8 +38,8 @@ export default function LoginPage() {
             </div>
             <div className="">
               {/* Login Form */}
-              <div className="mx-auto max-w-[400px]">
-                <h1 className="mb-14 text-center text-2xl font-semibold text-[#333333]">
+              <div className="mx-auto max-w-[400px] max-h-[362px]">
+                <h1 className="mb-14 text-center text-2xl font-bold text-[#333333]">
                   Login
                 </h1>
                 <Formik
@@ -50,23 +50,17 @@ export default function LoginPage() {
                   <Form className="space-y-12">
                     <div className="space-y-6">
                       <div>
-                      <FormField type="text" name="email" placeholder="Enter your email" />
+                      <FormField type="text" name="email" placeholder="Email/Phone Number" />
                       </div>
 
                       <div className="relative">
-                      <FormField type="password" name="password" placeholder="Enter your password" />
-                        <button
-                          type="button"
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-                        >
-                          <Eye className="h-5 w-5" />
-                        </button>
+                      <PasswordFormField type="password" name="password" placeholder="Password" />
                       </div>
                     </div>
                     <div className="w-full">
                       <button
                         type="submit"
-                        className="mt-6 w-full rounded-[4px] bg-[#0F5959] py-5 text-center text-base font-semibold text-white hover:bg-[#0F5959]/90"
+                        className="mt-6 w-full rounded-[4px] bg-[#0F5959] h-[58px] text-center text-base font-bold text-white hover:bg-[#0F5959]/90 "
                       >
                         Login
                       </button>
