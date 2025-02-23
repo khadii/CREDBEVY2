@@ -50,7 +50,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
         </button>
       </div>
       <table className="w-full text-left ">
-        <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-semibold text-xs border">
+        <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-bold text-xs border">
           <tr className="h-[44px]">
             <th className="pl-[27px] py-3 px-6">
               <div className="flex items-center gap-4 h-full">
@@ -68,7 +68,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
           </tr>
         </thead>
 
-        <tbody className="text-[#333333] font-semibold text-sm">
+        <tbody className="text-[#333333] font-semibold text-xs">
           {data.map((req, index) => (
             <tr
               key={index}

@@ -19,11 +19,11 @@ export const FormField = ({ type, name, placeholder }: FormFieldProps) => (
       autoComplete="off"
       // onFocus={(e:any) => e.target.removeAttribute("readonly")}
       placeholder=" "
-      className="w-full rounded-[4px] border border-[#8A8B9F] px-6 h-[64px] focus:border-[#8A8B9F] focus:outline-none text-[#333333] peer"
+      className="w-full rounded-[4px] pt-7  border border-[#8A8B9F] px-6 h-[64px] focus:border-[#8A8B9F] focus:outline-none text-[#333333] peer "
     />
     <label
       htmlFor={name}
-      className="absolute left-6 top-2 font-bold text-sm text-[#333333] transition-all duration-200 pointer-events-none peer-focus:top-2  peer-focus:font-bold peer-focus:text-sm peer-focus:text-[#333333] peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:text-sm  "
+      className="absolute left-6 top-1 font-bold text-sm text-[#333333] transition-all duration-200 pointer-events-none peer-focus:top-1  peer-focus:font-bold peer-focus:text-sm peer-focus:text-[#333333] peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:text-sm   "
     >
       {placeholder}
     </label>
@@ -40,7 +40,7 @@ export const PasswordFormField = ({
   name,
   placeholder,
 }: FormFieldProps) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -53,11 +53,11 @@ export const PasswordFormField = ({
         id={name}
         name={name}
         placeholder=" "
-        className="w-full rounded-[4px] border border-gray-300 px-6 py-5 focus:border-[#0F5959] focus:outline-none text-[#24262D] peer"
+        className="w-full rounded-[4px] pt-7  border border-[#8A8B9F] px-6 h-[64px] focus:border-[#8A8B9F] focus:outline-none text-[#333333] peer "
       />
       <label
         htmlFor={name}
-         className="absolute left-6 top-2 font-bold text-sm text-[#333333] transition-all duration-200 pointer-events-none peer-focus:top-2  peer-focus:font-bold peer-focus:text-sm peer-focus:text-[#333333] peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:text-sm  "
+        className="absolute left-6 top-1 font-bold text-sm text-[#333333] transition-all duration-200 pointer-events-none peer-focus:top-1  peer-focus:font-bold peer-focus:text-sm peer-focus:text-[#333333] peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-not-placeholder-shown:top-2 peer-not-placeholder-shown:text-sm   "
       >
         {placeholder}
       </label>

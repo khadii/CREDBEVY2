@@ -30,7 +30,7 @@ export default function LoginPage() {
     <>
       {/* Logo */}
 
-      <div className=" w-full   ">
+      <div className=" w-full bg-[#FAFAFA]   ">
         <div className="w-full flex justify-center pb-72">
           <div className="max-w-7xl w-full  md:p-0 p-6">
             <div className="mb-24 pt-16 md:pl-28 ">
@@ -47,17 +47,17 @@ export default function LoginPage() {
                   validationSchema={validationSchema}
                   onSubmit={onSubmit}
                 >
-                  <Form className="space-y-12">
-                    <div className="space-y-6">
-                      <div>
-                      <FormField type="text" name="email" placeholder="Email/Phone Number" />
+                  <Form className="">
+                    <div className="">
+                      <div className="mb-6">
+                      <FormField type="text" name="email" placeholder="Email" />
                       </div>
 
                       <div className="relative">
                       <PasswordFormField type="password" name="password" placeholder="Password" />
                       </div>
                     </div>
-                    <div className="w-full">
+                    <div className="w-full mt-10">
                       <button
                         type="submit"
                         className="mt-6 w-full rounded-[4px] bg-[#0F5959] h-[58px] text-center text-base font-bold text-white hover:bg-[#0F5959]/90 "

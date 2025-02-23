@@ -22,7 +22,9 @@ export function Sidebar() {
 
       <nav className=" px-3">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href;
+     const isActive =
+     pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href + "/"));
+   
           const iconSrc = isActive ? item.activeIcon : item.icon;
 
           return (

@@ -7,10 +7,10 @@ export const Tabs = ({ tabs, activeTab, setActiveTab }:{ tabs:any, activeTab:any
       {tabs.map((tab:any) => (
         <button
           key={tab.name}
-          className={`relative flex items-center justify-center gap-2 ${
+          className={`relative flex items-center justify-center  gap-2 ${
             activeTab === tab.name
-              ? "font-semibold text-[14px] text-[#156064] border-b-2 border-[#156064] pb-[10px]"
-              : "text-[#8A8B9F] font-semibold text-[14px]"
+              ? "font-medium text-[14px] text-[#156064] border-b-2 border-[#156064] pb-[10px]"
+              : "text-[#8A8B9F] font-medium text-[14px]"
           }`}
           onClick={() => setActiveTab(tab.name)}
         >
