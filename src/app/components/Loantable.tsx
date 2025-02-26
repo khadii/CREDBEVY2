@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Table from "./ChartCards/Datatable";
+import Table from "./Tableone/Datatable";
 // import Table from "./Table";
 
 const LoanRequests = () => {

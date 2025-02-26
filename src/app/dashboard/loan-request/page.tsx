@@ -1,14 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import DynamicHeader from "../../components/DynamicHeader";
 import Layout from "@/app/components/Layout/Layout";
 import { HeaderWithTabs } from "@/app/components/HeadersTab";
 import Dashboard from "../reuseabledashboaard";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
+import Table from "@/app/components/Tableone/Datatable";
+import LoanRequestActions from "@/app/components/Search";
+import { Tabs } from "@/app/components/Tabs";
+import { LoanRequestHeaderWithTabs } from "./ReuseableHeader";
+import { LoanHistoryExample } from "@/app/components/ChartCards/LoanHistoryReuasbleTable";
 
-export default function page() {
+export default function Page() {
   const tabs = [
     { name: "All Request" },
     { name: "Pending Request", count: 200 },
@@ -18,13 +23,10 @@ export default function page() {
 
   const years = ["This Year", "Last Year"];
 
-  const handleTabChange = (tab: string) => {
-    console.log("Active Tab:", tab);
-  };
-
   const handleYearChange = (year: string) => {
     console.log("Selected Year:", year);
   };
+
   const handleSearchClick = () => {
     console.log("Search button clicked");
   };
@@ -103,6 +105,7 @@ export default function page() {
     { label: "Product C", value: 90000, maxValue: 100000 },
     { label: "Product D", value: 30000, maxValue: 100000 },
   ];
+
   const formatCurrency = (value: any) =>
     new Intl.NumberFormat("en-NG", {
       style: "currency",
@@ -112,11 +115,11 @@ export default function page() {
   const requests = [
     {
       name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`, // Number with prefix
-      amount: `${formatCurrency(134000000.0)}`, // Number with prefix
-      cs: 743, // Number without prefix
-      ir: `${23}%`, // Number with suffix
-      duration: `${3} Months`, // Number with suffix
+      income: `${formatCurrency(134000000.0)}`,
+      amount: `${formatCurrency(134000000.0)}`,
+      cs: 743,
+      ir: `${23}%`,
+      duration: `${3} Months`,
       status: "Interested",
     },
     {
@@ -181,46 +184,131 @@ export default function page() {
     subtitle: "Loans awaiting a decision",
   };
 
-  return (
-    <Layout>
-      {" "}
-      <HeaderWithTabs
-        title="Loan Request"
-        tabs={tabs}
-        years={years}
-        onTabChange={handleTabChange}
-        onYearChange={handleYearChange}
-      />
-      <Dashboard
-        stats={stats}
-        chartData={chartData}
-        barChartData={barChartData}
-        pieChartData={pieChartData}
-        progressBarData={progressBarData}
-        tableData={requests}
-        tableHeaders={tableHeaders}
-        tableTitleProps={tableTitleProps}
+  const [activeTab, setActiveTab] = useState(tabs[0].name);
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "All Request":
+        return (
+          <>
+            <HeaderWithTabs
+              title="Loan Request"
+              tabs={tabs}
+              years={years}
+              onTabChange={handleTabChange}
+              onYearChange={handleYearChange}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+            <Dashboard
+              stats={stats}
+              chartData={chartData}
+              barChartData={barChartData}
+              pieChartData={pieChartData}
+              progressBarData={progressBarData}
+              tableData={requests}
+              tableHeaders={tableHeaders}
+              tableTitleProps={tableTitleProps}
+              onSearchClick={handleSearchClick}
+              onFilterClick={handleFilterClick}
+              onSeeAllClick={handleSeeAllClick}
+              onFundWallet={handleFundWallet}
+              barChartTitle="Loan Disbursement"
+              barChartDescription="Total loan amount disbursed over time."
+              barChartTotalAmount="₦ 50,000,000.00"
+              barChartHighlightBar="Dec"
+              barChartHighlightColor="#EC7910"
+              pieChartTitle="Loan Approval Rate"
+              pieChartDescription="The percentage of loan requests approved."
+              pieChartTotal="80,000"
+              lineChartTitle="Default Rate"
+              lineChartDescription="Total unpaid loan value."
+              lineChartTotalRevenue="₦ 20,000,000.00"
+              lineChartRevenueChange="(30,00)"
+              lineChartLineColor="#0F4C5C"
+              lineChartDefaultSelectedYear="This Year"
+              progressBarTitle="Sales Performance"
+              progressBarDescription="Total sales performance of different products"
+              href={"/dashboard/loan-request/details"}
+            />
+          </>
+        );
+      case "Pending Request":
+        return (
+          <div className="">
+            <LoanRequestHeaderWithTabs title="Loan Request" tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} ></LoanRequestHeaderWithTabs>
+            <LoanRequestActions
+              onSearchClick={handleSearchClick}
+              onFilterClick={handleFilterClick}
+              onSeeAllClick={handleSeeAllClick}
+            />
+            <Table
+              headers={tableHeaders}
+              data={requests}
+              titleProps={tableTitleProps}
+              href={"#"}
+            />
+          </div>
+        );
+      case "Approved Requests":
+        return <div>            <LoanRequestHeaderWithTabs title="Loan Request" tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} ></LoanRequestHeaderWithTabs>      <LoanRequestActions
         onSearchClick={handleSearchClick}
         onFilterClick={handleFilterClick}
         onSeeAllClick={handleSeeAllClick}
-        onFundWallet={handleFundWallet}
-        barChartTitle="Loan Disbursement"
-        barChartDescription="Total loan amount disbursed over time."
-        barChartTotalAmount="₦ 50,000,000.00"
-        barChartHighlightBar="Dec"
-        barChartHighlightColor="#EC7910"
-        pieChartTitle="Loan Approval Rate"
-        pieChartDescription="The percentage of loan requests approved."
-        pieChartTotal="80,000"
-        lineChartTitle="Default Rate"
-        lineChartDescription="Total unpaid loan value."
-        lineChartTotalRevenue="₦ 20,000,000.00"
-        lineChartRevenueChange="(30,00)"
-        lineChartLineColor="#0F4C5C"
-        lineChartDefaultSelectedYear="This Year"
-        progressBarTitle="Sales Performance"
-        progressBarDescription="Total sales performance of different products"
-      />
-    </Layout>
-  );
+      /><LoanHistoryExample/></div>;
+      case "Canceled Requests":
+        return <div>Canceled Requests Content</div>;
+      default:
+        return (
+          <>
+            <HeaderWithTabs
+              title="Loan Request"
+              tabs={tabs}
+              years={years}
+              onTabChange={handleTabChange}
+              onYearChange={handleYearChange}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
+            <Dashboard
+              stats={stats}
+              chartData={chartData}
+              barChartData={barChartData}
+              pieChartData={pieChartData}
+              progressBarData={progressBarData}
+              tableData={requests}
+              tableHeaders={tableHeaders}
+              tableTitleProps={tableTitleProps}
+              onSearchClick={handleSearchClick}
+              onFilterClick={handleFilterClick}
+              onSeeAllClick={handleSeeAllClick}
+              onFundWallet={handleFundWallet}
+              barChartTitle="Loan Disbursement"
+              barChartDescription="Total loan amount disbursed over time."
+              barChartTotalAmount="₦ 50,000,000.00"
+              barChartHighlightBar="Dec"
+              barChartHighlightColor="#EC7910"
+              pieChartTitle="Loan Approval Rate"
+              pieChartDescription="The percentage of loan requests approved."
+              pieChartTotal="80,000"
+              lineChartTitle="Default Rate"
+              lineChartDescription="Total unpaid loan value."
+              lineChartTotalRevenue="₦ 20,000,000.00"
+              lineChartRevenueChange="(30,00)"
+              lineChartLineColor="#0F4C5C"
+              lineChartDefaultSelectedYear="This Year"
+              progressBarTitle="Sales Performance"
+              progressBarDescription="Total sales performance of different products"
+              href={"/dashboard/loan-request/details"}
+            />
+          </>
+        );
+    }
+  };
+
+  return <Layout>{renderContent()}</Layout>;
 }

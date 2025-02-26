@@ -2,6 +2,10 @@
 
 import { CheckCircle, XCircle } from 'lucide-react';
 import { FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
+import ApproveRequest from '../Modals/Approve Request';
+import DeclineRequest from '../Modals/DeclineRequest';
+import Modal from '../Modals/indicateInterest';
+import { useState } from 'react';
 
 const userData = [
   { label: "Date of Birth", value: "Dec. 16, 1999" },
@@ -14,8 +18,15 @@ const userData = [
 ];
 
 export default function ProfileCard() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] = useState(false);
+    const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] = useState(false);
   return (
-    <div className="bg-[#FFFFFF]  flex flex-col items-center rounded-lg text-center h-[857px]">
+    <div className="bg-[#FFFFFF]  flex flex-col items-center rounded-lg text-center h-[857px] border-[1px]">
+       <ApproveRequest isOpen={isModalOpenApproveRequest} onClose={() => setIsModalOpenApproveRequest(false)} />
+           <DeclineRequest isOpen={isModalOpenDeclineRequest} onClose={() => setIsModalOpenDeclineRequest(false)} />
+           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} setIsModalOpenApproveRequest={()=>setIsModalOpenApproveRequest(true)} />
+
       {/* Profile Image */}
       <img
         src="https://bit.ly/dan-abramov"
@@ -28,7 +39,7 @@ export default function ProfileCard() {
       {/* Buttons */}
       <div className="mt-6 grid justify-center gap-2">
         <div>
-          <button className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]">
+          <button className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]" onClick={() => setIsModalOpen(true)}>
             <div>
               <FaRegCheckCircle size={18} />
             </div>
@@ -36,7 +47,7 @@ export default function ProfileCard() {
           </button>
         </div>
         <div>
-          <button className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]">
+          <button className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]" onClick={()=>setIsModalOpenDeclineRequest(true)}>
             <div>
               <FaRegTimesCircle size={18} />
             </div>

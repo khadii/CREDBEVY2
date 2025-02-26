@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           
           <div className='flex flex-col   w-full'>
             <div className='sticky top-0 bg-white z-50'><TopBar /></div>
-            <div className='px-[27px]  pt-[48px] bg-[#FAFAFA]'>
+            <div className='px-[27px]  pt-[48px] bg-[#FAFAFA] h-full'>
               {children}
             </div>
           </div>

@@ -1,6 +1,5 @@
-"use client";
-
-import React from "react";
+import React, { useState } from "react";
+// import { useRouter } from "next/router";
 import {
   LucideThumbsUp,
   LucideThumbsDown,
@@ -9,6 +8,10 @@ import {
   Circle,
 } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import Modal from "../Modals/indicateInterest";
+import DeclineRequest from "../Modals/DeclineRequest";
+import ApproveRequest from "../Modals/Approve Request";
 
 interface TableProps {
   headers: string[];
@@ -26,11 +29,24 @@ interface TableProps {
     requestCount: string;
     subtitle: string;
   };
+  href: string; // Add href as a prop
 }
 
-const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
+const Table: React.FC<TableProps> = ({ headers, data, titleProps, href }) => {
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] = useState(false);
+  const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] = useState(false);
+
+  const handleRowClick = (index: number) => {
+    router.push(href); // Navigate to the specified href
+  };
+
   return (
-    <div className="bg-white rounded-lg  mt-3  w-full ">
+    <div className=" rounded-lg  mt-3  w-full ">
+           <ApproveRequest isOpen={isModalOpenApproveRequest} onClose={() => setIsModalOpenApproveRequest(false)} />
+           <DeclineRequest isOpen={isModalOpenDeclineRequest} onClose={() => setIsModalOpenDeclineRequest(false)} />
+           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} setIsModalOpenApproveRequest={()=>setIsModalOpenApproveRequest(true)} />
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
         <div>
           <div className="grid grid-cols-3 w-full gap-3">
@@ -72,7 +88,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
           {data.map((req, index) => (
             <tr
               key={index}
-              className="border-t odd:bg-gray-100 even:bg-white h-[72px]"
+              className="border-t odd:bg-gray-100 even:bg-white h-[72px] cursor-pointer"
             >
               <td className="pl-[27px] py-4 px-6">
                 <div className="flex items-center gap-4 h-full">
@@ -87,23 +103,46 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
                   <p className="truncate max-w-[140px]">{req.name}</p>
                 </div>
               </td>
-              <td className="truncate max-w-[120px] py-4 px-6">{req.income}</td>
-              <td className="truncate max-w-[120px] py-4 px-6">{req.amount}</td>
-              <td className="truncate max-w-[75px] py-4 px-6">{req.cs}</td>
-              <td className="truncate max-w-[85px] py-4 px-6">{req.ir}</td>
-              <td className="truncate max-w-[110px] py-4 px-6">
+              <td
+                className="truncate max-w-[120px] py-4 px-6"
+                onClick={() => handleRowClick(index)}
+              >
+                {req.income}
+              </td>
+              <td
+                className="truncate max-w-[120px] py-4 px-6"
+                onClick={() => handleRowClick(index)}
+              >
+                {req.amount}
+              </td>
+              <td
+                className="truncate max-w-[75px] py-4 px-6"
+                onClick={() => handleRowClick(index)}
+              >
+                {req.cs}
+              </td>
+              <td
+                className="truncate max-w-[85px] py-4 px-6"
+                onClick={() => handleRowClick(index)}
+              >
+                {req.ir}
+              </td>
+              <td
+                className="truncate max-w-[110px] py-4 px-6"
+                onClick={() => handleRowClick(index)}
+              >
                 {req.duration}
               </td>
               <td className="truncate max-w-[154px] py-4 px-4">
                 {req.status === "Interested" && (
                   <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold">
                     <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
-                    Interested 
+                    Interested
                   </button>
                 )}
                 {req.status === "Not Interested" && (
                   <button className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold">
-                   <FaCircle className="text-[#E33A24] w-2 h-2 mr-1" />
+                    <FaCircle className="text-[#E33A24] w-2 h-2 mr-1" />
                     Not interested
                   </button>
                 )}
@@ -112,10 +151,12 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
                     {" "}
                     {/* Increased gap */}
                     <LucideThumbsUp
+                      onClick={() => setIsModalOpen(true)}
                       size={24}
                       className="text-[#067647] cursor-pointer"
                     />
                     <LucideThumbsDown
+                      onClick={() => setIsModalOpenDeclineRequest(true)}
                       size={24}
                       className="text-[#B42318] cursor-pointer"
                     />
@@ -126,6 +167,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps }) => {
           ))}
         </tbody>
       </table>
+ 
       <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg border-t-0 rounded-t-none"></div>
     </div>
   );

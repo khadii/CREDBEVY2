@@ -68,7 +68,7 @@ export default function FinancialInfo() {
   };
 
   return (
-    <div className={`pt-[34px] bg-white rounded-lg h-[857px] w-full`}>
+    <div className={`pt-[34px] bg-white rounded-lg h-[857px] w-full border-[1px]`}>
       <div className="flex mb-[42px]  pl-[24px]">
         <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleTabChange} />
       </div>

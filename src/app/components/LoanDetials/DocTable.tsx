@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Eye, Download } from "lucide-react";
 import { HeaderWithTabs } from "../HeadersTab";
-import Table from "../ChartCards/GeneralreuseableTable";
+import Table from "../TableThree/GeneralreuseableTable";
 
 const DocumentsTable = () => {
   const tableHead = ["Document Name", "Type", "Date Uploaded", "Actions"];

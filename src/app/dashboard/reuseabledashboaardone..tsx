@@ -4,7 +4,7 @@ import React, { JSX } from "react";
 import Card from "../components/Card";
 import EqualHeightContainer from "../components/equator";
 import LoanRequestActions from "../components/Search";
-import Table from "../components/ChartCards/Datatable";
+import Table from "../components/Tableone/Datatable";
 import ChartCard from "../components/DefaultRate";
 import BarChartCard from "../components/Revenuechart";
 import LoanApprovalChart from "../components/ChartCards/Piechart";
@@ -84,6 +84,7 @@ interface DashboardProps {
   lineChartDefaultSelectedYear: string;
   progressBarTitle: string;
   progressBarDescription: string;
+  href:string
 }
 
 export default function Dashboardone({
@@ -115,6 +116,7 @@ export default function Dashboardone({
   lineChartDefaultSelectedYear,
   progressBarTitle,
   progressBarDescription,
+  href
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -180,7 +182,7 @@ export default function Dashboardone({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} />
+        <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />
       </div>
     </section>
   );
