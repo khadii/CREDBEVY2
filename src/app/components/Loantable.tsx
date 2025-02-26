@@ -71,7 +71,7 @@ const requests = [
     subtitle: "Loans awaiting a decision",
   };
 
-  return <Table headers={headers} data={requests} titleProps={titleProps} />;
+  return <Table headers={headers} data={requests} titleProps={titleProps} href={""} />;
 };
 
 export default LoanRequests;
