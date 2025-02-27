@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import LoanPerformance from "./ChartCards/ProgressBarCard";
+import LoanPerformance, { PerformanceLoanProduct } from "./ChartCards/ProgressBarCard";
 
 interface LoanData {
   label: string;
@@ -22,6 +22,36 @@ export default function ProgressBarCard({
 }: ProgressBarCardProps) {
   return (
     <LoanPerformance
+      loanData={loanData}
+      title={title}
+      description={description}
+    />
+  );
+}
+
+
+
+
+
+interface LoanData {
+  label: string;
+  value: number;
+  maxValue: number;
+}
+
+interface ProgressBarCardProps {
+  loanData: LoanData[];
+  title: string;
+  description: string;
+}
+
+export  function LoanProductProgressBarCard({
+  loanData,
+  title,
+  description,
+}: ProgressBarCardProps) {
+  return (
+    <PerformanceLoanProduct
       loanData={loanData}
       title={title}
       description={description}

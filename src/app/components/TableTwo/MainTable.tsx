@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LucideChevronDown } from "lucide-react";
+import { LucideChevronDown, Plus } from "lucide-react";
 import TableHeader from "./TableHeader";
 import TableRow from "./TableRow";
 import Pagination from "./Pagination";
@@ -15,6 +15,7 @@ interface TableProps<T> {
   };
   href: string;
   itemsPerPage: number;
+  setStep:any;
   renderRow: (item: T, index: number) => React.ReactNode;
 }
 
@@ -24,6 +25,7 @@ const GenericTable = <T,>({
   titleProps,
   href,
   itemsPerPage,
+  setStep,
   renderRow,
 }: TableProps<T>) => {
   const router = useRouter();
@@ -54,9 +56,15 @@ const GenericTable = <T,>({
                   {titleProps.subtitle}
                 </p>
               </div>
-        <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold">
-          Bulk Action <LucideChevronDown size={16} />
+          <div className="flex gap-[12px]">
+          <button className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold" onClick={()=>setStep(2)}>
+           <Plus size={16}  /> Add Product
         </button>
+          <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold">
+          Bulk Action <LucideChevronDown size={16} /> 
+        </button>
+      
+          </div>
       </div>
 
       <table className="w-full text-left">

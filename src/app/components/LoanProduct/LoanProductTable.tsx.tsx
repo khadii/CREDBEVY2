@@ -28,9 +28,10 @@ interface LoanData {
   creditScore: string;
   dateTime: string;
   status: "Active" | "Repaid" | "Overdue";
+
 }
 
-export const LoanProduct = () => {
+export const LoanProduct = ({  setStep}:{  setStep:any;}) => {
   const loanHeaders = ["Name", "Email Address", "Amount Requested", "Credit Score", "Date/Time", "Status"];
 
   const loanData: LoanData[] = [
@@ -158,7 +159,6 @@ export const LoanProduct = () => {
       href="/loans"
       itemsPerPage={5}
       // renderStatus={renderStatus}
-      renderRow={renderRow}
-    />
+      renderRow={renderRow} setStep={setStep}    />
   );
 };

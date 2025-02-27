@@ -8,9 +8,9 @@ import Table from "../components/Tableone/Datatable";
 import ChartCard from "../components/DefaultRate";
 import BarChartCard from "../components/Revenuechart";
 import LoanApprovalChart from "../components/ChartCards/Piechart";
-import ProgressBarCard from "../components/Loanperformance";
+import ProgressBarCard, { LoanProductProgressBarCard } from "../components/Loanperformance";
 import { Protest_Guerrilla } from "next/font/google";
-import { LoanProduct } from "./loan-products/LoanProductTable.tsx";
+import { LoanProduct } from "../components/LoanProduct/LoanProductTable.tsx";
 
 interface Stat {
   title: string;
@@ -87,9 +87,11 @@ interface DashboardProps {
   progressBarTitle: string;
   progressBarDescription: string;
   href: string;
+  setStep:any
 }
 
 export default function LoanProducts({
+  setStep,
   stats,
   chartData,
   barChartData,
@@ -145,7 +147,7 @@ export default function LoanProducts({
               />
             }
             middle={
-              <ProgressBarCard
+              <LoanProductProgressBarCard
                 loanData={progressBarData}
                 title={progressBarTitle}
                 description={progressBarDescription}
@@ -166,8 +168,7 @@ export default function LoanProducts({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <LoanProduct
-         
+        <LoanProduct setStep={setStep}         
         />
       </div>
     </section>
