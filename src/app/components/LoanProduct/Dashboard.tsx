@@ -1,7 +1,7 @@
 "use client";
 
 import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 // import Bigcard from "./BigCard";
 
 import { TbCurrencyNaira } from "react-icons/tb";
@@ -9,6 +9,7 @@ import { LuSquareActivity } from "react-icons/lu";
 // import LoanProducts from "../LoanProduct";
 import Layout from "@/app/components/Layout/Layout";
 import LoanProducts from "@/app/dashboard/LoanProduct";
+import { YearDropdown } from "../Yeardropdown";
 // import Dashboardone from "../dashboard/reuseabledashboaardone.";
 
 export default function Dashboard({setStep}:{setStep:any}) {
@@ -145,6 +146,14 @@ export default function Dashboard({setStep}:{setStep:any}) {
       "Duration",
       "Quick Actions",
     ];
+   
+  const [selectedYear, setSelectedYear] = useState('This Year');
+  const years = ["This Year", "Last Year"];
+
+  const handleYearChange = (year: string) => {
+    console.log("Selected Year:", year);
+  };
+  
   
     const tableTitleProps = {
       mainTitle: "Pending Loan request",
@@ -175,7 +184,11 @@ export default function Dashboard({setStep}:{setStep:any}) {
       </p>
       {/* notification */}
     
-     
+       <YearDropdown
+               years={years}
+               selectedYear={selectedYear}
+               setSelectedYear={handleYearChange}
+             />
       <div>
         
         <div>

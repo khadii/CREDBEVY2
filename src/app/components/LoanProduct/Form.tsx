@@ -4,6 +4,7 @@ import CollateralSelection from "../FormInputs/CollateralSelection";
 import OptionInput from "../FormInputs/OptionInput";
 import InputField from "../FormInputs/iputDetails";
 import MinimumAmountInput from "../FormInputs/Input";
+import { CircleAlert } from "lucide-react";
 
 export default function Form({setStep}:{setStep:any}) {
 
@@ -147,6 +148,11 @@ export default function Form({setStep}:{setStep:any}) {
   };
 
   return (
+  <>
+    <p className="font-semibold text-4xl text-[#333333] mb-3 bg-[#FAFAFA] ">
+    Loan Products List
+       </p>
+       <h1 className="font-bold text-[#8A8B9F] text-[14px] mb-[36px] flex flex-row items-center gap-2">Fill in the details below to add a loan product <CircleAlert size={14} /></h1>
     <form onSubmit={handleSubmit} className="space-y-[24px] pb-[76px]">
       <div className="w-full max-w-[822px] h-full max-h-[528px] px-[24px] pt-[24px]  pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
         <p className="text-[#333333] text-[20px] font-bold mb-[24px]">Product Info</p>
@@ -316,6 +322,6 @@ export default function Form({setStep}:{setStep:any}) {
         Add Product
         </button>
       </div>
-    </form>
+    </form></>
   );
 }
