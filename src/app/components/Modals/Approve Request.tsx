@@ -36,7 +36,7 @@ const ApproveRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       //   onClick={onClose}
     >
-      <div className="relative bg-white">
+      <div className="relative bg-white rounded-lg">
         <div className=" flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-semibold text-[#333333]">
           Approve Request

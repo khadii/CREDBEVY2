@@ -29,7 +29,7 @@ interface LoanData {
   status: "Active" | "Repaid" | "Overdue";
 }
 
-export const LoanHistoryExample = () => {
+export const LoanHistoryExample = ({}) => {
   const loanHeaders = ["Name", "Email Address", "Amount Requested", "Credit Score", "Date/Time", "Status"];
 
   const loanData: LoanData[] = [
@@ -157,7 +157,6 @@ export const LoanHistoryExample = () => {
       href="/loans"
       itemsPerPage={5}
       // renderStatus={renderStatus}
-      renderRow={renderRow}
-    />
+      renderRow={renderRow}   />
   );
 };

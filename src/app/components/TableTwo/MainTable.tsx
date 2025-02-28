@@ -15,7 +15,7 @@ interface TableProps<T> {
   };
   href: string;
   itemsPerPage: number;
-  setStep:any;
+  setStep?:any;
   renderRow: (item: T, index: number) => React.ReactNode;
 }
 
