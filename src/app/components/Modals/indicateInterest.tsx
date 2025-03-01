@@ -40,7 +40,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,setIsModalOpenApproveRequ
       <div className="relative bg-white rounded-lg">
         <div className=" flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-bold text-[#333333]">
-            Accept Request
+          Indicate Interest
           </h2>
           <button onClick={onClose} className=" text-[#333333] px-2 rounded-[4px] border font-bold tetx-xs">
             ✕

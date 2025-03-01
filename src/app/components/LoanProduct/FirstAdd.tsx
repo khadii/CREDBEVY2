@@ -6,13 +6,13 @@ export default function Customers({setStep}:{setStep:any}) {
   return (
     <div className="min-h-scree">
       <div>
-        <title>Customers</title>
+        <title>Loan Products</title>
         <meta name="description" content="Manage your customers" />
       </div>
       
       <div className="">
         {/* Header */}
-        <h1 className="text-[34px] font-bold text-[#333333] mb-16 ">Customers</h1>
+        <h1 className="text-[34px] font-bold  mb-16 text-[#333333]">Customers</h1>
         
         {/* Empty state container */}
         <div className="flex flex-col items-center justify-center mt-24 ">
@@ -36,12 +36,13 @@ export default function Customers({setStep}:{setStep:any}) {
           </div>
           
           {/* Empty state message */}
-          <p className="text-[#8A8B9F] font-bold text-sm mb-4">You do not have any customers yet</p>
+          <p className=" text-[#333333] font-bold text-[24px] mb-[24px]">No Loan Product Yet</p>
+          <p className=" text-[#333333] max-w-[400px] font-semibold text-[14px] mb-[24px] text-center">You do not have any loan product yet. Click the button below to create one.</p>
           
           {/* CTA Button */}
           <div>
-            <button className="bg-[#156064] hover:bg-[#156064] text-white text-sm w-[134px] h-[36px] rounded-lg font-bold text-[12px] transition-colors" onClick={()=>setStep(2)}>
-              Get Customers
+            <button className="bg-[#156064] hover:bg-[#156064] text-white text-sm w-[279px] h-[44px] rounded-lg font-bold text-[12px] transition-colors" onClick={()=>setStep(2)}>
+            Add New Product
             </button>
           </div>
         </div>

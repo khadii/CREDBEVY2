@@ -1,4 +1,5 @@
 "use client";
+import { useDashboard } from "@/app/Context/DahboardContext";
 import React, { useState, useRef } from "react";
 
 interface ModalProps {
@@ -27,9 +28,10 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       inputRefs.current[index + 1]?.focus();
     }
   };
-
+  const { interested, setInterested } = useDashboard();
   // 2) Only render if modal is open
   if (!isOpen) return null;
+  
 
   return (
     <div
@@ -76,7 +78,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             >
               Cancel
             </button>
-            <button className="px-[81px] py-[10px] border border-[#FA4D56] bg-[#FA4D56] rounded-[4px] text-[12px] font-bold text-white">
+            <button className="px-[81px] py-[10px] border border-[#FA4D56] bg-[#FA4D56] rounded-[4px] text-[12px] font-bold text-white" onClick={()=>{setInterested(false);onClose()}}>
             Decline
             </button>
           </div>

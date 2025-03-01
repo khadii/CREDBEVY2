@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs } from "../Tabs";
 import DocumentsTable from "./DocTable";
+import { useDashboard } from "@/app/Context/DahboardContext";
 
 export default function FinancialInfo() {
+  const { interested, setInterested } = useDashboard();
   const tabs = [
     { name: "All Request" },
     { name: "Employment info" },
@@ -42,13 +44,28 @@ export default function FinancialInfo() {
     { label: "Financial Institution", value: "Guarantee Trust Bank (GTB)" },
     { label: "BVN", value: "1283673484" },
   ];
+  const financialDataNotinterested = [
+    { label: "Average Debt", value: "N 344,474,455.00" },
+    { label: "Average Credit", value: "N 264,676,664.00" },
+    { label: "Average Balance", value: "N 903,043,564.00" },
+    { label: "Average Income", value: "N 344,474,455.00" },
+    { label: "Average Expenses", value: "N 292,936,112.00" },
+    { label: "Performing Loans", value: "6" },
+    { label: "Account Name", value: "Oripeloye Timilehin" },
+    { label: "Account Number", value: "/Image/RectangleBig.svg" },
+    { label: "Financial Institution", value: "/Image/RectangleBig.svg" },
+    { label: "BVN", value: "/Image/RectangleBig.svg" },
+  ];
+
   const [data, setData] = useState(Request_Details);
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab); // Update the active tab
-    setShowDocumentsTable(tab === "Documents"); // Update the state to show/hide DocumentsTable
+  const financialdata = interested ? financialData : financialDataNotinterested;
 
-    switch (tab) { // Use the `tab` parameter directly
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab); 
+    setShowDocumentsTable(tab === "Documents"); 
+
+    switch (tab) {
       case "All Request":
         setData(Request_Details);
         break;
@@ -56,37 +73,72 @@ export default function FinancialInfo() {
         setData(Employment_Info);
         break;
       case "Financial info":
-        setData(financialData);
+        setData(financialdata);
         break;
       case "Documents":
-        // No need to setData here, as we're rendering a different component
         break;
       default:
-        setData([]); // Empty state for other tabs
+        setData([]); 
         break;
     }
   };
 
+  
+  useEffect(() => {
+    if (activeTab === "Financial info") {
+      setData(financialdata);
+    }
+  }, [interested, activeTab]); 
+
   return (
-    <div className={`pt-[34px] bg-white rounded-lg h-[857px] w-full border-[1px]`}>
+    <div
+      className={`pt-[34px] bg-white rounded-lg ${ interested?'h-[857px]':'h-[900px]'}  w-full border-[1px]`}
+    >
       <div className="flex mb-[42px]  pl-[24px]">
-        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleTabChange} />
+        <Tabs
+          tabs={tabs}
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+        />
       </div>
 
       {/* User Details */}
       {showDocumentsTable ? (
-         <div className={`w-full  ${activeTab === "Documents" ?"px-[24px]":"pl-[24px]"}`}> <DocumentsTable /></div>
+        <div
+          className={`w-full  ${
+            activeTab === "Documents" ? "px-[24px]" : "pl-[24px]"
+          }`}
+        >
+          {" "}
+          <DocumentsTable />
+        </div>
       ) : (
         <div className="w-full space-y-5 mt-[38px] flex flex-col items-center justify-center ">
           {data.map((item, index) => (
             <div
               key={index}
-              className="flex w-full text-[16px] font-medium text-[#8A8B9F] text-left gap-[38px]  pl-[24px]"
+              className="flex w-full text-[16px] font-medium text-[#8A8B9F] text-left gap-[38px]  pl-[24px] items-center"
             >
               <div className="w-[154px] ">{item.label}:</div>
-              <div className="text-left truncate w-[153px] text-pretty break-words">
+              <div className="text-left truncate w-[300px] text-pretty break-words">
                 <p className={item.label === "Email" ? "break-words" : ""}>
-                  {item.value}
+                  {interested ? (
+                    item.value
+                  ) : (
+                    <>
+                      {item.label !== "Account Number" &&
+                      item.label !== "Financial Institution" &&
+                      item.label !== "BVN" ? (
+                        <span>{item.value}</span>
+                      ) : (
+                        <img
+                          src={item.value}
+                          alt={item.label}
+                          className="w-full h-full"
+                        />
+                      )}
+                    </>
+                  )}
                 </p>
               </div>
             </div>
