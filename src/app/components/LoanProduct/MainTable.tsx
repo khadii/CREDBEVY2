@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LucideChevronDown, Plus } from "lucide-react";
-import TableHeader from "./TableHeader";
-import TableRow from "./TableRow";
-import Pagination from "./Pagination";
+import TableHeader from "../TableTwo/TableHeader";
+import TableRow from "../TableTwo/TableRow";
+import Pagination from "../TableTwo/Pagination";
 
 interface TableProps<T> {
   headers: string[];
@@ -19,7 +19,7 @@ interface TableProps<T> {
   renderRow: (item: T, index: number) => React.ReactNode;
 }
 
-const GenericTable = <T,>({
+const LoanProductTable = <T,>({
   headers,
   data,
   titleProps,
@@ -91,4 +91,4 @@ const GenericTable = <T,>({
   );
 };
 
-export default GenericTable;
+export default LoanProductTable;

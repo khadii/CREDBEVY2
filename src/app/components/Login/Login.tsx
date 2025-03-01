@@ -30,7 +30,7 @@ export default function LoginPage() {
     <>
       {/* Logo */}
 
-      <div className=" w-full bg-[#FAFAFA]   ">
+      <div className=" w-full bg-[#FAFAFA] h-screen  ">
         <div className="w-full flex justify-center pb-72">
           <div className="max-w-7xl w-full  md:p-0 p-6">
             <div className="mb-24 pt-16 md:pl-28 ">

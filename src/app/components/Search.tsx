@@ -9,7 +9,7 @@ interface LoanRequestActionsProps {
   onSeeAllClick?: () => void;
 }
 
-const LoanRequestActions: React.FC<LoanRequestActionsProps> = ({
+const Search: React.FC<LoanRequestActionsProps> = ({
   onSearchClick,
   onFilterClick,
   onSeeAllClick,
@@ -43,4 +43,4 @@ const LoanRequestActions: React.FC<LoanRequestActionsProps> = ({
   );
 };
 
-export default LoanRequestActions;
+export default Search;

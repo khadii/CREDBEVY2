@@ -8,7 +8,7 @@ import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
 // import LoanProducts from "../LoanProduct";
 import Layout from "@/app/components/Layout/Layout";
-import LoanProducts from "@/app/dashboard/LoanProduct";
+import LoanProducts from "@/app/components/LoanProduct/LoanProduct";
 import { YearDropdown } from "../Yeardropdown";
 // import Dashboardone from "../dashboard/reuseabledashboaardone.";
 

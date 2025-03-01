@@ -1,16 +1,14 @@
 "use client";
 
 import React, { JSX } from "react";
-import Card from "../components/Card";
-import EqualHeightContainer, { TheeContainer } from "../components/equator";
-import LoanRequestActions from "../components/Search";
-import Table from "../components/Tableone/Datatable";
-import ChartCard from "../components/DefaultRate";
-import BarChartCard from "../components/Revenuechart";
-import LoanApprovalChart from "../components/ChartCards/Piechart";
-import ProgressBarCard, { LoanProductProgressBarCard } from "../components/Loanperformance";
-import { Protest_Guerrilla } from "next/font/google";
-import { LoanProduct } from "../components/LoanProduct/LoanProductTable.tsx";
+import Card from "../Card";
+import EqualHeightContainer from "../equator";
+import Search from "../Search";
+import Table from "../Tableone/Datatable";
+import ChartCard from "../DefaultRate";
+import BarChartCard from "../Revenuechart";
+import LoanApprovalChart from "../ChartCards/Piechart";
+import ProgressBarCard from "../Loanperformance";
 
 interface Stat {
   title: string;
@@ -86,12 +84,10 @@ interface DashboardProps {
   lineChartDefaultSelectedYear: string;
   progressBarTitle: string;
   progressBarDescription: string;
-  href: string;
-  setStep:any
+  href:string
 }
 
-export default function LoanProducts({
-  setStep,
+export default function Dashboardone({
   stats,
   chartData,
   barChartData,
@@ -120,7 +116,7 @@ export default function LoanProducts({
   lineChartDefaultSelectedYear,
   progressBarTitle,
   progressBarDescription,
-  href,
+  href
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -137,20 +133,18 @@ export default function LoanProducts({
           ))}
         </div>
         <div>
-          <TheeContainer
+          <EqualHeightContainer
             leftContent={
-              <LoanApprovalChart
-                title={pieChartTitle}
-                description={pieChartDescription}
-                total={pieChartTotal}
-                data={pieChartData}
-              />
-            }
-            middle={
-              <LoanProductProgressBarCard
-                loanData={progressBarData}
-                title={progressBarTitle}
-                description={progressBarDescription}
+              <BarChartCard
+                title={barChartTitle}
+                description={barChartDescription}
+                totalAmount={barChartTotalAmount}
+                data={barChartData}
+                highlightBar={barChartHighlightBar}
+                highlightColor={barChartHighlightColor}
+                barSize={11}
+                showValuesOnTop={true}
+                tooltip={true}
               />
             }
             rightContent={
@@ -162,14 +156,33 @@ export default function LoanProducts({
               />
             }
           />
+          <EqualHeightContainer
+            leftContent={
+              <ChartCard
+                chartData={chartData}
+                title={lineChartTitle}
+                description={lineChartDescription}
+                totalRevenue={lineChartTotalRevenue}
+                revenueChange={lineChartRevenueChange}
+                lineColor={lineChartLineColor}
+                defaultSelectedYear={lineChartDefaultSelectedYear}
+              />
+            }
+            rightContent={
+              <ProgressBarCard
+                loanData={progressBarData}
+                title={progressBarTitle}
+                description={progressBarDescription}
+              />
+            }
+          />
         </div>
-        <LoanRequestActions
+        <Search
           onSearchClick={onSearchClick}
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <LoanProduct setStep={setStep}         
-        />
+        <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />
       </div>
     </section>
   );

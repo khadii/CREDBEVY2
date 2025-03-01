@@ -2,20 +2,20 @@
 
 import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
 import React from "react";
-import Bigcard from "./BigCard";
-import Card from "./Card";
+import Bigcard from "../BigCard";
+import Card from "../Card";
 import { TrendingUp } from "lucide-react";
-import RevenueChart from "./Revenuechart";
-import PieChartComponent from "./PieChart";
-import Loanaprov from "./Loanaprov";
-import DefaultRatePage from "./DefaultRate";
-import LoanPerformancePage from "./Loanperformance";
-import EqualHeightContainer from "./equator";
-import LoanRequestActions from "./Search";
-import LoanRequests from "./Loantable";
+import RevenueChart from "../Revenuechart";
+import PieChartComponent from "../PieChart";
+import Loanaprov from "../Loanaprov";
+import DefaultRatePage from "../DefaultRate";
+import LoanPerformancePage from "../Loanperformance";
+import EqualHeightContainer from "../equator";
+import LoanRequestActions from "../Search";
+import LoanRequests from "../Loantable";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
-import Dashboardone from "../dashboard/reuseabledashboaardone.";
+import Dashboardone from "./reuseabledashboaardone.";
 
 export default function Dashboard() {
     const stats = [

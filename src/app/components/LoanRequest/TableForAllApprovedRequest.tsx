@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LucideChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
-import GenericTable from "../TableTwo/MainTable";
+import LoanApprovedTable from "./MainTable";
+
 
 interface TableProps<T> {
   headers: string[];
@@ -29,7 +30,7 @@ interface LoanData {
   status: "Active" | "Repaid" | "Overdue";
 }
 
-export const LoanHistoryExample = ({}) => {
+export const LoanTable = ({}) => {
   const loanHeaders = ["Name", "Email Address", "Amount Requested", "Credit Score", "Date/Time", "Status"];
 
   const loanData: LoanData[] = [
@@ -150,7 +151,7 @@ export const LoanHistoryExample = ({}) => {
   );
 
   return (
-    <GenericTable
+    <LoanApprovedTable
       headers={loanHeaders}
       data={loanData}
       titleProps={titleProps}

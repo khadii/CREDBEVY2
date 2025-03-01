@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LucideChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
-import GenericTable from "@/app/components/TableTwo/MainTable";
-// import GenericTable from "../TableTwo/MainTable";
+import LoanProductTable from "@/app/components/LoanProduct/MainTable";
+// import LoanProductTable from "../TableTwo/MainTable";
 
 interface TableProps<T> {
   headers: string[];
@@ -152,7 +152,7 @@ export const LoanProduct = ({  setStep}:{  setStep:any;}) => {
   );
 
   return (
-    <GenericTable
+    <LoanProductTable
       headers={loanHeaders}
       data={loanData}
       titleProps={titleProps}

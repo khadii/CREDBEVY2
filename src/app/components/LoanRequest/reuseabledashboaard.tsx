@@ -1,14 +1,14 @@
 "use client";
 
 import React, { JSX } from "react";
-import Card from "../components/Card";
-import EqualHeightContainer from "../components/equator";
-import LoanRequestActions from "../components/Search";
-import Table from "../components/Tableone/Datatable";
-import ChartCard from "../components/DefaultRate";
-import BarChartCard from "../components/Revenuechart";
-import LoanApprovalChart from "../components/ChartCards/Piechart";
-import ProgressBarCard from "../components/Loanperformance";
+import Card from "../Card";
+import EqualHeightContainer from "../equator";
+import Search from "../Search";
+import Table from "../Tableone/Datatable";
+import ChartCard from "../DefaultRate";
+import BarChartCard from "../Revenuechart";
+import LoanApprovalChart from "../ChartCards/Piechart";
+import ProgressBarCard from "../Loanperformance";
 
 interface Stat {
   title: string;
@@ -158,7 +158,7 @@ export default function Dashboard({
           />
    
         </div>
-        <LoanRequestActions
+        <Search
           onSearchClick={onSearchClick}
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
