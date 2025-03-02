@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function Customers({setStep}:{setStep:any}) {
   return (
-    <div className="min-h-scree">
+    <div className="min-h-screen">
       <div>
         <title>Loan Products</title>
         <meta name="description" content="Manage your customers" />
@@ -17,22 +17,13 @@ export default function Customers({setStep}:{setStep:any}) {
         {/* Empty state container */}
         <div className="flex flex-col items-center justify-center mt-24 ">
           {/* Illustration of empty customer cards */}
-          <div className="relative w-64 h-32 mb-6 space-y-4">
-            {/* Third card */}
-            <div className="absolute top-0 w-48 h-10 bg-blue-50 rounded-md shadow-sm left-8 flex items-center pl-10">
-              <div className="h-1 bg-gray-200 w-24"></div>
-            </div>
-            
-            {/* Second card */}
-            <div className="absolute top-10 w-48 h-10 bg-blue-50 rounded-md shadow-sm left-8 flex items-center pl-10">
-              <div className="h-1 bg-gray-200 w-24"></div>
-            </div>
-            
-            {/* First card */}
-            <div className="absolute top-20 w-48 h-10 bg-blue-50 rounded-md shadow-sm left-8 flex items-center pl-10 ">
-              <div className="h-1 bg-gray-200 w-24"></div>
-            </div>
-          
+          <div className="relative w-full h-full mb-6 justify-center flex">
+          <img
+          src='/Image/Chatsillustration.svg'
+          alt='/Image/Chatsillustration.svg'
+          className='w-ful h-full object-cover'
+          />
+
           </div>
           
           {/* Empty state message */}

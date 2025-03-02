@@ -32,7 +32,7 @@ export default function PendingRequest({
   handleSeeAllClick,
 }: PendingRequestProps) {
   return (
-    <div>
+    <div className="w-full h-screen">
       <LoanRequestHeaderWithTabs
         title="Loan Request"
         tabs={tabs}

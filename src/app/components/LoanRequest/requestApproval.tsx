@@ -24,7 +24,7 @@ export default function ApprovedRequests({
   handleSeeAllClick,
 }: ApprovedRequestsProps) {
   return (
-    <div>
+    <div className="w-full h-screen">
       <LoanRequestHeaderWithTabs
         title="Loan Request"
         tabs={tabs}
