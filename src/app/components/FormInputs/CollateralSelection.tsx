@@ -9,6 +9,7 @@ interface CollateralSelectionProps {
   availableOptions?: string[];
   onChange?: (selectedOptions: string[]) => void;
   required?: boolean;
+  error?: any; // Add error prop
 }
 
 const CollateralSelection: React.FC<CollateralSelectionProps> = ({
@@ -25,6 +26,7 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
   ],
   onChange,
   required = false,
+  error,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState(defaultSelectedOptions);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -62,7 +64,6 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
       );
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -85,7 +86,9 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div
-        className="relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer"
+        className={`relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer ${
+          error ? 'border-red-500' : ''
+        }`}
         onClick={toggleDropdown}
       >
         <div className="flex flex-wrap items-center flex-grow">
@@ -134,6 +137,7 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
           </ul>
         </div>
       )}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

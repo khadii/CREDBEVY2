@@ -1,7 +1,9 @@
 'use client';
 
+import { formatNaira } from '@/app/lib/utillity/nairaFormat';
 import { ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
+// import { formatNaira } from '@/utils/formatNaira'; // Import the utility function
 
 interface Currency {
   symbol: string;
@@ -12,12 +14,13 @@ interface MinimumAmountInputProps {
   label?: string;
   placeholder?: string;
   value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string) => void; // Update onChange to accept a string
   currencies?: Currency[];
   required?: boolean;
+  error?: any;
 }
 
-const MinimumAmountInput: React.FC<MinimumAmountInputProps> = ({
+const AmountInput: React.FC<MinimumAmountInputProps> = ({
   label = 'Minimum Amount',
   placeholder = '',
   value,
@@ -29,6 +32,7 @@ const MinimumAmountInput: React.FC<MinimumAmountInputProps> = ({
     { symbol: '£', name: 'British Pound' },
   ],
   required = false,
+  error,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currencies[0]);
@@ -43,7 +47,21 @@ const MinimumAmountInput: React.FC<MinimumAmountInputProps> = ({
     setIsDropdownOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let rawValue = e.target.value.replace(/[^\d]/g, ''); // Remove non-digit characters
+  
+    
+    if (rawValue.length > 9) {
+      return;
+    }
+  
+   
+    const formattedValue = formatNaira(rawValue.toString());
+  
+    onChange(formattedValue); 
+  };
+  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -70,8 +88,10 @@ const MinimumAmountInput: React.FC<MinimumAmountInputProps> = ({
           <input
             type="text"
             value={value}
-            onChange={onChange}
-            className="w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px]"
+            onChange={handleInputChange}
+            className={`w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] ${
+              error ? 'border-red-500' : ''
+            }`}
             placeholder={placeholder}
             aria-label={label}
           />
@@ -106,8 +126,9 @@ const MinimumAmountInput: React.FC<MinimumAmountInputProps> = ({
           </div>
         )}
       </div>
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };
 
-export default MinimumAmountInput;
+export default AmountInput;

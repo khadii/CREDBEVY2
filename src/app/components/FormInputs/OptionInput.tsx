@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -8,6 +8,7 @@ interface DurationInputProps {
   onChange: (option: string) => void;
   options?: string[];
   required?: boolean;
+  error?: any; // Add error prop
 }
 
 const OptionInput: React.FC<DurationInputProps> = ({
@@ -16,6 +17,7 @@ const OptionInput: React.FC<DurationInputProps> = ({
   onChange,
   options,
   required = false,
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,11 +27,10 @@ const OptionInput: React.FC<DurationInputProps> = ({
   };
 
   const handleSelect = (option: string) => {
-    onChange(option); // Call the onChange prop with the selected option
+    onChange(option);
     setIsOpen(false);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -54,7 +55,9 @@ const OptionInput: React.FC<DurationInputProps> = ({
       <div className="relative">
         <div
           onClick={toggleDropdown}
-          className="relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer"
+          className={`relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer ${
+            error ? 'border-red-500' : ''
+          }`}
         >
           <span className="block truncate text-[14px] text-[#8A8B9F]">
             {value}
@@ -89,6 +92,7 @@ const OptionInput: React.FC<DurationInputProps> = ({
           </div>
         )}
       </div>
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

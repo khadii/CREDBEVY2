@@ -9,6 +9,7 @@ interface InputFieldProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   required?: boolean;
+  error?: any; // Add error prop
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -18,6 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({
   onChange,
   type = 'text',
   required = false,
+  error,
 }) => {
   return (
     <div className="w-full">
@@ -28,17 +30,17 @@ const InputField: React.FC<InputFieldProps> = ({
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] text-[#8A8B9F]"
+        className={`w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] text-[#8A8B9F] ${
+          error ? 'border-red-500' : ''
+        }`}
         placeholder={placeholder}
       />
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };
 
 export default InputField;
-
-
-
 
 
 // 'use client';
