@@ -8,6 +8,7 @@ import InputField from "../FormInputs/iputDetails";
 import { CircleAlert } from "lucide-react";
 import AmountInput from "../FormInputs/Input";
 import { formatNaira } from "@/app/lib/utillity/nairaFormat";
+import CustomizedButton from "../CustomizedButton";
 
 export default function Form({ setStep }: { setStep: any }) {
   const [unsecured, setUnsecured] = useState(false);
@@ -369,12 +370,7 @@ export default function Form({ setStep }: { setStep: any }) {
         </div>
 
         <div className="w-full max-w-[822px]  pt-[24px]  flex justify-end">
-          <button
-            type="submit"
-            className="bg-[#156064] text-white w-[134px] h-[36px] rounded-[4px] text-center text-[12px] font-bold"
-          >
-            Add Product
-          </button>
+         <CustomizedButton text={'Add Product'} />
         </div>
       </form>
     </>

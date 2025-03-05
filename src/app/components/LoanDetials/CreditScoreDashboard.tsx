@@ -59,28 +59,98 @@ export default function CreditScoreGauge() {
 
         {/* Score Display - Made responsive with relative units */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-[#42BE65] text-xs sm:text-[11px] font-medium">Good</span>
-          <span className="text-[#1F2937] text-3xl sm:text-4xl font-extrabold leading-none mt-2">{score}</span>
+          <span className="text-[#42BE65] text-clamp-xs font-medium">Good</span>
+          <span className="text-[#1F2937] text-clamp-3xl font-extrabold leading-none mt-2">{score}</span>
           <div className="flex items-center gap-1 mt-1">
-            <span className="text-[#42BE65] text-xs sm:text-[11px] font-semibold">+</span>
-            <span className="text-[#42BE65] text-xs sm:text-[11px] font-semibold">24 pts</span>
+            <span className="text-[#42BE65] text-clamp-xs font-semibold">+</span>
+            <span className="text-[#42BE65] text-clamp-xs font-semibold">24 pts</span>
           </div>
         </div>
 
         {/* Range Labels - Using negative margin to pull up */}
         <div className="flex justify-between px-4 -mt-2">
-          <span className="text-gray-600 text-xs sm:text-[13px] font-semibold">{min}</span>
-          <span className="text-gray-600 text-xs sm:text-[13px] font-semibold">{max}</span>
+          <span className="text-gray-600 text-clamp-xs font-semibold">{min}</span>
+          <span className="text-gray-600 text-clamp-xs font-semibold">{max}</span>
         </div>
 
         {/* Last Updated - Using negative margin to pull up */}
         <div className="text-center -mt-1">
-          <span className="text-[#6B7280] text-xs sm:text-[13px] font-semibold">Last updated 21st June 2022</span>
+          <span className="text-[#6B7280] text-clamp-xs font-semibold">Last updated 21st June 2022</span>
         </div>
       </div>
     </div>
   )
 }
+// "use client"
+
+// import { PieChart, Pie, Cell, Text } from "recharts"
+
+// export  function DoughnutChart() {
+//   // First dataset with colors
+//   const data = [
+//     { value: 30, color: "rgb(255, 69, 96)" },
+//     { value: 30, color: "rgb(206, 148, 73)" },
+//     { value: 20, color: "rgb(153, 223, 89)" },
+//     { value: 1, color: "rgba(0, 0, 0, 0.6)" },
+//     { value: 20, color: "rgb(153, 223, 89)" },
+//   ]
+
+//   // Second dataset (mostly transparent)
+//   const overlayData = [
+//     { value: 30, color: "rgba(0, 0, 0, 0)" },
+//     { value: 30, color: "rgba(0, 0, 0, 0)" },
+//     { value: 20, color: "rgba(0, 0, 0, 0)" },
+//     { value: 1, color: "rgba(0, 0, 0, 0.6)" },
+//     { value: 20, color: "rgba(0, 0, 0, 0)" },
+//   ]
+
+//   // Title text to display at the bottom
+//   const titleText = "4"
+
+//   return (
+//     <ChartContainer className="h-[300px] w-[300px]">
+//       <PieChart>
+//         {/* First dataset */}
+//         <Pie
+//           data={data}
+//           dataKey="value"
+//           cx="50%"
+//           cy="50%"
+//           outerRadius={100}
+//           startAngle={180}
+//           endAngle={0}
+//           isAnimationActive={false}
+//         >
+//           {data.map((entry, index) => (
+//             <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+//           ))}
+//         </Pie>
+
+//         {/* Second dataset (overlay) */}
+//         <Pie
+//           data={overlayData}
+//           dataKey="value"
+//           cx="50%"
+//           cy="50%"
+//           outerRadius={100}
+//           startAngle={180}
+//           endAngle={0}
+//           isAnimationActive={false}
+//         >
+//           {overlayData.map((entry, index) => (
+//             <Cell key={`overlay-cell-${index}`} fill={entry.color} stroke="none" />
+//           ))}
+//         </Pie>
+
+//         {/* Title at the bottom */}
+//         <Text x="50%" y="85%" textAnchor="middle" dominantBaseline="middle" className="text-lg font-medium">
+//           {titleText}
+//         </Text>
+//       </PieChart>
+//     </ChartContainer>
+//   )
+// }
+
 
 
 
