@@ -1,6 +1,6 @@
-'use client';
-import { ChevronDown } from 'lucide-react';
-import React, { useState, useRef, useEffect } from 'react';
+"use client";
+import { ChevronDown } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface DurationInputProps {
   label?: string;
@@ -9,6 +9,7 @@ interface DurationInputProps {
   options?: string[];
   required?: boolean;
   error?: any; // Add error prop
+  placeholder?: string; // Add placeholder prop
 }
 
 const OptionInput: React.FC<DurationInputProps> = ({
@@ -18,6 +19,7 @@ const OptionInput: React.FC<DurationInputProps> = ({
   options,
   required = false,
   error,
+  placeholder = "Select an option", // Default placeholder text
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -41,9 +43,9 @@ const OptionInput: React.FC<DurationInputProps> = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -56,11 +58,15 @@ const OptionInput: React.FC<DurationInputProps> = ({
         <div
           onClick={toggleDropdown}
           className={`relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer ${
-            error ? 'border-red-500' : ''
+            error ? "border-red-500" : ""
           }`}
         >
-          <span className="block truncate text-[14px] text-[#8A8B9F]">
-            {value}
+          <span
+            className={`block truncate text-[14px] ${
+              value ? "text-[#333333]" : "text-[#8A8B9F]"
+            }`}
+          >
+            {value || placeholder} {/* Display placeholder if no value is selected */}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <button
@@ -80,8 +86,8 @@ const OptionInput: React.FC<DurationInputProps> = ({
                   key={option}
                   className={`relative cursor-pointer select-none py-2 px-4 hover:bg-gray-100 ${
                     value === option
-                      ? 'bg-[#F0F0FF] text-[#156064] text-[14px]'
-                      : 'text-[#156064] text-[14px] font-semibold'
+                      ? "bg-[#F0F0FF] text-[#156064] text-[14px]"
+                      : "text-[#156064] text-[14px] font-semibold"
                   }`}
                   onClick={() => handleSelect(option)}
                 >

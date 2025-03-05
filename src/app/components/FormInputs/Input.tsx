@@ -1,6 +1,5 @@
 'use client';
 
-import { formatNaira } from '@/app/lib/utillity/nairaFormat';
 import { ChevronDown } from 'lucide-react';
 import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 // import { formatNaira } from '@/utils/formatNaira'; // Import the utility function
