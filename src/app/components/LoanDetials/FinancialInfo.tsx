@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { Tabs } from "../Tabs";
 import DocumentsTable from "./DocTable";
 import { useDashboard } from "@/app/Context/DahboardContext";
+import CreditScoreGauge from "./CreditScoreDashboard";
+import FinancialGrid from "../LoanRequest/FinancialCardgrid";
+import { CSSProperties } from "react"; // Import CSSProperties for type safety
 
 export default function FinancialInfo() {
   const { interested, setInterested } = useDashboard();
@@ -17,6 +20,7 @@ export default function FinancialInfo() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].name);
   const [showDocumentsTable, setShowDocumentsTable] = useState(false);
+  const [showFinancialGrid, setShowFinancialGrid] = useState(false);
 
   const Request_Details = [
     { label: "Loan Amount", value: "N 344, 373, 790.00" },
@@ -52,18 +56,27 @@ export default function FinancialInfo() {
     { label: "Average Expenses", value: "N 292,936,112.00" },
     { label: "Performing Loans", value: "6" },
     { label: "Account Name", value: "Oripeloye Timilehin" },
-    { label: "Account Number", value: "/Image/RectangleBig.svg" },
-    { label: "Financial Institution", value: "/Image/RectangleBig.svg" },
-    { label: "BVN", value: "/Image/RectangleBig.svg" },
+    { label: "Account Number", value: "0423807582" },
+    { label: "Financial Institution", value: "Guarantee Trust Bank (GTB)" },
+    { label: "BVN", value: "1283673484" },
   ];
 
   const [data, setData] = useState(Request_Details);
 
   const financialdata = interested ? financialData : financialDataNotinterested;
 
+  // Define blurStyles with explicit CSSProperties type
+  const blurStyles: CSSProperties = {
+    filter: "blur(4px)",
+    userSelect: "none",
+    pointerEvents: "none", // Correctly typed as a valid CSS value
+  };
+
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab); 
-    setShowDocumentsTable(tab === "Documents"); 
+    setActiveTab(tab);
+    setShowDocumentsTable(tab === "Documents");
+    setShowFinancialGrid(tab === "Credit info");
+
 
     switch (tab) {
       case "All Request":
@@ -77,47 +90,56 @@ export default function FinancialInfo() {
         break;
       case "Documents":
         break;
+        case "Credit info":
+        break;
       default:
-        setData([]); 
+        setData([]);
         break;
     }
   };
 
-  
   useEffect(() => {
     if (activeTab === "Financial info") {
       setData(financialdata);
     }
-  }, [interested, activeTab]); 
+  }, [interested, activeTab]);
 
   return (
     <div
-      className={`pt-[34px] bg-white rounded-lg ${ interested?'h-[857px]':'h-[900px]'}  w-full border-[1px]`}
+      className={`pt-[34px] bg-white rounded-lg ${
+        interested ? "h-[1000px]" : "h-[1000px]"
+      } w-full border-[1px]`}
     >
-      <div className="flex mb-[42px]  pl-[24px]">
-        <Tabs
-          tabs={tabs}
-          activeTab={activeTab}
-          setActiveTab={handleTabChange}
-        />
+      <div className="flex mb-[42px] pl-[24px]">
+        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleTabChange} />
       </div>
 
       {/* User Details */}
       {showDocumentsTable ? (
         <div
-          className={`w-full  ${
+          className={`w-full ${
             activeTab === "Documents" ? "px-[24px]" : "pl-[24px]"
           }`}
         >
           {" "}
           <DocumentsTable />
         </div>
+      ) : 
+      showFinancialGrid ? (
+        <div
+          className={`w-full ${
+            activeTab === "Credit info" ? "px-[24px]" : "pl-[24px]"
+          }`}
+        >
+          {" "}
+          <FinancialGrid />
+        </div>
       ) : (
         <div className="w-full space-y-5 mt-[38px] flex flex-col items-center justify-center ">
           {data.map((item, index) => (
             <div
               key={index}
-              className="flex w-full text-[16px] font-medium text-[#8A8B9F] text-left gap-[38px]  pl-[24px] items-center"
+              className="flex w-full text-[16px] font-medium text-[#8A8B9F] text-left gap-[38px] pl-[24px] items-center"
             >
               <div className="w-[154px] ">{item.label}:</div>
               <div className="text-left truncate w-[300px] text-pretty break-words">
@@ -131,11 +153,7 @@ export default function FinancialInfo() {
                       item.label !== "BVN" ? (
                         <span>{item.value}</span>
                       ) : (
-                        <img
-                          src={item.value}
-                          alt={item.label}
-                          className="w-full h-full"
-                        />
+                        <span style={blurStyles}>{item.value}</span>
                       )}
                     </>
                   )}

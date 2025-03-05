@@ -10,10 +10,12 @@ interface CollateralSelectionProps {
   onChange?: (selectedOptions: string[]) => void;
   required?: boolean;
   error?: any; // Add error prop
+  visibility:any
 }
 
 const CollateralSelection: React.FC<CollateralSelectionProps> = ({
   label = 'Accepted Collateral',
+  visibility,
   defaultSelectedOptions = ['Car', 'Property', 'Equipment'],
   availableOptions = [
     'Car',
@@ -81,7 +83,7 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
   }, []);
 
   return (
-    <div className="w-full" ref={dropdownRef}>
+    <div className={`w-full ${visibility}`} ref={dropdownRef}>
       <label className="block text-gray-800 font-semibold text-[12px] mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>

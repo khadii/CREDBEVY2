@@ -1,12 +1,13 @@
 "use client";
 
-import { CheckCircle, ThumbsDown, ThumbsUp, XCircle } from "lucide-react";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import ApproveRequest from "../Modals/Approve Request";
 import DeclineRequest from "../Modals/DeclineRequest";
 import Modal from "../Modals/indicateInterest";
 import { useState } from "react";
 import { useDashboard } from "@/app/Context/DahboardContext";
+import { CSSProperties } from "react"; // Import CSSProperties for type safety
 
 const userData = [
   { label: "Date of Birth", value: "Dec. 16, 1999" },
@@ -17,14 +18,15 @@ const userData = [
   { label: "Country", value: "Nigeria" },
   { label: "Gender", value: "Male" },
 ];
+
 const userDataNotinterested = [
-  { label: "Date of Birth", value: "/Image/RectangleBig.svg" },
-  { label: "Email", value: "/Image/RectangleBig.svg" },
-  { label: "Phone", value: "/Image/RectangleBig.svg" },
-  { label: "Address", value: "/Image/RectangleBig.svg" },
+  { label: "Date of Birth", value: "Dec. 16, 1999" },
+  { label: "Email", value: "Timilehinoripeloye@gmail.com" },
+  { label: "Phone", value: "+2349052380387" },
+  { label: "Address", value: "10, Lanre Street, Alube Oju,  Yaba, Lagos" },
   { label: "State", value: "Lagos State" },
   { label: "Country", value: "Nigeria" },
-  { label: "Gender", value: "/Image/RectangleBig.svg" },
+  { label: "Gender", value: "Male" },
 ];
 
 export default function ProfileCard() {
@@ -35,8 +37,20 @@ export default function ProfileCard() {
     useState(false);
   const { interested, setInterested } = useDashboard();
   const data = interested ? userData : userDataNotinterested;
+
+  // Define blurStyles with explicit CSSProperties type
+  const blurStyles: CSSProperties = {
+    filter: "blur(4px)",
+    userSelect: "none",
+    pointerEvents: "none", // Correctly typed as a valid CSS value
+  };
+
   return (
-    <div className={`bg-[#FFFFFF]  flex flex-col items-center rounded-lg text-center ${ interested?'h-[857px]':'h-[900px]'} border-[1px]`}>
+    <div
+      className={`bg-[#FFFFFF] flex flex-col items-center rounded-lg text-center ${
+        interested ? "h-[1000px]" : "h-[1000px]"
+      } border-[1px]`}
+    >
       <ApproveRequest
         isOpen={isModalOpenApproveRequest}
         onClose={() => setIsModalOpenApproveRequest(false)}
@@ -130,17 +144,18 @@ export default function ProfileCard() {
             className="flex w-full text-[12px] font-medium text-[#8A8B9F] text-left gap-[38px] items-center"
           >
             <div className="w-[73px]">{item.label}:</div>
-            <div className=" text-left truncate w-[225px] text-pretty break-words">
-              <p className={item.label === "Email" ? "break-words  " : ""}>
+            <div className="text-left truncate w-[225px] text-pretty break-words">
+              <p className={item.label === "Email" ? "break-words" : ""}>
                 {interested ? (
                   item.value
                 ) : (
-                 <>
-                  {item.label === "State" || item.label === "Country" ? (
-                    <span>{item.value}</span>
-                  ) : (
-                    <img src={item.value} alt={item.label} className="w-full h-full" />
-                  )}</>
+                  <>
+                    {item.label === "State" || item.label === "Country" ? (
+                      <span>{item.value}</span>
+                    ) : (
+                      <span style={blurStyles}>{item.value}</span>
+                    )}
+                  </>
                 )}
               </p>
             </div>

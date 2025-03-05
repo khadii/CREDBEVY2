@@ -183,7 +183,7 @@ export const LoanProduct = ({ setStep }: { setStep: any }) => {
       headers={loanHeaders}
       data={loanData}
       titleProps={titleProps}
-      href="/loans"
+      href="/dashboard/loan-products/performance"
       itemsPerPage={5}
       renderRow={renderRow}
       setStep={setStep}

@@ -2,7 +2,7 @@
 
 import { formatNaira } from '@/app/lib/utillity/nairaFormat';
 import { ChevronDown } from 'lucide-react';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 // import { formatNaira } from '@/utils/formatNaira'; // Import the utility function
 
 interface Currency {
@@ -14,14 +14,14 @@ interface MinimumAmountInputProps {
   label?: string;
   placeholder?: string;
   value: string;
-  onChange: (value: string) => void; // Update onChange to accept a string
+onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   currencies?: Currency[];
   required?: boolean;
   error?: any;
 }
 
 const AmountInput: React.FC<MinimumAmountInputProps> = ({
-  label = 'Minimum Amount',
+  label,
   placeholder = '',
   value,
   onChange,
@@ -47,20 +47,7 @@ const AmountInput: React.FC<MinimumAmountInputProps> = ({
     setIsDropdownOpen(false);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let rawValue = e.target.value.replace(/[^\d]/g, ''); // Remove non-digit characters
-  
-    
-    if (rawValue.length > 9) {
-      return;
-    }
-  
-   
-    const formattedValue = formatNaira(rawValue.toString());
-  
-    onChange(formattedValue); 
-  };
-  
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,7 +75,7 @@ const AmountInput: React.FC<MinimumAmountInputProps> = ({
           <input
             type="text"
             value={value}
-            onChange={handleInputChange}
+            onChange={onChange}
             className={`w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] ${
               error ? 'border-red-500' : ''
             }`}

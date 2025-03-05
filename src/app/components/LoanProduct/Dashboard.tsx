@@ -228,24 +228,3 @@ export default function Dashboard({setStep}:{setStep:any}) {
    
   );
 }
-
-const stats = [
-  {
-    title: "Total Revenue generated",
-    amount: "₦  20,000,000.00",
-    percentage: "15.00%",
-    icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
-  },
-  {
-    title: "Total Loan Disbursed",
-    amount: "₦  20,000,000.00", // Removed ₦
-    percentage: "15.00%",
-    icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
-  },
-  {
-    title: "Total Loan Volume",
-    amount: "3,000,000,000",
-    percentage: "15.00%",
-    icon: <SquareActivity size={"18px"} className="text-gray-500" />,
-  },
-];
