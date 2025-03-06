@@ -51,16 +51,15 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
       aria-modal="true"
       aria-labelledby="edit-user-modal-title"
     >
-      <div className="relative bg-white rounded-lg w-full max-w-3xl">
+      <div className="relative bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
-        <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
-          <h2 className="text-[24px] font-semibold text-[#333333]">
-          Edit User
+        <div className="sticky top-0 bg-white z-10 flex pl-6 pt-6 pr-4 justify-between w-full items-center border-b pb-4">
+          <h2 className="text-2xl font-semibold text-[#333333]">
+            Edit User
           </h2>
           <button
             onClick={onClose}
             className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
-    
           >
             ✕
           </button>
@@ -69,9 +68,9 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
         {/* Modal Body */}
         <form onSubmit={formik.handleSubmit}>
           <div className="p-6">
-            <div className="grid grid-cols-2 gap-6 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* First Name */}
-              <div className="">
+              <div>
                 <InputField
                   label="First Name"
                   placeholder="Enter First Name"
@@ -83,7 +82,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* Last Name */}
-              <div className="">
+              <div>
                 <InputField
                   label="Last Name"
                   placeholder="Enter Last Name"
@@ -95,7 +94,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* User Name */}
-              <div className="">
+              <div>
                 <InputField
                   label="User Name"
                   placeholder="Enter User Name"
@@ -107,7 +106,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* Address */}
-              <div className="">
+              <div>
                 <InputField
                   label="Address"
                   placeholder="Enter Address"
@@ -119,7 +118,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* Email */}
-              <div className="">
+              <div>
                 <InputField
                   label="Email"
                   placeholder="Enter Email"
@@ -131,7 +130,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* Password */}
-              <div className="">
+              <div>
                 <InputField
                   label="Password"
                   placeholder="Enter Password"
@@ -144,7 +143,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               </div>
 
               {/* User's roles */}
-              <div className=" col-span-2">
+              <div className="col-span-1 md:col-span-2">
                 <CollateralSelection
                   label="User's roles"
                   availableOptions={availableOptions}
@@ -156,20 +155,20 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
                   required
                   visibility="block"
                 />
-                <p className="font-medium text-[12px] text-[#666687]">A user can have one or several roles</p>
+                <p className="font-medium text-xs text-[#666687]">A user can have one or several roles</p>
               </div>
 
               {/* Active toggle */}
-              <div className="">
-                <label className="block text-[12px] font-bold text-g[#333333] mb-1">
+              <div>
+                <label className="block text-xs font-bold text-[#333333] mb-1">
                   Active
                 </label>
-                <div className="flex w-[193px] h-[40px] bg-[#DCDCE4] justify-between items-center px-[4px] border rounded-[4px]">
+                <div className="flex w-full max-w-[193px] h-10 bg-[#DCDCE4] justify-between items-center px-1 border rounded-[4px]">
                   <button
                     type="button"
                     onClick={() => formik.setFieldValue("isActive", false)}
-                    className={`px-6 py-2 text-[12px] font-bold rounded-[4px] ${
-                      !formik.values.isActive ? "bg-[#FFFFFF] text-[#007D69] w-[92px] h-[32px]" : "bg-[[#DCDCE4] text-[#8A8B9F] "
+                    className={`px-4 py-1 text-xs font-bold rounded-[4px] ${
+                      !formik.values.isActive ? "bg-white text-[#007D69] w-[92px] h-8" : "bg-[#DCDCE4] text-[#8A8B9F]"
                     }`}
                   >
                     FALSE
@@ -177,38 +176,33 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
                   <button
                     type="button"
                     onClick={() => formik.setFieldValue("isActive", true)}
-                    className={`px-6 py-2 text-[12px] font-bold  rounded-[4px] ${
-                        formik.values.isActive ? "bg-[#FFFFFF] text-[#007D69] w-[92px] h-[32px]" : "bg-[[#DCDCE4] text-[#8A8B9F] "
-                      }`}
+                    className={`px-4 py-1 text-xs font-bold rounded-[4px] ${
+                      formik.values.isActive ? "bg-white text-[#007D69] w-[92px] h-8" : "bg-[#DCDCE4] text-[#8A8B9F]"
+                    }`}
                   >
                     TRUE
                   </button>
                 </div>
               </div>
             </div>
-             {/* Modal Footer */}
-          <div className="flex justify-between w-full mt-[99px]">
-            <button
-              onClick={onClose}
-              className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333] hover:bg-gray-100 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-               type="submit"
-            //   onClick={() => {
-                
-            //     // onClose(); 
-            //     // onConfirm();
-            //   }}
-              className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white hover:bg-[#156064] transition-colors"
-            >
-              Proceed
-            </button>
+            
+            {/* Modal Footer */}
+            <div className="flex justify-between w-full mt-8">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-2 border border-[#333333] rounded-[4px] text-xs font-bold text-[#333333] hover:bg-gray-100 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 border border-[#156064] bg-[#156064] rounded-[4px] text-xs font-bold text-white hover:bg-opacity-90 transition-colors"
+              >
+                Proceed
+              </button>
+            </div>
           </div>
-          </div>
-
-         
         </form>
       </div>
     </div>
@@ -216,4 +210,5 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
 };
 
 export default EditUserModal;
-const availableOptions =["Super Admin", "Editor","User"]
+
+const availableOptions = ["Super Admin", "Editor", "User"];
