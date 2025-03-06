@@ -51,7 +51,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
       aria-modal="true"
       aria-labelledby="edit-user-modal-title"
     >
-      <div className="relative bg-white rounded-lg w-full max-w-[822px] lg:max-h-full md:max-h-[600px] overflow-scroll">
+      <div className="relative bg-white rounded-lg w-full">
         {/* Modal Header */}
         <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-semibold text-[#333333]">
