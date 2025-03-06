@@ -9,33 +9,24 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose,setIsModalOpenApproveRequest}) => {
   const [pin, setPin] = useState(["", "", "", ""]);
-
-  // 1) Make a ref that stores an array of HTMLInputElements
   const inputRefs = useRef<HTMLInputElement[]>([]);
-
-  // Safely handle input changes
   const handleChange = (index: number, value: string) => {
-    // Only allow digits
     if (!/^\d?$/.test(value)) return;
-
-    // Update the pin array
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
-
     // Move focus to next input if user typed a digit
     if (value && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // 2) Only render if modal is open
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-      //   onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"
     >
       <div className="relative bg-white rounded-lg">
         <div className=" flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">

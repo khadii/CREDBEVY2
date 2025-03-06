@@ -5,6 +5,8 @@ import { Tabs } from '../Tabs'
 import Company_info from './Company_info';
 import NotificationSettings from './Notifications';
 import IntegrationGrid from './Integrations';
+import User_management from './user_management';
+import User_Roles from './User_Roles';
 
 export default function SettingsHome() {
     const navItems = [
@@ -33,11 +35,11 @@ export default function SettingsHome() {
             case "Integrations":
                 return <IntegrationGrid />;
             case "User management":
-                return <div>User Management Content</div>; 
+                return <User_management/>; 
             case "Group Management":
                 return <div>Group Management Content</div>; 
             case "User Roles":
-                return <div>User Roles Content</div>; 
+                return <div><User_Roles/></div>; 
             case "Security & Password":
                 return <div>Security & Password Content</div>; 
             case "Logs":

@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensure this component is client-side rendered
 
 import React from "react";
 import { LucideSearch, ListFilter } from "lucide-react";
@@ -7,12 +7,14 @@ interface LoanRequestActionsProps {
   onSearchClick?: () => void;
   onFilterClick?: () => void;
   onSeeAllClick?: () => void;
+  showSeeAll?: boolean; // Optional prop to control visibility of the "See All" link
 }
 
 const Search: React.FC<LoanRequestActionsProps> = ({
   onSearchClick,
   onFilterClick,
   onSeeAllClick,
+  showSeeAll = true, // Default value is true
 }) => {
   return (
     <div className="flex justify-between items-center mt-6 mb-3 bg-[#FAFAFA]">
@@ -32,13 +34,17 @@ const Search: React.FC<LoanRequestActionsProps> = ({
           Filter
         </button>
       </div>
-      <a
-        href="#"
-        onClick={onSeeAllClick}
-        className="text-[#156064] font-bold text-sm"
-      >
-        See All
-      </a>
+
+      {/* Conditionally render the "See All" link */}
+      {showSeeAll && (
+        <a
+          href="#"
+          onClick={onSeeAllClick}
+          className="text-[#156064] font-bold text-sm"
+        >
+          See All
+        </a>
+      )}
     </div>
   );
 };

@@ -8,26 +8,6 @@ interface ModalProps {
 }
 
 const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const [pin, setPin] = useState(["", "", "", ""]);
-
-  // 1) Make a ref that stores an array of HTMLInputElements
-  const inputRefs = useRef<HTMLInputElement[]>([]);
-
-  // Safely handle input changes
-  const handleChange = (index: number, value: string) => {
-    // Only allow digits
-    if (!/^\d?$/.test(value)) return;
-
-    // Update the pin array
-    const newPin = [...pin];
-    newPin[index] = value;
-    setPin(newPin);
-
-    // Move focus to next input if user typed a digit
-    if (value && index < 3) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
   const { interested, setInterested } = useDashboard();
   // 2) Only render if modal is open
   if (!isOpen) return null;
@@ -35,7 +15,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"
       //   onClick={onClose}
     >
       <div className="relative bg-white rounded-lg">

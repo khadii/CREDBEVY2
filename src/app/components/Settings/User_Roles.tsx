@@ -1,0 +1,166 @@
+import React, { useState } from "react";
+import SettingsTable from "./Generaltablecomp";
+import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
+import DeleteModal from "../Modals/DeleteModal";
+import EditUserModal from "../Modals/EditUser";
+
+const User_Roles = () => {
+  interface RoleData {
+    id: number;
+    name: string;
+    description: string;
+    users: number;
+    lastModified: string;
+    selected: boolean;
+  }
+
+  const [roleData, setRoleData] = React.useState<RoleData[]>([
+    {
+      id: 1,
+      name: "Admin",
+      description: "The super admin can add, edit anything on the dashboard",
+      users: 4,
+      lastModified: "9/17/2023, 11:28 PM",
+      selected: false
+    },
+    {
+      id: 2,
+      name: "Contributor",
+      description: "The super admin can add, edit anything on the dashboard",
+      users: 5,
+      lastModified: "9/17/2023, 11:28 PM",
+      selected: false
+    },
+    {
+      id: 3,
+      name: "Viewer",
+      description: "The super admin can add, edit anything on the dashboard",
+      users: 10,
+      lastModified: "9/17/2023, 11:28 PM",
+      selected: false
+    },
+  ]);
+
+  const headers = ["Role Name", "Description", "Users", "Last Modified"];
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState<number | null>(null);
+
+  const CustomCheckbox = ({ id, checked, onChange }: { id: number; checked: boolean; onChange: (id: number) => void }) => {
+    return (
+      <div 
+        className={`w-4 h-4 rounded-md flex items-center justify-center cursor-pointer ${checked ? 'bg-[#156064]' : 'border-2 border-gray-300'}`}
+        onClick={() => onChange(id)}
+      >
+        {checked && <Check size={12} color="white" />}
+      </div>
+    );
+  };
+
+  const toggleSelection = (id: number) => {
+    setRoleData(roleData.map(role => 
+      role.id === id ? { ...role, selected: !role.selected } : role
+    ));
+  };
+
+  const handleEdit = (id: number) => {
+    console.log(`Edit role with id: ${id}`);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (id: any) => {
+    setRoleData(roleData.filter(role => role.id !== id));
+    setIsDeleteModalOpen(false);
+  };
+
+  const renderRoleBadge = (roleName: string) => {
+    let bgColor = "";
+    let textColor = "";
+
+    if (roleName === "Admin") {
+      bgColor = "bg-[#FEEEFF] border-[#FBCAFF]";
+      textColor = "text-[#156064]";
+    } else if (roleName === "Contributor") {
+      bgColor = "bg-[#FFF0F1] border-[#FFAAAE]";
+      textColor = "text-[#FA4D56]";
+    } else if (roleName === "Viewer") {
+      bgColor = "bg-[#EFFAF2] border-[#BFFFD1]";
+      textColor = "text-[#42BE65]";
+    }
+
+    return (
+      <span className={`px-[10px] py-[2px] rounded-[2px] border text-xs ${bgColor} ${textColor}`}>
+        {roleName}
+      </span>
+    );
+  };
+
+  const renderRow = (item: RoleData, index: number) => (
+    <>
+      <td className="pl-[27px] py-4 px-6">
+        <div className="flex items-center gap-4 h-full">
+          <CustomCheckbox 
+            id={item.id} 
+            checked={item.selected} 
+            onChange={toggleSelection} 
+          />
+          <p className="truncate max-w-[120px]">{item.name}</p>
+        </div>
+      </td>
+      <td className="truncate max-w-[300px] py-4 px-6">{item.description}</td>
+      <td className="truncate max-w-[120px] py-4 px-6">{item.users}</td>
+      <td className="truncate max-w-[180px] py-4 px-6">{item.lastModified}</td>
+      <td className="py-4 px-4">
+        <div className="flex items-center gap-4">
+          <button className="text-gray-500" onClick={() => handleEdit(item.id)}>
+            <PencilLine size={20} />
+          </button>
+          <button className="text-[#E33A24] hover:text-[#E33A24]" onClick={() => {
+            setRoleToDelete(item.id);
+            setIsDeleteModalOpen(true);
+          }}>
+            <Trash2 size={20} />
+          </button>
+        </div>
+      </td>
+    </>
+  );
+
+  return (
+    <div>
+      <SettingsTable
+        headers={headers}
+        data={roleData}
+        titleProps={{
+          mainTitle: "User Roles",
+          count: "200 Users",
+          subtitle: "List of all user roles on the dashboard",
+        }}
+        href=""
+        itemsPerPage={5}
+        setStep={(step: number) => console.log(`Step: ${step}`)}
+        renderRow={renderRow}
+        showAddUserButton={false}
+      />
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          if (roleToDelete !== null) {
+            handleDelete(roleToDelete);
+          }
+        }}
+      />
+      {/* <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={() => {
+          // Add logic to handle edit confirmation
+        }}
+      /> */}
+    </div>
+  );
+};
+
+export default User_Roles;

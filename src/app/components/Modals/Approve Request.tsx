@@ -33,7 +33,7 @@ const ApproveRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"
       //   onClick={onClose}
     >
       <div className="relative bg-white rounded-lg">
