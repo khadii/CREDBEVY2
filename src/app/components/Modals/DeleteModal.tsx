@@ -20,7 +20,7 @@ const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       role="dialog"
     
     >
-      <div className="relative bg-white rounded-lg lg:max-h-full " >
+      <div className="relative bg-white rounded-lg lg:max-h-full max-w-3xl" >
         {/* Modal Header */}
         <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-semibold text-[#333333]">
@@ -56,7 +56,7 @@ const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
           </div>
 
           {/* Modal Footer */}
-          <div className="flex space-x-[396px]">
+          <div className="flex justify-between gap-x-[200px] w-full">
             <button
               onClick={onClose}
               className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333] hover:bg-gray-100 transition-colors"

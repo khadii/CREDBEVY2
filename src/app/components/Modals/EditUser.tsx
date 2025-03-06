@@ -51,7 +51,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
       aria-modal="true"
       aria-labelledby="edit-user-modal-title"
     >
-      <div className="relative bg-white rounded-lg w-full">
+      <div className="relative bg-white rounded-lg w-full max-w-3xl">
         {/* Modal Header */}
         <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-semibold text-[#333333]">
@@ -69,7 +69,7 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
         {/* Modal Body */}
         <form onSubmit={formik.handleSubmit}>
           <div className="p-6">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6 ">
               {/* First Name */}
               <div className="">
                 <InputField
