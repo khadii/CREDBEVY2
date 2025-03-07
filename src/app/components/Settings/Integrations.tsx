@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { Switch } from "../FormInputs/Switch"
+import { Switch } from "../FormInputs/ToggleButton_Small"
 
 interface Integration {
   id: string

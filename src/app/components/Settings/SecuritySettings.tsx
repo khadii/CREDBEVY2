@@ -1,9 +1,12 @@
 "use client";
+
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import InputField from "../FormInputs/iputDetails";
 import CustomizedButton from "../CustomizedButton";
+import ToggleButton from "../FormInputs/ToggleButton";
+
 
 const SecuritySettings = () => {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
@@ -51,10 +54,8 @@ const SecuritySettings = () => {
             label="Current Password"
             placeholder="Current Password"
             type="password"
-           
             value={passwordFormik.values.currentPassword}
             onChange={passwordFormik.handleChange}
-          
             error={passwordFormik.touched.currentPassword && passwordFormik.errors.currentPassword}
             required
           />
@@ -65,10 +66,8 @@ const SecuritySettings = () => {
               label="New Password"
               placeholder="New Password"
               type="password"
-            
               value={passwordFormik.values.newPassword}
               onChange={passwordFormik.handleChange}
-          
               error={passwordFormik.touched.newPassword && passwordFormik.errors.newPassword}
               required
             />
@@ -78,10 +77,8 @@ const SecuritySettings = () => {
               label="Confirm New Password"
               placeholder="Confirm New Password"
               type="password"
-             
               value={passwordFormik.values.confirmNewPassword}
               onChange={passwordFormik.handleChange}
-           
               error={passwordFormik.touched.confirmNewPassword && passwordFormik.errors.confirmNewPassword}
               required
             />
@@ -91,20 +88,18 @@ const SecuritySettings = () => {
 
       {/* Security Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-      <h2 className="text-[20px] font-bold text-[#333333] mb-6">Security</h2>
+        <h2 className="text-[20px] font-bold text-[#333333] mb-6">Security</h2>
         
         <div className="flex justify-between items-center mb-2">
           <div>
             <h3 className="text-[14px] font-bold text-[#333333] mb-1">2-Step Verification</h3>
-            <p className="text-[12px] font-bold text-[#8A8B9F] mb-[40px]">Make your account extra secure. Along with the password, you will need a code</p>
+            <p className="text-[12px] font-bold text-[#8A8B9F] mb-[40px]">
+              Make your account extra secure. Along with the password, you will need a code
+            </p>
           </div>
           
-          <button 
-            onClick={handleToggleTwoFactor}
-            className={`w-12 h-6 flex items-center rounded-full p-1 ${twoFactorEnabled ? 'bg-[#156064]' : 'bg-gray-300'}`}
-          >
-            <div className={`bg-white w-4 h-4 rounded-full transform duration-300 ease-in-out ${twoFactorEnabled ? 'translate-x-6' : 'translate-x-0'}`}></div>
-          </button>
+        
+          <ToggleButton isEnabled={twoFactorEnabled} onToggle={handleToggleTwoFactor} />
         </div>
         
         <div className="space-y-6 pb-[62px]">
@@ -138,9 +133,9 @@ const SecuritySettings = () => {
       </div>
       
       {/* Submit Button */}
-             <div className="w-full max-w-[822px] pt-[24px] flex justify-end ">
-               <CustomizedButton text={'Save changes'} />
-             </div>
+      <div className="w-full max-w-[822px] pt-[24px] flex justify-end ">
+        <CustomizedButton text={'Save changes'} />
+      </div>
     </div>
   );
 };

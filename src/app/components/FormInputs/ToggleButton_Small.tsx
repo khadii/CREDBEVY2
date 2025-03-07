@@ -24,15 +24,15 @@ export const Switch = React.forwardRef<HTMLDivElement, SwitchProps>(
         data-state={checked ? "checked" : "unchecked"}
         aria-disabled={disabled}
         onClick={handleClick}
-        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors 
+        className={`relative inline-flex h-[15px] w-[27px] shrink-0 cursor-pointer items-center rounded-full transition-colors 
           ${checked ? "bg-[#156064]" : "bg-gray-200"} 
           ${disabled ? "cursor-not-allowed opacity-50" : ""} 
           ${className}`}
         {...props}
       >
         <span
-          className={`pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform
-            ${checked ? "translate-x-5" : "translate-x-1"}`}
+          className={`pointer-events-none block h-[12px] w-[12px] rounded-full bg-white shadow-lg ring-0 transition-transform
+            ${checked ? "translate-x-3" : "translate-x-1"}`}
         />
       </div>
     )

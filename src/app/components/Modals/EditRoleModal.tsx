@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import InputField from "../FormInputs/iputDetails";
+import CheckToggleButton from "../FormInputs/CheckToggle";
+
 
 interface ModalProps {
   isOpen: boolean;
@@ -41,7 +43,6 @@ const EditRoleModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
     },
     validationSchema,
     onSubmit: (values) => {
-      
       onConfirm();
       onClose();
     },
@@ -61,9 +62,7 @@ const EditRoleModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="edit-role-modal-title"
+
     >
       <div className="relative bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
@@ -122,48 +121,28 @@ const EditRoleModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
                     <tr key={index} className="">
                       <td className="py-4 text-sm font-semibold text-[#333333]">{permission.resource}</td>
                       <td className="py-4 text-center">
-                        <div className="inline-flex justify-center">
-                          <button 
-                            type="button"
-                            className={`w-6 h-6 rounded ${permission.create ? 'bg-[#156064] text-white' : 'bg-white border border-gray-300'} flex items-center justify-center`}
-                            onClick={() => togglePermission(index, 'create')}
-                          >
-                            {permission.create && <CheckIcon />}
-                          </button>
-                        </div>
+                        <CheckToggleButton
+                          isActive={permission.create}
+                          onClick={() => togglePermission(index, 'create')}
+                        />
                       </td>
                       <td className="py-4 text-center">
-                        <div className="inline-flex justify-center">
-                          <button 
-                            type="button"
-                            className={`w-6 h-6 rounded ${permission.read ? 'bg-[#156064] text-white' : 'bg-white border border-gray-300'} flex items-center justify-center`}
-                            onClick={() => togglePermission(index, 'read')}
-                          >
-                            {permission.read && <CheckIcon />}
-                          </button>
-                        </div>
+                        <CheckToggleButton
+                          isActive={permission.read}
+                          onClick={() => togglePermission(index, 'read')}
+                        />
                       </td>
                       <td className="py-4 text-center">
-                        <div className="inline-flex justify-center">
-                          <button 
-                            type="button"
-                            className={`w-6 h-6 rounded ${permission.update ? 'bg-[#156064] text-white' : 'bg-white border border-gray-300'} flex items-center justify-center`}
-                            onClick={() => togglePermission(index, 'update')}
-                          >
-                            {permission.update && <CheckIcon />}
-                          </button>
-                        </div>
+                        <CheckToggleButton
+                          isActive={permission.update}
+                          onClick={() => togglePermission(index, 'update')}
+                        />
                       </td>
                       <td className="py-4 text-center">
-                        <div className="inline-flex justify-center">
-                          <button 
-                            type="button"
-                            className={`w-6 h-6 rounded ${permission.delete ? 'bg-[#156064] text-white' : 'bg-white border border-gray-300'} flex items-center justify-center`}
-                            onClick={() => togglePermission(index, 'delete')}
-                          >
-                            {permission.delete && <CheckIcon />}
-                          </button>
-                        </div>
+                        <CheckToggleButton
+                          isActive={permission.delete}
+                          onClick={() => togglePermission(index, 'delete')}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -193,12 +172,5 @@ const EditRoleModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
     </div>
   );
 };
-
-// Check icon component
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
 
 export default EditRoleModal;
