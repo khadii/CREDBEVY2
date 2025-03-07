@@ -191,13 +191,13 @@ const EditUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2 border border-[#333333] rounded-[4px] text-xs font-bold text-[#333333] hover:bg-gray-100 transition-colors"
+                className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-xs font-bold text-[#333333] hover:bg-gray-100 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 border border-[#156064] bg-[#156064] rounded-[4px] text-xs font-bold text-white hover:bg-opacity-90 transition-colors"
+                className="px-[81px] py-[10px]border border-[#156064] bg-[#156064] rounded-[4px] text-xs font-bold text-white hover:bg-opacity-90 transition-colors"
               >
                 Proceed
               </button>

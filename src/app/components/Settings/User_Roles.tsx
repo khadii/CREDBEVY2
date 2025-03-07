@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import SettingsTable from "./Generaltablecomp";
 import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
 import DeleteModal from "../Modals/DeleteModal";
-import EditUserModal from "../Modals/EditUser";
+
+import EditRoleModal from "../Modals/EditRoleModal";
 
 const User_Roles = () => {
   interface RoleData {
@@ -74,27 +75,7 @@ const User_Roles = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const renderRoleBadge = (roleName: string) => {
-    let bgColor = "";
-    let textColor = "";
 
-    if (roleName === "Admin") {
-      bgColor = "bg-[#FEEEFF] border-[#FBCAFF]";
-      textColor = "text-[#156064]";
-    } else if (roleName === "Contributor") {
-      bgColor = "bg-[#FFF0F1] border-[#FFAAAE]";
-      textColor = "text-[#FA4D56]";
-    } else if (roleName === "Viewer") {
-      bgColor = "bg-[#EFFAF2] border-[#BFFFD1]";
-      textColor = "text-[#42BE65]";
-    }
-
-    return (
-      <span className={`px-[10px] py-[2px] rounded-[2px] border text-xs ${bgColor} ${textColor}`}>
-        {roleName}
-      </span>
-    );
-  };
 
   const renderRow = (item: RoleData, index: number) => (
     <>
@@ -113,7 +94,7 @@ const User_Roles = () => {
       <td className="truncate max-w-[180px] py-4 px-6">{item.lastModified}</td>
       <td className="py-4 px-4">
         <div className="flex items-center gap-4">
-          <button className="text-gray-500" onClick={() => handleEdit(item.id)}>
+          <button className="text-gray-500" onClick={ () => setIsEditModalOpen(true)}>
             <PencilLine size={20} />
           </button>
           <button className="text-[#E33A24] hover:text-[#E33A24]" onClick={() => {
@@ -128,7 +109,7 @@ const User_Roles = () => {
   );
 
   return (
-    <div>
+    <div className="w-full min-h-screen">
       <SettingsTable
         headers={headers}
         data={roleData}
@@ -152,13 +133,13 @@ const User_Roles = () => {
           }
         }}
       />
-      {/* <EditUserModal
+      <EditRoleModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onConfirm={() => {
           // Add logic to handle edit confirmation
         }}
-      /> */}
+      />
     </div>
   );
 };
