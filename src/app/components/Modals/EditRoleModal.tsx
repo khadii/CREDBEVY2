@@ -108,12 +108,12 @@ const EditRoleModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => 
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="">
+                  <tr className="text-left">
                     <th className="text-left py-4 font-semibold text-xs text-[#8A8B9F]">ROLES</th>
-                    <th className="text-center py-4 font-semibold text-xs text-[#8A8B9F]">CREATE</th>
-                    <th className="text-center py-4 font-semibold text-xs text-[#8A8B9F]">READ</th>
-                    <th className="text-center py-4 font-semibold text-xs text-[#8A8B9F]">UPDATE</th>
-                    <th className="text-center py-4 font-semibold text-xs text-[#8A8B9F]">DELETE</th>
+                    <th className="text-left py-4 font-semibold text-xs text-[#8A8B9F]">CREATE</th>
+                    <th className="text-left py-4 font-semibold text-xs text-[#8A8B9F]">READ</th>
+                    <th className="text-left py-4 font-semibold text-xs text-[#8A8B9F]">UPDATE</th>
+                    <th className="text-left py-4 font-semibold text-xs text-[#8A8B9F]">DELETE</th>
                   </tr>
                 </thead>
                 <tbody>

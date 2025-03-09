@@ -3,6 +3,7 @@ import SettingsTable from "./Generaltablecomp";
 import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
 import DeleteModal from "../Modals/DeleteModal";
 import EditUserModal from "../Modals/EditUser";
+import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 
 // import DeleteModal from "../Modals/DeleteModal";
 
@@ -71,16 +72,6 @@ const User_managementTable = () => {
   const [isEditModalOpen, setIEditModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
-  const CustomCheckbox = ({ id, checked, onChange }: { id: number; checked: boolean; onChange: (id: number) => void }) => {
-    return (
-      <div 
-        className={`w-4 h-4 rounded-md flex items-center justify-center cursor-pointer ${checked ? 'bg-[#156064]' : 'border-2 border-gray-300'}`}
-        onClick={() => onChange(id)}
-      >
-        {checked && <Check size={12} color="white" />}
-      </div>
-    );
-  };
 
   const toggleSelection = (id: number) => {
     setUserData(userData.map(user => 

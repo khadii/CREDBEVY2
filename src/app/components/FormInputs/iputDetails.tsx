@@ -72,26 +72,4 @@ export default InputField;
 //         placeholder="Enter duration"
 //         value={duration}
 //         onChange={handleDurationChange}
-//         required
-//       />
-//       <InputField
-//         label="Email"
-//         placeholder="Enter your email"
-//         value={email}
-//         onChange={handleEmailChange}
-//         type="email"
-//         required
-//       />
-//       <InputField
-//         label="Password"
-//         placeholder="Enter your password"
-//         value={password}
-//         onChange={handlePasswordChange}
-//         type="password"
-//         required
-//       />
-//     </div>
-//   );
-// };
-
-// export default Form;
+//         requir

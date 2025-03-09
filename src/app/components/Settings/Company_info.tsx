@@ -1,13 +1,11 @@
 import React from 'react';
 import InputField from '../FormInputs/iputDetails';
-import OptionInput from '../FormInputs/OptionInput';
-import { CircleAlert } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import FileUpload from '../FormInputs/Uploadinput';
 import CustomizedButton from '../CustomizedButton';
 
-// Yup validation schema
+// Yup validation schema (for form submission)
 const validationSchema = Yup.object({
   company_Name: Yup.string()
     .required('Company Name is required')
@@ -20,29 +18,34 @@ const validationSchema = Yup.object({
     .url('Invalid URL format'),
   Company_Email: Yup.string()
     .required('Company Email is required')
-    .email('Invalid email format'),
+    .email('Invalid email format')
+    .test('is-company-email', 'Personal email is not allowed', (value) => {
+      const personalEmailDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+      const domain = value.split('@')[1];
+      return !personalEmailDomains.includes(domain);
+    }),
   Company_Phone: Yup.string()
     .required('Company Phone is required')
-    .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
+    .matches(/^[0-9]{11}$/, 'Phone number must be 11 digits'),
   Company_Logo: Yup.mixed()
     .required('Company Logo is required')
     .test('fileSize', 'File size must be less than 1 MB', (value) => {
       if (value) {
-        const file = value as File; // Cast value to File
-        return file.size <= 1 * 1024 * 1024; // Check file size
+        const file = value as File;
+        return file.size <= 1 * 1024 * 1024;
       }
       return true;
     })
     .test('fileType', 'Only PNG and JPG files are allowed', (value) => {
       if (value) {
-        const file = value as File; // Cast value to File
-        return ['image/png', 'image/jpeg'].includes(file.type); // Check file type
+        const file = value as File;
+        return ['image/png', 'image/jpeg'].includes(file.type);
       }
       return true;
     }),
 });
 
-export default function Company_info() {
+export default function CompanyInfo() {
   // Formik initialization
   const formik = useFormik({
     initialValues: {
@@ -51,14 +54,67 @@ export default function Company_info() {
       Company_Website: '',
       Company_Email: '',
       Company_Phone: '',
-      Company_Logo: null, // Add Company_Logo to initialValues
+      Company_Logo: null,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log('Form submitted:', values);
-      // Handle form submission here
     },
   });
+
+  // Handle Company Email Change
+  const handleCompanyEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    formik.handleChange(e);
+    const value = e.target.value;
+    if (value.includes('@')) {
+      const domain = value.split('@')[1];
+      const personalEmailDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
+      if (personalEmailDomains.includes(domain)) {
+        formik.setFieldError('Company_Email', 'Personal email is not allowed');
+      } else {
+        formik.setFieldError('Company_Email', '');
+      }
+    }
+  };
+
+  // Handle Company Phone Change
+  const handleCompanyPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^0-9]/g, '');
+    if (value.length > 11) {
+      value = value.slice(0, 11);
+    }
+    if (value !== e.target.value) {
+      e.preventDefault();
+      e.target.value = value;
+    }
+    formik.setFieldValue('Company_Phone', value);
+
+    if (value && value.length !== 11) {
+      formik.setFieldError('Company_Phone', 'Phone number must be 11 digits');
+    } else {
+      formik.setFieldError('Company_Phone', '');
+    }
+  };
+
+  // Handle URL Change
+  const handleURLChange = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    formik.setFieldValue(fieldName, value);
+
+    if (value) {
+      try {
+        new URL(value);
+        formik.setFieldError(fieldName, '');
+      } catch (error) {
+        formik.setFieldError(fieldName, 'Invalid URL format');
+      }
+    } else {
+      formik.setFieldError(fieldName, '');
+    }
+  };
+
+  const handleCompanyDashboardURLChange = handleURLChange('Company_Dashboard_URL');
+  const handleCompanyWebsiteChange = handleURLChange('Company_Website');
 
   return (
     <div>
@@ -73,7 +129,6 @@ export default function Company_info() {
               placeholder="Enter Company Name"
               value={formik.values.company_Name}
               onChange={formik.handleChange('company_Name')}
-             
               error={formik.touched.company_Name && formik.errors.company_Name}
               required
             />
@@ -86,8 +141,7 @@ export default function Company_info() {
                 label="Company Dashboard URL"
                 placeholder="Enter Company Dashboard URL"
                 value={formik.values.Company_Dashboard_URL}
-                onChange={formik.handleChange('Company_Dashboard_URL')}
-             
+                onChange={handleCompanyDashboardURLChange}
                 error={formik.touched.Company_Dashboard_URL && formik.errors.Company_Dashboard_URL}
                 required
               />
@@ -99,8 +153,7 @@ export default function Company_info() {
                 label="Company Website"
                 placeholder="Enter Company Website"
                 value={formik.values.Company_Website}
-                onChange={formik.handleChange('Company_Website')}
-              
+                onChange={handleCompanyWebsiteChange}
                 error={formik.touched.Company_Website && formik.errors.Company_Website}
                 required
               />
@@ -114,8 +167,7 @@ export default function Company_info() {
                 label="Company Email"
                 placeholder="Enter Company Email"
                 value={formik.values.Company_Email}
-                onChange={formik.handleChange('Company_Email')}
-               
+                onChange={handleCompanyEmailChange}
                 error={formik.touched.Company_Email && formik.errors.Company_Email}
                 required
               />
@@ -127,8 +179,7 @@ export default function Company_info() {
                 label="Company Phone"
                 placeholder="Enter Company Phone"
                 value={formik.values.Company_Phone}
-                onChange={formik.handleChange('Company_Phone')}
-                
+                onChange={handleCompanyPhoneChange}
                 error={formik.touched.Company_Phone && formik.errors.Company_Phone}
                 required
               />

@@ -10,7 +10,7 @@ const CheckToggleButton: React.FC<ToggleButtonProps> = ({ isActive, onClick }) =
   return (
     <button
       type="button"
-      className={`w-6 h-6 rounded ${
+      className={`w-5 h-5 rounded ${
         isActive ? "bg-[#156064] text-white" : "bg-white border border-gray-300"
       } flex items-center justify-center`}
       onClick={onClick}

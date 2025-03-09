@@ -1,45 +1,41 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import InputField from "../FormInputs/iputDetails";
-import CustomizedButton from "../CustomizedButton";
-import ToggleButton from "../FormInputs/ToggleButton";
-
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import InputFieldPassword from '../FormInputs/InputFieldPassword';
+import CustomizedButton from '../CustomizedButton';
+import ToggleButton from '../FormInputs/ToggleButton';
 
 const SecuritySettings = () => {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
   const passwordFormik = useFormik({
     initialValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmNewPassword: "",
+      currentPassword: '',
+      newPassword: '',
+      confirmNewPassword: '',
     },
     validationSchema: Yup.object({
-      currentPassword: Yup.string().required("Current password is required"),
+      currentPassword: Yup.string().required('Current password is required'),
       newPassword: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .required("New password is required"),
+        .min(8, 'Password must be at least 8 characters')
+        .required('New password is required'),
       confirmNewPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword")], "Passwords must match")
-        .required("Please confirm your new password"),
+        .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+        .required('Please confirm your new password'),
     }),
     onSubmit: (values) => {
-      console.log("Password change submitted:", values);
-      // Add API call to change password here
+      console.log('Password change submitted:', values);
     },
   });
 
   const handleToggleTwoFactor = () => {
     setTwoFactorEnabled(!twoFactorEnabled);
-    // In a real app, you would make an API call to enable/disable 2FA
   };
 
   const handleSaveChanges = () => {
     passwordFormik.handleSubmit();
-    // You could add additional save logic here if needed
   };
 
   return (
@@ -47,47 +43,47 @@ const SecuritySettings = () => {
       {/* Password Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
         <h2 className="text-[20px] font-bold text-[#333333] mb-6">Password</h2>
-        
         <div className="space-y-6">
           {/* Current Password */}
-          <InputField
+          <InputFieldPassword
             label="Current Password"
             placeholder="Current Password"
-            type="password"
             value={passwordFormik.values.currentPassword}
             onChange={passwordFormik.handleChange}
             error={passwordFormik.touched.currentPassword && passwordFormik.errors.currentPassword}
             required
+            name="currentPassword" // Add the name prop
           />
-          
+
           {/* New Password */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <InputField
+            <InputFieldPassword
               label="New Password"
               placeholder="New Password"
-              type="password"
               value={passwordFormik.values.newPassword}
               onChange={passwordFormik.handleChange}
               error={passwordFormik.touched.newPassword && passwordFormik.errors.newPassword}
               required
+              name="newPassword" // Add the name prop
             />
-            
+
             {/* Confirm New Password */}
-            <InputField
+            <InputFieldPassword
               label="Confirm New Password"
               placeholder="Confirm New Password"
-              type="password"
               value={passwordFormik.values.confirmNewPassword}
               onChange={passwordFormik.handleChange}
               error={passwordFormik.touched.confirmNewPassword && passwordFormik.errors.confirmNewPassword}
               required
+              name="confirmNewPassword" // Add the name prop
             />
           </div>
         </div>
       </div>
 
-      {/* Security Section */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+    
+     {/* Security Section */}
+     <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
         <h2 className="text-[20px] font-bold text-[#333333] mb-6">Security</h2>
         
         <div className="flex justify-between items-center mb-2">
@@ -131,10 +127,10 @@ const SecuritySettings = () => {
           </p>
         </div>
       </div>
-      
+
       {/* Submit Button */}
-      <div className="w-full max-w-[822px] pt-[24px] flex justify-end ">
-        <CustomizedButton text={'Save changes'} />
+      <div className="w-full max-w-[822px] pt-[24px] flex justify-end">
+        <CustomizedButton text="Save changes" />
       </div>
     </div>
   );

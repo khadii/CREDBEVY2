@@ -9,9 +9,7 @@ interface ModalProps {
 }
 
 const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
-  const { interested, setInterested } = useDashboard();
-
-  // Only render if modal is open
+  
   if (!isOpen) return null;
 
   return (
@@ -22,9 +20,7 @@ const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       <div className="relative bg-white rounded-lg w-full max-w-md mx-4">
         {/* Modal Header */}
         <div className="flex pl-6 pt-6 pr-4 justify-between w-full items-center">
-          <h2 className="text-2xl font-semibold text-[#333333]">
-            Delete Role
-          </h2>
+          <h2 className="text-2xl font-semibold text-[#333333]">Delete Role</h2>
           <button
             onClick={onClose}
             className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
@@ -64,7 +60,7 @@ const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
             <button
               onClick={() => {
                 onConfirm();
-                onClose(); 
+                onClose();
               }}
               className="flex-1 py-2 border border-[#FA4D56] bg-[#FA4D56] rounded-[4px] text-xs font-bold text-white hover:bg-[#e53e3e] transition-colors"
             >

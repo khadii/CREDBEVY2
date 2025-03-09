@@ -4,6 +4,7 @@ import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
 import DeleteModal from "../Modals/DeleteModal";
 
 import EditRoleModal from "../Modals/EditRoleModal";
+import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 
 const User_Roles = () => {
   interface RoleData {
@@ -48,16 +49,6 @@ const User_Roles = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState<number | null>(null);
 
-  const CustomCheckbox = ({ id, checked, onChange }: { id: number; checked: boolean; onChange: (id: number) => void }) => {
-    return (
-      <div 
-        className={`w-4 h-4 rounded-md flex items-center justify-center cursor-pointer ${checked ? 'bg-[#156064]' : 'border-2 border-gray-300'}`}
-        onClick={() => onChange(id)}
-      >
-        {checked && <Check size={12} color="white" />}
-      </div>
-    );
-  };
 
   const toggleSelection = (id: number) => {
     setRoleData(roleData.map(role => 
