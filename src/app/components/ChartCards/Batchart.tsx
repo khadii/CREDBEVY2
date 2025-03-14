@@ -81,7 +81,7 @@ const CardChart = ({
           
           {/* Year Selection Modal */}
           {isModalOpen && (
-            <div className="absolute" ref={modalRef}>
+            <div className="absolute right-0 left-0 top-12" ref={modalRef}>
               <YearModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

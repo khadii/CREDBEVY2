@@ -163,7 +163,7 @@ export default function Dashboard({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />
+        {/* <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />x */}
       </div>
     </section>
   );

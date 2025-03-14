@@ -25,6 +25,7 @@ interface TableProps {
     loan_duration: string;
     info_status?: string;
     image: string; // Add image property
+    
   }>;
   titleProps: {
     mainTitle: string;
