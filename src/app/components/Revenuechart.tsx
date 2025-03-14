@@ -18,6 +18,8 @@ interface BarChartCardProps {
   barSize: number;
   showValuesOnTop: boolean;
   tooltip: boolean;
+  selectedYear?:any
+setSelectedYear?:any
 }
 
 export default function BarChartCard({
@@ -30,6 +32,8 @@ export default function BarChartCard({
   barSize,
   showValuesOnTop,
   tooltip,
+  selectedYear,
+setSelectedYear
 }: BarChartCardProps) {
   return (
     <CardChart
@@ -42,6 +46,8 @@ export default function BarChartCard({
       barSize={barSize}
       showValuesOnTop={showValuesOnTop}
       tooltip={tooltip}
+      selectedYear={selectedYear}
+     setSelectedYear={setSelectedYear}
     />
   );
 }

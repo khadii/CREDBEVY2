@@ -16,6 +16,8 @@ interface ChartCardProps {
   revenueChange: string;
   lineColor: string;
   defaultSelectedYear: string;
+  selectedYear:any
+  setSelectedYear:any
 }
 
 export default function ChartCard({
@@ -26,6 +28,8 @@ export default function ChartCard({
   revenueChange,
   lineColor,
   defaultSelectedYear,
+  selectedYear,
+  setSelectedYear
 }: ChartCardProps) {
   return (
     <RevenueChart
@@ -36,6 +40,8 @@ export default function ChartCard({
       revenueChange={revenueChange}
       lineColor={lineColor}
       defaultSelectedYear={defaultSelectedYear}
+      selectedYear={selectedYear}
+      setSelectedYear={setSelectedYear}
     />
   );
 }

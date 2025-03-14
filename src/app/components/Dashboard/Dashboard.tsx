@@ -1,14 +1,23 @@
 "use client";
 
 import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Bigcard from "../BigCard";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
 import Dashboardone from "./reuseabledashboaardone.";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Redux/store";
-import { _Loan_Disbursed, _Loan_volume, _revenue, dashboard_wallet, loan_approval_rates } from "@/app/Redux/dashboard/dashboardThunk";
+import {
+  _Loan_Disbursed,
+  _Loan_volume,
+  _revenue,
+  dashboard_wallet,
+  loan_approval_rates,
+  _pending_loans,
+  _Default_Rate,
+  total_revenue_perer_time,
+} from "@/app/Redux/dashboard/dashboardThunk";
 import { clearWalletBalance } from "@/app/Redux/dashboard/dashboardSlice";
 import toast from "react-hot-toast";
 
@@ -20,13 +29,28 @@ export default function Dashboard() {
     last_week_total_revenue,
     percentage_difference,
     total_loans,
-approved_loans,
-loan_approval_rate,
-loan_disapproval_rate,
-Total_Loan_Disbursed,
-percentage_difference_Total_Loan_Disbursed,
-percentage_difference_Total_Loan_volume,
-Total_Loan_volume,
+    approved_loans,
+    loan_approval_rate,
+    loan_disapproval_rate,
+    Total_Loan_Disbursed,
+    percentage_difference_Total_Loan_Disbursed,
+    percentage_difference_Total_Loan_volume,
+    Total_Loan_volume,
+    pending_loans,
+    total_count,
+    total_defaults_by_month,
+    total_defaults_by_week,
+
+    total_defaults_by_year,
+    total_sum_defaults_by_year,
+    total_sum_defaults_by_month,
+    total_sum_defaults_by_week,
+    total_revenue_by_year,
+    total_revenue_by_month,
+    total_revenue_by_week,
+    total_sum_revenue_by_year,
+    total_sum_revenue_by_month,
+    total_sum_revenue_by_week,
     loading,
     error,
   } = useSelector((state: any) => state.wallet);
@@ -35,6 +59,9 @@ Total_Loan_volume,
     dispatch(_revenue());
     dispatch(_Loan_Disbursed());
     dispatch(_Loan_volume());
+    dispatch(_pending_loans());
+    dispatch(_Default_Rate());
+    dispatch(total_revenue_perer_time());
     dispatch(loan_approval_rates());
     return () => {
       dispatch(clearWalletBalance());
@@ -50,51 +77,93 @@ Total_Loan_volume,
     },
     {
       title: "Total Loan Disbursed",
-      amount: Total_Loan_Disbursed, 
-      percentage: percentage_difference_Total_Loan_Disbursed +"%",
+      amount: Total_Loan_Disbursed,
+      percentage: percentage_difference_Total_Loan_Disbursed + "%",
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Loan Volume",
       amount: Total_Loan_volume,
-      percentage: percentage_difference_Total_Loan_volume+"%",
+      percentage: percentage_difference_Total_Loan_volume + "%",
       icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
     },
   ];
 
-  const chartData = [
-    { month: "January", value: 16 },
-    { month: "February", value: 12 },
-    { month: "March", value: 10 },
-    { month: "April", value: 8 },
-    { month: "May", value: 6 },
-    { month: "June", value: 4 },
-    { month: "July", value: 2 },
-    { month: "August", value: 16 },
-    { month: "September", value: 12 },
-    { month: "October", value: 10 },
-    { month: "November", value: 8 },
-    { month: "December", value: 6 },
-  ];
+  const currentYear = new Date().getFullYear();
+  const lineChartDefaultSelectedYear = "year";
+  const [linechartselectedYear, setlinechartSelectedYear] = useState(
+    lineChartDefaultSelectedYear
+  );
+  const total_sum_defaults =
+    linechartselectedYear === "year"
+      ? total_sum_defaults_by_year
+      : linechartselectedYear === "months"
+      ? total_sum_defaults_by_month
+      : total_sum_defaults_by_week;
+  const chartData =
+    linechartselectedYear === "year"
+      ? total_defaults_by_year?.map((item: any) => ({
+          month: new Date(currentYear, item.month - 1).toLocaleString(
+            "default",
+            { month: "long" }
+          ),
+          value: item.default_percentage,
+        }))
+      : linechartselectedYear === "months"
+      ? total_defaults_by_month?.map((item: any) => ({
+          month: `${item.day}`,
+          value: item.default_percentage,
+        }))
+      : total_defaults_by_week?.map((item: any) => ({
+          month: item.day,
+          value: parseFloat(item.default_percentage),
+        }));
 
-  const barChartData = [
-    { name: "Jan", revenue: 10 },
-    { name: "Feb", revenue: 15 },
-    { name: "Mar", revenue: 20 },
-    { name: "Apr", revenue: 25 },
-    { name: "May", revenue: 30 },
-    { name: "Jun", revenue: 35 },
-    { name: "Jul", revenue: 40 },
-    { name: "Aug", revenue: 45 },
-    { name: "Sep", revenue: 50 },
-    { name: "Oct", revenue: 55 },
-    { name: "Nov", revenue: 60 },
-    { name: "Dec", revenue: 65 },
-  ];
+  const formattedTotalSumDefaults = new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+  }).format(total_sum_defaults);
 
+  const barChartDefaultSelectedYear = "year";
+
+  const [barchartselectedYear, setbarchartSelectedYear] = useState(
+    barChartDefaultSelectedYear
+  );
+
+  const total_sum_revenue_generated =
+  barchartselectedYear === "year"
+      ? total_sum_revenue_by_year
+      : barchartselectedYear === "months"
+      ? total_sum_revenue_by_month
+      : total_sum_revenue_by_week;
+
+      const barChartData =
+      barchartselectedYear === "year"
+        ? Object.entries(total_revenue_by_year || {}).map(([month, value]) => ({
+            name: month, // Month names (e.g., "Jan", "Feb")
+            revenue: value
+              ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+              : 0,
+          }))
+        : barchartselectedYear === "months"
+        ? Object.entries(total_revenue_by_month || {}).map(([day, value]) => ({
+            name: `${day}`, // Days (e.g., "Day 1", "Day 2")
+            revenue: value
+              ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+              : 0,
+          }))
+        : Object.entries(total_revenue_by_week || {}).map(([day, value]) => ({
+            name: day, // Weekday names (e.g., "Sun", "Mon")
+            revenue: value
+              ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+              : 0,
+          }));
+    
+
+  // { name: "Jan", revenue: 10 },
   const pieChartData = [
-    { name: "Approved", value: loan_approval_rate?? "N/A",  color: "#156064" },
-    { name: "Unapproved", value: loan_disapproval_rate?? "N/A", color: "#EC7910" },
+    { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
+    { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
   ];
 
   const progressBarData = [
@@ -108,52 +177,6 @@ Total_Loan_volume,
       style: "currency",
       currency: "NGN",
     }).format(value);
-
-  const requests = [
-    {
-      name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`, // Number with prefix
-      amount: `${formatCurrency(134000000.0)}`, // Number with prefix
-      cs: 743, // Number without prefix
-      ir: `${23}%`, // Number with suffix
-      duration: `${3} Months`, // Number with suffix
-      status: "Interested",
-    },
-    {
-      name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`,
-      amount: `${formatCurrency(134000000.0)}`,
-      cs: 743,
-      ir: `${23}%`,
-      duration: `${6} Months`,
-      status: "Not Interested",
-    },
-    {
-      name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`,
-      amount: `${formatCurrency(134000000.0)}`,
-      cs: 743,
-      ir: `${23}%`,
-      duration: `${6} Months`,
-      status: "Interested",
-    },
-    {
-      name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`,
-      amount: `${formatCurrency(134000000.0)}`,
-      cs: 743,
-      ir: `${23}%`,
-      duration: `${6} Months`,
-    },
-    {
-      name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`,
-      amount: `${formatCurrency(134000000.0)}`,
-      cs: 743,
-      ir: `${23}%`,
-      duration: `${6} Months`,
-    },
-  ];
 
   const headers = [
     "Name",
@@ -177,7 +200,7 @@ Total_Loan_volume,
 
   const tableTitleProps = {
     mainTitle: "Pending Loan request",
-    requestCount: "200 requests",
+    requestCount: total_count + "" + " requests",
     subtitle: "Loans awaiting a decision",
   };
   const handleSearchClick = () => {
@@ -240,27 +263,31 @@ Total_Loan_volume,
               barChartData={barChartData}
               pieChartData={pieChartData}
               progressBarData={progressBarData}
-              tableData={requests}
+              tableData={pending_loans}
               tableHeaders={tableHeaders}
               tableTitleProps={tableTitleProps}
               onSearchClick={handleSearchClick}
               onFilterClick={handleFilterClick}
               onSeeAllClick={handleSeeAllClick}
               onFundWallet={handleFundWallet}
-              barChartTitle="Loan Disbursement"
+              barChartTitle="Revenue Generated"
               barChartDescription="Total loan amount disbursed over time."
-              barChartTotalAmount="₦ 50,000,000.00"
+              barChartTotalAmount={total_sum_revenue_generated}
               barChartHighlightBar="Dec"
               barChartHighlightColor="#EC7910"
               pieChartTitle="Loan Approval Rate"
               pieChartDescription="The percentage of loan requests approved."
-              pieChartTotal={total_loans?? "N/A"}
+              pieChartTotal={total_loans ?? "N/A"}    
               lineChartTitle="Default Rate"
               lineChartDescription="Total unpaid loan value."
-              lineChartTotalRevenue="₦ 20,000,000.00"
+              lineChartTotalRevenue={formattedTotalSumDefaults}
               lineChartRevenueChange="(30,00)"
               lineChartLineColor="#0F4C5C"
-              lineChartDefaultSelectedYear="This Year"
+              lineChartDefaultSelectedYear={lineChartDefaultSelectedYear}
+              selectedYear={linechartselectedYear}
+              setSelectedYear={setlinechartSelectedYear}
+              barselectedYear={barchartselectedYear}
+              barsetSelectedYear={setbarchartSelectedYear}
               progressBarTitle="Sales Performance"
               progressBarDescription="Total sales performance of different products"
               href={"#"}
@@ -271,4 +298,3 @@ Total_Loan_volume,
     </section>
   );
 }
-

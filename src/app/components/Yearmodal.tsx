@@ -17,17 +17,24 @@ const YearModal = ({ isOpen, onClose, onSelect }: YearModalProps) => {
       
         <div className="space-y-3">
           <button
-            onClick={() => onSelect("This Year")}
+            onClick={() => onSelect("year")}
             className="w-full text-center  text-xs text-black"
           >
-            This Year
+           year
           </button>
           <button
-            onClick={() => onSelect("Last Year")}
+            onClick={() => onSelect("months")}
             className="w-full text-center  text-xs text-black"
           >
-            Last Year
+           months
           </button>
+          <button
+            onClick={() => onSelect("weeks")}
+            className="w-full text-center  text-xs text-black"
+          >
+         weeks
+          </button>
+          
         </div>
       
       </div>

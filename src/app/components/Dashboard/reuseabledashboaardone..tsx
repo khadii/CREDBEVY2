@@ -40,13 +40,15 @@ interface ProgressBarData {
 }
 
 interface TableData {
-  name: string;
-  income: string;
-  amount: string;
-  cs: number;
-  ir: string;
-  duration: string;
-  status?: string;
+  first_name: string;
+  last_name: string;
+  average_income: string;
+  amount_requested: string;
+  credit_score: number;
+  interest_rate: string;
+  loan_duration: string;
+  info_status?: string;
+  image: string; // Add image property
 }
 
 interface TitleProps {
@@ -84,7 +86,11 @@ interface DashboardProps {
   lineChartDefaultSelectedYear: string;
   progressBarTitle: string;
   progressBarDescription: string;
-  href:string
+  href: string;
+  selectedYear?:any
+  setSelectedYear?:any
+  barselectedYear?:any
+  barsetSelectedYear?:any
 }
 
 export default function Dashboardone({
@@ -116,7 +122,12 @@ export default function Dashboardone({
   lineChartDefaultSelectedYear,
   progressBarTitle,
   progressBarDescription,
-  href
+  href,
+  selectedYear,
+  setSelectedYear,
+  barselectedYear,
+  barsetSelectedYear
+  
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -145,6 +156,8 @@ export default function Dashboardone({
                 barSize={11}
                 showValuesOnTop={true}
                 tooltip={true}
+                selectedYear={barselectedYear}
+                setSelectedYear={barsetSelectedYear}
               />
             }
             rightContent={
@@ -166,6 +179,8 @@ export default function Dashboardone({
                 revenueChange={lineChartRevenueChange}
                 lineColor={lineChartLineColor}
                 defaultSelectedYear={lineChartDefaultSelectedYear}
+                selectedYear={selectedYear}
+                setSelectedYear={setSelectedYear}
               />
             }
             rightContent={

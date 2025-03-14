@@ -18,6 +18,8 @@ interface RevenueChartProps {
   revenueChange?: string;
   lineColor?: string;
   defaultSelectedYear?: string;
+  selectedYear?:any, 
+  setSelectedYear?:any
 }
 
 const RevenueChart: React.FC<RevenueChartProps> = ({
@@ -27,15 +29,17 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
   totalRevenue,
   revenueChange,
   lineColor = "#0F4C5C",
-  defaultSelectedYear = "This Year",
+  defaultSelectedYear = "year",
+  selectedYear, 
+  setSelectedYear
 }) => {
-  const [selectedYear, setSelectedYear] = useState(defaultSelectedYear);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const handleSelectYear = (year: string) => {
     setSelectedYear(year);
-    setIsModalOpen(false); // Close the modal after selection
+    setIsModalOpen(false); 
   };
 
   // Effect to close modal when clicking outside
@@ -77,7 +81,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
           
           {/* Year Selection Modal */}
           {isModalOpen && (
-            <div className="absolute" ref={modalRef}>
+            <div className="absolute right-0 left-0 top-12" ref={modalRef}>
               <YearModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

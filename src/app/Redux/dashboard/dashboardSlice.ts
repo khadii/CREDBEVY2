@@ -5,6 +5,9 @@ import {
   _revenue,
   dashboard_wallet,
   loan_approval_rates,
+  _pending_loans,
+  _Default_Rate,
+  total_revenue_perer_time,
 } from "./dashboardThunk";
 
 interface WalletState {
@@ -20,8 +23,22 @@ interface WalletState {
   loan_disapproval_rate?: number | null;
   Total_Loan_volume?: number | null;
   Total_Loan_Disbursed?: number | null;
-  percentage_difference_Total_Loan_Disbursed?:number
-  percentage_difference_Total_Loan_volume?:number
+  percentage_difference_Total_Loan_Disbursed?: number;
+  percentage_difference_Total_Loan_volume?: number;
+  total_count?: number;
+  pending_loans?: any;
+  total_defaults_by_year?:any
+  total_defaults_by_month?:any
+  total_defaults_by_week?:any
+  total_sum_defaults_by_year?:any
+  total_sum_defaults_by_month?:any
+  total_sum_defaults_by_week?:any
+  total_revenue_by_year ?:any
+  total_revenue_by_month?:any
+  total_revenue_by_week?:any
+total_sum_revenue_by_year?:any
+  total_sum_revenue_by_month?:any
+  total_sum_revenue_by_week?:any
 }
 
 // Initial state
@@ -34,8 +51,20 @@ const initialState: WalletState = {
   percentage_difference: null,
   Total_Loan_volume: null,
   Total_Loan_Disbursed: null,
-  percentage_difference_Total_Loan_Disbursed:0,
-  percentage_difference_Total_Loan_volume:0
+  percentage_difference_Total_Loan_Disbursed: 0,
+  percentage_difference_Total_Loan_volume: 0,
+  total_count: 0,
+  pending_loans: null,
+  total_defaults_by_year:null,
+  total_defaults_by_month:null,
+  total_defaults_by_week:null,
+  total_sum_defaults_by_year:null,
+  total_sum_defaults_by_month:null,
+  total_sum_defaults_by_week:null,
+  total_revenue_by_year:null,
+  total_revenue_by_month:null,
+  total_revenue_by_week:null
+  
 };
 
 interface WalletResponse {
@@ -146,10 +175,9 @@ const walletSlice = createSlice({
         const { error, data, message } = action.payload;
         console.log({ action: action.payload });
         if (!error) {
-          
           state.Total_Loan_Disbursed = data.total_loan_disbursed;
-          state.percentage_difference_Total_Loan_Disbursed=data.percentage_difference
-
+          state.percentage_difference_Total_Loan_Disbursed =
+            data.percentage_difference;
         } else {
           state.error = message;
         }
@@ -169,9 +197,9 @@ const walletSlice = createSlice({
         const { error, data, message } = action.payload;
         console.log({ action: action.payload });
         if (!error) {
-          
           state.Total_Loan_volume = data.total_loan_count;
-          state.percentage_difference_Total_Loan_volume=data.percentage_difference
+          state.percentage_difference_Total_Loan_volume =
+            data.percentage_difference;
         } else {
           state.error = message;
         }
@@ -180,16 +208,78 @@ const walletSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+
+      //pending loan
+      .addCase(_pending_loans.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(_pending_loans.fulfilled, (state, action) => {
+        state.loading = false;
+        const { error, data, message } = action.payload;
+        console.log({ action: action.payload });
+        if (!error) {
+          state.total_count = data.total_count;
+          state.pending_loans = data.pending_loans;
+        } else {
+          state.error = message;
+        }
+      })
+      .addCase(_pending_loans.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //_Default_Rate
+      .addCase(_Default_Rate.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(_Default_Rate.fulfilled, (state, action) => {
+        state.loading = false;
+        const { error, data, message } = action.payload;
+        console.log({ action: action.payload });
+        if (!error) {
+          state.total_defaults_by_year = data.total_defaults_by_year;
+          state.total_defaults_by_month=data.total_defaults_by_month;
+          state.total_defaults_by_week=data.total_defaults_by_week;
+          state.total_sum_defaults_by_year=data.total_sum_defaults_by_year
+          state.total_sum_defaults_by_month=data.total_sum_defaults_by_month
+          state.total_sum_defaults_by_week=data.total_sum_defaults_by_week
+         
+        } else {
+          state.error = message;
+        }
+      })
+      .addCase(_Default_Rate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //total_revenue_perer_time
+      .addCase(total_revenue_perer_time.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(total_revenue_perer_time.fulfilled, (state, action) => {
+        state.loading = false;
+        const { error, data, message } = action.payload;
+        console.log({ action: action.payload });
+        if (!error) {
+          state.total_revenue_by_year = data.total_revenue_by_year;
+          state.total_revenue_by_month=data.total_revenue_by_month;
+          state.total_revenue_by_week=data.total_revenue_by_week;
+          state.total_sum_revenue_by_year=data.total_sum_revenue_by_year
+          state.total_sum_revenue_by_month=data.total_sum_revenue_by_month
+          state.total_sum_revenue_by_week=data.total_sum_revenue_by_week
+         
+        } else {
+          state.error = message;
+        }
+      })
+      .addCase(total_revenue_perer_time.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
   },
 });
 export const { clearWalletBalance } = walletSlice.actions;
 export default walletSlice.reducer;
-
-
-// "data": {
-//   "error": false,
-//   "": 150000,
-//   "last_week_loan_disbursed": 0,
-//   "current_week_loan_disbursed": 150000,
-//   "percentage_difference": 100
-// }

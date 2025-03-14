@@ -136,6 +136,83 @@ export const _Loan_volume = createAsyncThunk(
 
 
 
+export const _pending_loans = createAsyncThunk(
+  "dashboard/pending-loans",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("authToken");
+      console.log("Token from cookies:", token);
+      
+      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/pending-loans", {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;  
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.message || "unauthorised");
+    } else if (error.request) {
+      return rejectWithValue("No response from the server. Please check your network connection.");
+    } else {
+      return rejectWithValue("An unexpected error occurred. Please try again.");
+    }
+  }
+}
+);
+
+export const _Default_Rate = createAsyncThunk(
+  "dashboard/Default_Rate",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("authToken");
+      console.log("Token from cookies:", token);
+      
+      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/default-rate", {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;  
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.message || "unauthorised");
+    } else if (error.request) {
+      return rejectWithValue("No response from the server. Please check your network connection.");
+    } else {
+      return rejectWithValue("An unexpected error occurred. Please try again.");
+    }
+  }
+}
+);
+
+export const total_revenue_perer_time = createAsyncThunk(
+  "dashboard/total_revenue_perer_time",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("authToken");
+      console.log("Token from cookies:", token);
+      
+      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/total-revenue-per-time", {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;  
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.message || "unauthorised");
+    } else if (error.request) {
+      return rejectWithValue("No response from the server. Please check your network connection.");
+    } else {
+      return rejectWithValue("An unexpected error occurred. Please try again.");
+    }
+  }
+}
+);
+
+
+
 
 // export const loan_approval_rates = createAsyncThunk(
 //   "dashboard/loan_approval_rate",

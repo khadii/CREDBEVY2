@@ -21,6 +21,8 @@ type CardChartProps = {
   barSize?: number;
   showValuesOnTop?: boolean;
   tooltip?: boolean;
+  selectedYear?:any
+  setSelectedYear?:any
 };
 
 const CardChart = ({
@@ -33,8 +35,10 @@ const CardChart = ({
   barSize = 11,
   showValuesOnTop = true,
   tooltip = true,
+  selectedYear,
+  setSelectedYear
 }: CardChartProps) => {
-  const [selectedYear, setSelectedYear] = useState("This Year");
+  // const [selectedYear, setSelectedYear] = useState("This Year");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,7 +100,7 @@ const CardChart = ({
       </div>
 
       {/* Chart */}
-      <div className="">
+      <div className="w-full">
         <BarChartComponent
           data={data}
           highlightBar={highlightBar}
