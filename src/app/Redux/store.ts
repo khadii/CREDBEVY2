@@ -1,10 +1,12 @@
 // store.ts
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../Redux/auth/authSlice'
+import walletReducer from '../Redux/dashboard/dashboardSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    wallet: walletReducer,
   },
 });
 

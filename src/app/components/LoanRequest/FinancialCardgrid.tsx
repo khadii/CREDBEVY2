@@ -7,8 +7,8 @@ const FinancialGrid: React.FC = () => {
   return (
     <><div className=" bg-blue-50 flex w-full py-[53px] pr-[22px]">
       <div className="grid grid-cols-2 w-full  items-start">
-        <div className='w-full pb-[20px]'>
-          <CreditScoreGauge />
+        <div className='w-full pt-[55px]'>
+          <CreditScoreGauge creditScore={660} />
         </div>
         <div className="grid grid-cols-2 gap-5 w-full pt-[40px] ">
           <Card

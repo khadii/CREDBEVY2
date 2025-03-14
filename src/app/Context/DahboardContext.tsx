@@ -40,9 +40,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 };
 export const useDashboard = () => {
   const context = useContext(DashboardContext);
-  if (!context) {
-    throw new Error("useDashboard must be used within a DashboardProvider");
-  }
+  // if (!context) {
+  //   throw new Error("useDashboard must be used within a DashboardProvider");
+  // }
   return context;
 };
 

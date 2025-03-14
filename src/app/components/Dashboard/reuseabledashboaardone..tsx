@@ -11,9 +11,9 @@ import LoanApprovalChart from "../ChartCards/Piechart";
 import ProgressBarCard from "../Loanperformance";
 
 interface Stat {
-  title: string;
-  amount: string;
-  percentage: string;
+  title: any;
+  amount: any;
+  percentage: any;
   icon: JSX.Element;
 }
 
@@ -29,7 +29,7 @@ interface BarChartData {
 
 interface PieChartData {
   name: string;
-  value: number;
+  value: any;
   color: string;
 }
 

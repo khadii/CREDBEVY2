@@ -3,9 +3,9 @@ import { BsArrowUpRightCircle } from "react-icons/bs";
 import { SquareActivity } from "lucide-react"; // Assuming you're using Lucide React for SquareActivity
 
 interface CardProps {
-  title: string;
-  amount: string;
-  percentage: string;
+  title: any;
+  amount: any;
+  percentage: any;
   icon: ReactNode;
 }
 
@@ -24,7 +24,7 @@ const Card = ({ title, amount, percentage, icon }: CardProps) => {
             <p className="text-3xl font-bold text-[#333333] mr-2">₦</p>
             )}
             <h2 className="text-3xl font-extrabold text-[#333333] truncate">
-              {amount.replace("₦", "").trim()} {/* Remove the ₦ symbol from the amount */}
+              {amount} 
             </h2>
           </div>
           <div className="bg-[#EDFCF1] rounded-full flex items-center space-x-1 px-2 py-1 ml-2">
