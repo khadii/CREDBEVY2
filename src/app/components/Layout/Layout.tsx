@@ -1,8 +1,28 @@
-import React from 'react';
+'use client'
+import React, { useEffect } from 'react';
 import { Sidebar } from './SideBar/SIdeBar';
 import TopBar from './navBar/NavBar';
+import { AppDispatch, RootState } from '@/app/Redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { checkTokenConsistency, revalidateToken } from '@/app/Redux/auth/authSlice';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+
+  const { isAuthenticated, loading, error } = useSelector((state: RootState) => state.auth);
+  const router=useRouter()
+  useEffect(()=>{
+   if (!isAuthenticated){
+    router.push('/')
+   }
+  })
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(revalidateToken()); 
+    dispatch(checkTokenConsistency()); 
+  }, [dispatch]);
+
   return (
     <div className='w-full'>
       <div className='flex  flex-col w-full'>

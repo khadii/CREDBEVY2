@@ -1,0 +1,25 @@
+<svg width="149" height="149" viewBox="0 0 149 149" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="149" height="149" fill="url(#pattern0_117_68)"/>
+<g clip-path="url(#clip0_117_68)">
+<rect x="24.8334" y="24.8333" width="99.3333" height="99.3333" rx="37.25" fill="url(#pattern1_117_68)"/>
+<path opacity="0.5" d="M117.958 74.5C117.958 68.7929 116.834 63.1418 114.65 57.8692C112.466 52.5966 109.265 47.8058 105.23 43.7703C101.194 39.7348 96.4034 36.5337 91.1307 34.3497C85.8581 32.1657 80.207 31.0416 74.5 31.0416C68.7929 31.0416 63.1418 32.1657 57.8692 34.3497C52.5966 36.5337 47.8058 39.7348 43.7703 43.7703C39.7348 47.8058 36.5337 52.5966 34.3497 57.8692C32.1657 63.1418 31.0416 68.793 31.0416 74.5C31.0416 80.207 32.1657 85.8582 34.3497 91.1308C36.5337 96.4034 39.7348 101.194 43.7703 105.23C47.8058 109.265 52.5966 112.466 57.8692 114.65C63.1418 116.834 68.7929 117.958 74.5 117.958C80.207 117.958 85.8581 116.834 91.1308 114.65C96.4034 112.466 101.194 109.265 105.23 105.23C109.265 101.194 112.466 96.4034 114.65 91.1308C116.834 85.8581 117.958 80.207 117.958 74.5L117.958 74.5Z" stroke="#141414" stroke-width="3.10417" stroke-linecap="round" stroke-dasharray="3.1 12.42"/>
+<circle cx="6.20833" cy="6.20833" r="6.20833" transform="matrix(1 0 0 -1 68.2916 80.7083)" fill="#141414"/>
+<path d="M117.958 74.5C117.958 74.591 117.958 74.682 117.957 74.773" stroke="#141414" stroke-width="12.4167" stroke-linecap="round"/>
+<path d="M117.958 74.5C117.958 74.409 117.958 74.3179 117.957 74.2269" stroke="#141414" stroke-width="12.4167" stroke-linecap="round"/>
+<circle cx="6.20833" cy="6.20833" r="6.20833" transform="matrix(-1 0 0 1 80.7084 68.2917)" fill="#141414"/>
+<path d="M31.0417 74.5C31.0417 74.409 31.042 74.3179 31.0426 74.2269" stroke="#141414" stroke-width="12.4167" stroke-linecap="round"/>
+<path d="M31.0417 74.5C31.0417 74.591 31.042 74.682 31.0426 74.773" stroke="#141414" stroke-width="12.4167" stroke-linecap="round"/>
+</g>
+<defs>
+<pattern id="pattern0_117_68" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_117_68"/>
+</pattern>
+<pattern id="pattern1_117_68" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_117_68"/>
+</pattern>
+<clipPath id="clip0_117_68">
+<rect x="24.8334" y="24.8333" width="99.3333" height="99.3333" rx="37.25" fill="white"/>
+</clipPath>
+<image id="image0_117_68" width="1" height="1" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBAQUA+v8AAAAAAAAFAAFkeJU4AAAAAElFTkSuQmCC"/>
+</defs>
+</svg>

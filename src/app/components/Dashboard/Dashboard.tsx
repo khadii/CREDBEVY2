@@ -21,8 +21,10 @@ import {
 } from "@/app/Redux/dashboard/dashboardThunk";
 import { clearWalletBalance } from "@/app/Redux/dashboard/dashboardSlice";
 import toast from "react-hot-toast";
+import SpinningFaceExact from "../credbevyLoader";
 
 export default function Dashboard() {
+  
   const dispatch = useDispatch<AppDispatch>();
   const {
     balance,
@@ -218,7 +220,7 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="w-full justify-center items-center"><SpinningFaceExact/></div>;
   }
 
   if (error) {
