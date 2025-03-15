@@ -212,6 +212,31 @@ export const total_revenue_perer_time = createAsyncThunk(
 );
 
 
+export const _loan_performance = createAsyncThunk(
+  "dashboard/_loan_performance",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("authToken");
+      console.log("Token from cookies:", token);
+      
+      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/loan-performance", {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;  
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.message || "unauthorised");
+    } else if (error.request) {
+      return rejectWithValue("No response from the server. Please check your network connection.");
+    } else {
+      return rejectWithValue("An unexpected error occurred. Please try again.");
+    }
+  }
+}
+);
+
 
 
 // export const loan_approval_rates = createAsyncThunk(

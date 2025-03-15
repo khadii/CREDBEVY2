@@ -17,27 +17,27 @@ type DataItem = {
 
 type BarChartComponentProps = {
   data: DataItem[];
-  barColor?: string; // Optional prop for custom bar color
-  highlightBar?: string; // Optional prop to highlight a specific bar (e.g., "Jan")
-  highlightColor?: string; // Optional prop for the highlight color
-  barSize?: number; // Optional prop for bar size
-  showValuesOnTop?: boolean; // Optional prop to show values on top of bars
-  tooltip?: boolean; // Optional prop to enable/disable tooltip
+  barColor?: string;
+  highlightBar?: string; 
+  highlightColor?: string; 
+  barSize?: number; 
+  showValuesOnTop?: boolean; 
+  tooltip?: boolean; 
 };
 
 const BarChartComponent = ({
   data,
-  barColor = "#0F4C5C", // Default bar color
+  barColor = "#0F4C5C", 
   highlightBar,
-  highlightColor = "#FF0000", // Default highlight color
-  barSize = 11, // Default bar size
-  showValuesOnTop = true, // Show values on top by default
-  tooltip = true, // Enable tooltip by default
+  highlightColor = "#FF0000",
+  barSize = 11,
+  showValuesOnTop = true,
+  tooltip = true, 
 }: BarChartComponentProps) => {
   // Custom Bar Shape for dynamic coloring
   const renderCustomBar = (props: any) => {
     const { x, y, width, height, name } = props;
-    const fillColor = name === highlightBar ? highlightColor : barColor; // Conditional color
+    const fillColor = name === highlightBar ? highlightColor : barColor; 
     return (
       <rect
         x={x}
@@ -47,7 +47,7 @@ const BarChartComponent = ({
         fill={fillColor}
         rx={5} // Rounded corners
         ry={5}
-        // style={{ boxShadow: 'none' }}
+      
       
         
       />
@@ -87,31 +87,16 @@ const BarChartComponent = ({
           width={30}
           tick={{ fill: "#333333", fontSize: 12 }}
         />
-         <Tooltip content={<CustomTooltip />}
-          wrapperStyle={{ backgroundColor: 'transparent', border: 'none',height:257,}}
-          // contentStyle={{ backgroundColor: 'white', borderRadius: '8px', padding: '10px' }}
-          // itemStyle={{ color: 'blue' }}
-          // labelStyle={{ fontWeight: 'bold', color: 'black' }}
-          // cursor={{  strokeWidth: 0,}}
-          // offset={15}
-           />
-        {/* {tooltip && <Tooltip content={<CustomTooltip />} />} */}
+     <Tooltip 
+  content={<CustomTooltip />}
+  wrapperStyle={{ backgroundColor: 'transparent', border: 'none', height: 257 }}
+  cursor={false} 
+/>
         <Bar
           dataKey="revenue"
-          shape={renderCustomBar} // Use custom bar shape
+          shape={renderCustomBar}
           barSize={barSize}
         >
-          {/* {showValuesOnTop && (
-            <LabelList
-              dataKey="revenue"
-              position="top"
-              fill="#000" // Text color
-              fontSize={12} // Text size
-              formatter={(value: number) => `₦${value}M`} // Format the value
-              // enableBackground={'blue'}
-            />
-          )} */}
-        
         </Bar>
        
       </RechartsBarChart>

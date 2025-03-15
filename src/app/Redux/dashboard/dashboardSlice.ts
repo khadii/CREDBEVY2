@@ -8,6 +8,7 @@ import {
   _pending_loans,
   _Default_Rate,
   total_revenue_perer_time,
+  _loan_performance,
 } from "./dashboardThunk";
 
 interface WalletState {
@@ -39,6 +40,11 @@ interface WalletState {
 total_sum_revenue_by_year?:any
   total_sum_revenue_by_month?:any
   total_sum_revenue_by_week?:any
+  // product_name?:any
+  // approved_loans_count?:any
+  //  approved_count?:any
+  //  percentage?:any
+  loan_performance?:any
 }
 
 // Initial state
@@ -63,7 +69,13 @@ const initialState: WalletState = {
   total_sum_defaults_by_week:null,
   total_revenue_by_year:null,
   total_revenue_by_month:null,
-  total_revenue_by_week:null
+  total_revenue_by_week:null,
+  loan_performance:null
+  // product_name:null,
+  // approved_loans_count:null,
+  //    approved_count:null,
+  //  percentage:null,
+
   
 };
 
@@ -276,6 +288,30 @@ const walletSlice = createSlice({
         }
       })
       .addCase(total_revenue_perer_time.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+
+
+
+      //_loan_performance
+      .addCase(_loan_performance.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(_loan_performance.fulfilled, (state, action) => {
+        state.loading = false;
+        const { error, data, message } = action.payload;
+        console.log("Fulfilled Payload:", action.payload); 
+        if (!error) {
+          state.loan_performance = data;
+          console.log("Loan Performance Data:", data); 
+        } else {
+          state.error = message;
+        }
+      })
+      .addCase(_loan_performance.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

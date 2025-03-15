@@ -17,6 +17,7 @@ import {
   _pending_loans,
   _Default_Rate,
   total_revenue_perer_time,
+  _loan_performance,
 } from "@/app/Redux/dashboard/dashboardThunk";
 import { clearWalletBalance } from "@/app/Redux/dashboard/dashboardSlice";
 import toast from "react-hot-toast";
@@ -51,6 +52,7 @@ export default function Dashboard() {
     total_sum_revenue_by_year,
     total_sum_revenue_by_month,
     total_sum_revenue_by_week,
+    loan_performance,
     loading,
     error,
   } = useSelector((state: any) => state.wallet);
@@ -61,6 +63,7 @@ export default function Dashboard() {
     dispatch(_Loan_volume());
     dispatch(_pending_loans());
     dispatch(_Default_Rate());
+    dispatch(_loan_performance());
     dispatch(total_revenue_perer_time());
     dispatch(loan_approval_rates());
     return () => {
@@ -90,18 +93,18 @@ export default function Dashboard() {
   ];
 
   const currentYear = new Date().getFullYear();
-  const lineChartDefaultSelectedYear = "year";
+  const lineChartDefaultSelectedYear = "This Year";
   const [linechartselectedYear, setlinechartSelectedYear] = useState(
     lineChartDefaultSelectedYear
   );
   const total_sum_defaults =
-    linechartselectedYear === "year"
+    linechartselectedYear === "This Year"
       ? total_sum_defaults_by_year
-      : linechartselectedYear === "months"
+      : linechartselectedYear === "This Month"
       ? total_sum_defaults_by_month
       : total_sum_defaults_by_week;
   const chartData =
-    linechartselectedYear === "year"
+    linechartselectedYear === "This Year"
       ? total_defaults_by_year?.map((item: any) => ({
           month: new Date(currentYear, item.month - 1).toLocaleString(
             "default",
@@ -109,7 +112,7 @@ export default function Dashboard() {
           ),
           value: item.default_percentage,
         }))
-      : linechartselectedYear === "months"
+      : linechartselectedYear === "This Month"
       ? total_defaults_by_month?.map((item: any) => ({
           month: `${item.day}`,
           value: item.default_percentage,
@@ -124,28 +127,28 @@ export default function Dashboard() {
     currency: "NGN",
   }).format(total_sum_defaults);
 
-  const barChartDefaultSelectedYear = "year";
+  const barChartDefaultSelectedYear = "This Year";
 
   const [barchartselectedYear, setbarchartSelectedYear] = useState(
     barChartDefaultSelectedYear
   );
 
   const total_sum_revenue_generated =
-  barchartselectedYear === "year"
+  barchartselectedYear === "This Year"
       ? total_sum_revenue_by_year
-      : barchartselectedYear === "months"
+      : barchartselectedYear === "This Month"
       ? total_sum_revenue_by_month
       : total_sum_revenue_by_week;
 
       const barChartData =
-      barchartselectedYear === "year"
+      barchartselectedYear === "This Year"
         ? Object.entries(total_revenue_by_year || {}).map(([month, value]) => ({
             name: month, // Month names (e.g., "Jan", "Feb")
             revenue: value
               ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
               : 0,
           }))
-        : barchartselectedYear === "months"
+        : barchartselectedYear === "This Month"
         ? Object.entries(total_revenue_by_month || {}).map(([day, value]) => ({
             name: `${day}`, // Days (e.g., "Day 1", "Day 2")
             revenue: value
@@ -166,27 +169,23 @@ export default function Dashboard() {
     { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
   ];
 
-  const progressBarData = [
-    { label: "Product A", value: 50000, maxValue: 100000 },
-    { label: "Product B", value: 75000, maxValue: 100000 },
-    { label: "Product C", value: 90000, maxValue: 100000 },
-    { label: "Product D", value: 30000, maxValue: 100000 },
-  ];
-  const formatCurrency = (value: any) =>
-    new Intl.NumberFormat("en-NG", {
-      style: "currency",
-      currency: "NGN",
-    }).format(value);
+  // const progressBarData = [
+  //   { label: "Product A", value: 50000, maxValue: 100000 },
+  //   { label: "Product B", value: 75000, maxValue: 100000 },
+  //   { label: "Product C", value: 90000, maxValue: 100000 },
+  //   { label: "Product D", value: 30000, maxValue: 100000 },
+  //   { label: "Product D", value: 30000, maxValue: 100000 },
+  //   { label: "Product D", value: 30000, maxValue: 100000 },
+  //   { label: "Product D", value: 30000, maxValue: 100000 },
+  // ];
 
-  const headers = [
-    "Name",
-    "Average Income",
-    "Amount Requested",
-    "C.S",
-    "I.R",
-    "Duration",
-    "Quick Actions",
-  ];
+  const progressBarData = loan_performance?.map((item: any) => ({
+    label: item.product_name,
+    value: item.approved_loans_count,
+    maxValue: item.total_count,
+  })) || [];
+
+
 
   const tableHeaders = [
     "Name",

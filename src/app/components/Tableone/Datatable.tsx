@@ -4,7 +4,7 @@ import {
   LucideThumbsDown,
   LucideChevronDown,
   Check,
-} from "lucide-react"; // Import Check from lucide-react
+} from "lucide-react"; 
 import { FaCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Modal from "../Modals/indicateInterest";
