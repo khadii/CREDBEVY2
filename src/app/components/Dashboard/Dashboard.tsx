@@ -220,7 +220,7 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return <div className="w-full justify-center items-center"><SpinningFaceExact/></div>;
+    return <div className="w-full justify-center items-center h-screen"><SpinningFaceExact/></div>;
   }
 
   if (error) {
