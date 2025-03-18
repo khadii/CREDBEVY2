@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CollateralSelection from "../FormInputs/CollateralSelection";
@@ -9,15 +9,25 @@ import { CircleAlert } from "lucide-react";
 import AmountInput from "../FormInputs/Input";
 import { formatNaira } from "@/app/lib/utillity/nairaFormat";
 import CustomizedButton from "../CustomizedButton";
+import { useDispatch, useSelector } from "react-redux";
+import { resetLoanProductState } from "@/app/Redux/Loan_Product/loan_product_slice";
+import { _create_loan_product } from "@/app/Redux/Loan_Product/loan_product_thunk";
+import toast from "react-hot-toast";
+import { AppDispatch } from "@/app/Redux/store";
+
 
 export default function Form({ setStep }: { setStep: any }) {
   const [unsecured, setUnsecured] = useState(false);
-  const loanOption = ["Personal Loan", "Business Loans", "Mortgage Loans"];
+   const dispatch = useDispatch<AppDispatch>();
+   const { success, error,loading, data } = useSelector((state:any) => state.loanProduct.loanProduct);
+
+  const loanOption = ["Personal Loan", "Business Loan", "Mortgage Loan"];
   const Repayment_Frequency = ["Monthly", "Yearly"];
   const DurationOptions = ["3 Months", "6 Months", "9 Months", "12 Months", "24 Months"];
   const categoryOptions = ["Secured Loan", "Unsecured Loan"];
   const DiscountdurationOptions = ["A week", "2 Weeks", "3 weeks", "4 weeks", "5 weeks"];
   const employmentStatus = ["Employed", "Unemployed"];
+
 
   const validationSchema = Yup.object({
     Product_Name: Yup.string().required("Product Name is required"),
@@ -44,27 +54,27 @@ export default function Form({ setStep }: { setStep: any }) {
     category: Yup.string().required("Category is required"),
     selectedCollaterals: Yup.array().min(1, "At least one collateral is required"),
     minCreditScore: Yup.string()
-    .max(3, "minCreditScore should not exceed three numbers")
-    .required("Minimum Credit Score is required")
-    .test(
-      "min-max-credit",
-      "Minimum Credit Score should not be greater than Maximum Credit Score",
-      function (value) {
-        const { maxCreditScore } = this.parent;
-        return !value || !maxCreditScore || parseInt(value) <= parseInt(maxCreditScore);
-      }
-    ),
-  maxCreditScore: Yup.string()
-    .max(3, "maxCreditScore should not exceed three numbers")
-    .required("Maximum Credit Score is required")
-    .test(
-      "max-min-credit",
-      "Maximum Credit Score must be greater than or equal to Minimum Credit Score",
-      function (value) {
-        const { minCreditScore } = this.parent;
-        return !value || !minCreditScore || parseInt(value) >= parseInt(minCreditScore);
-      }
-    ),
+      .max(3, "minCreditScore should not exceed three numbers")
+      .required("Minimum Credit Score is required")
+      .test(
+        "min-max-credit",
+        "Minimum Credit Score should not be greater than Maximum Credit Score",
+        function (value) {
+          const { maxCreditScore } = this.parent;
+          return !value || !maxCreditScore || parseInt(value) <= parseInt(maxCreditScore);
+        }
+      ),
+    maxCreditScore: Yup.string()
+      .max(3, "maxCreditScore should not exceed three numbers")
+      .required("Maximum Credit Score is required")
+      .test(
+        "max-min-credit",
+        "Maximum Credit Score must be greater than or equal to Minimum Credit Score",
+        function (value) {
+          const { minCreditScore } = this.parent;
+          return !value || !minCreditScore || parseInt(value) >= parseInt(minCreditScore);
+        }
+      ),
     minimumIncome: Yup.string()
       .max(999999999, "Minimum Income should not exceed ₦999,999,999")
       .required("Minimum Income is required"),
@@ -77,7 +87,7 @@ export default function Form({ setStep }: { setStep: any }) {
 
   const formik = useFormik({
     initialValues: {
-      selectedCollaterals: ["Car", "Property"],
+      selectedCollaterals: unsecured ?[]:["Car", "Property"],
       amount: "80,000,000.00",
       duration: "",
       Product_Name: "",
@@ -96,14 +106,39 @@ export default function Form({ setStep }: { setStep: any }) {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Form Data:", values);
-      setStep(3);
+      const productData = {
+        product_name: values.Product_Name,
+        loan_type: values.loanType,
+        repayment_frequency: values.repaymentFrequency,
+        minimum_amount: values.minAmount,
+        maximum_amount: values.maxAmount,
+        duration: values.duration,
+        interest_rate: values.interestRate,
+        discount_percentage: values.percentage,
+        discount_duration: values.Discountduration,
+        minimum_credit_score: values.minCreditScore,
+        maximum_credit_score: values.maxCreditScore,
+        minimum_income: values.minimumIncome,
+        employment_status: values.employmentStatus,
+        category: values.category,
+        collateral_uuids: values.selectedCollaterals,
+      };
+      dispatch(_create_loan_product(productData) as any)
+ 
     },
   });
 
-  function formattedValue(maxAmount: string): string {
-    throw new Error("Function not implemented.");
-  }
+  useEffect(() => {
+    if (success) {
+      toast.success(success); 
+      dispatch(resetLoanProductState()); 
+      setStep(3);
+    }
+    if (error) {
+      toast.error(error); 
+      dispatch(resetLoanProductState());
+    }
+  }, [success, error, dispatch]);
 
   return (
     <>
@@ -249,62 +284,42 @@ export default function Form({ setStep }: { setStep: any }) {
             </div>
           </div>
         </div>
-        {/* form2 */}
 
+        {/* Eligibility Criteria Section */}
         <div className="w-full max-w-[822px] h-full min-h-[262px] px-[24px] pt-[24px]  pb-[46px] bg-white border-[#E5EAEF] rounded-lg border">
           <p className="text-[#333333] text-[20px] font-bold mb-[24px]">Eligibility Criteria</p>
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
-  <div>
-    <InputField
-      label="Minimum Credit Score"
-      placeholder="Enter Minimum Credit Score"
-      value={formik.values.minCreditScore}
-      onChange={(e) => {
-        const newValue = e.target.value;
-
-        // Allow only numeric input and limit to 3 digits
-        if (/^\d{0,3}$/.test(newValue)) {
-          // Set the value in Formik
-          formik.setFieldValue("minCreditScore", newValue);
-
-          // Validate minCreditScore against maxCreditScore dynamically
-          if (formik.values.maxCreditScore && parseInt(newValue) > parseInt(formik.values.maxCreditScore)) {
-            formik.setFieldError("minCreditScore", "Minimum Credit Score should not be greater than Maximum Credit Score");
-          } else {
-            formik.setFieldError("minCreditScore", ""); // Clear the error if validation passes
-          }
-        }
-      }}
-      error={formik.touched.minCreditScore && formik.errors.minCreditScore}
-      required
-    />
-  </div>
-  <div>
-    <InputField
-      label="Maximum Credit Score"
-      placeholder="Enter Maximum Credit Score"
-      value={formik.values.maxCreditScore}
-      onChange={(e) => {
-        const newValue = e.target.value;
-
-        // Allow only numeric input and limit to 3 digits
-        if (/^\d{0,3}$/.test(newValue)) {
-          // Set the value in Formik
-          formik.setFieldValue("maxCreditScore", newValue);
-
-          // Validate maxCreditScore against minCreditScore dynamically
-          if (formik.values.minCreditScore && parseInt(newValue) < parseInt(formik.values.minCreditScore)) {
-            formik.setFieldError("maxCreditScore", "Maximum Credit Score must be greater than or equal to Minimum Credit Score");
-          } else {
-            formik.setFieldError("maxCreditScore", ""); // Clear the error if validation passes
-          }
-        }
-      }}
-      error={formik.touched.maxCreditScore && formik.errors.maxCreditScore}
-      required
-    />
-  </div>
-</div>
+            <div>
+              <InputField
+                label="Minimum Credit Score"
+                placeholder="Enter Minimum Credit Score"
+                value={formik.values.minCreditScore}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  if (/^\d{0,3}$/.test(newValue)) {
+                    formik.setFieldValue("minCreditScore", newValue);
+                  }
+                }}
+                error={formik.touched.minCreditScore && formik.errors.minCreditScore}
+                required
+              />
+            </div>
+            <div>
+              <InputField
+                label="Maximum Credit Score"
+                placeholder="Enter Maximum Credit Score"
+                value={formik.values.maxCreditScore}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  if (/^\d{0,3}$/.test(newValue)) {
+                    formik.setFieldValue("maxCreditScore", newValue);
+                  }
+                }}
+                error={formik.touched.maxCreditScore && formik.errors.maxCreditScore}
+                required
+              />
+            </div>
+          </div>
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
             <div>
               <AmountInput
@@ -314,9 +329,7 @@ export default function Form({ setStep }: { setStep: any }) {
                 onChange={(e) => {
                   let newValue = e.target.value.replace(/,/g, "");
                   if (/^\d{0,9}$/.test(newValue)) {
-                    {
-                      formik.setFieldValue("minimumIncome", newValue);
-                    }
+                    formik.setFieldValue("minimumIncome", newValue);
                   }
                 }}
                 error={formik.touched.minimumIncome && formik.errors.minimumIncome}
@@ -327,7 +340,7 @@ export default function Form({ setStep }: { setStep: any }) {
               <OptionInput
                 label="Employment Status"
                 value={formik.values.employmentStatus}
-                onChange={formik.handleChange("employmentStatus")}
+                onChange={(value) => formik.setFieldValue("employmentStatus", value)}
                 error={formik.touched.employmentStatus && formik.errors.employmentStatus}
                 required
                 options={employmentStatus}
@@ -337,6 +350,7 @@ export default function Form({ setStep }: { setStep: any }) {
           </div>
         </div>
 
+        {/* Discount Section */}
         <div className="w-full max-w-[822px] h-full max-h-[193px] px-[24px] pt-[24px]  pb-[61px] bg-white border-[#E5EAEF] rounded-lg border">
           <p className="text-[#333333] text-[20px] font-bold mb-[24px]">Discount</p>
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
@@ -369,10 +383,12 @@ export default function Form({ setStep }: { setStep: any }) {
           </div>
         </div>
 
-        <div className="w-full max-w-[822px]  pt-[24px]  flex justify-end">
-         <CustomizedButton text={'Add Product'} />
+        {/* Submit Button */}
+        <div className={`w-full max-w-[822px]  pt-[24px]  flex justify-end ${loading &&"cursor-not-allowed"}`}>
+          <CustomizedButton text={loading ? "Adding Product..." : "Add Product"}/>
         </div>
       </form>
+      {error && <p className="text-red-500">{error}</p>}
     </>
   );
 }

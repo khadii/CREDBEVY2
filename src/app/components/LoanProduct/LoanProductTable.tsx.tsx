@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LucideChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { LucideChevronDown, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
 import LoanProductTable from "@/app/components/LoanProduct/MainTable";
+import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 
 interface TableProps<T> {
   headers: string[];
@@ -19,17 +20,17 @@ interface TableProps<T> {
 }
 
 interface LoanData {
-  name: string;
-  type: string;
-  amount: string;
-  creditScore: string;
+  product_name: string;
+  loan_type: string;
+  maximum_amount: string;
+  minimum_credit_score: string;
   duration: string;
-  revenueGenerated: string;
+  total_revenue_generated: string;
   status: "Active" | "Repaid" | "Overdue" | "Inactive";
   imageUrl?: string; // Optional field for image URL
 }
 
-export const LoanProduct = ({ setStep }: { setStep: any }) => {
+export const LoanProduct = ({ setStep, laon_table_data_all, setCurrentPage, currentPage, totalPages,total_count }: { setStep: any, laon_table_data_all: any, setCurrentPage: any, currentPage: any, totalPages: any ,total_count:any}) => {
   const loanHeaders = [
     "Product Name",
     "Type",
@@ -40,95 +41,56 @@ export const LoanProduct = ({ setStep }: { setStep: any }) => {
     "Status"
   ];
 
-  const loanData: LoanData[] = [
-    {
-      name: "Employee Loans",
-      type: "Personal",
-      amount: "₦ 134,000,000.00",
-      creditScore: "743",
-      duration: "3 Months",
-      revenueGenerated: "₦ 123,373,000,000.00",
-      status: "Inactive",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Employee Loans",
-      type: "Personal",
-      amount: "₦ 134,000,000.00",
-      creditScore: "743",
-      duration: "3 Months",
-      revenueGenerated: "₦ 123,373,000,000.00",
-      status: "Active",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Business Loans",
-      type: "Corporate",
-      amount: "₦ 200,500,000.00",
-      creditScore: "812",
-      duration: "6 Months",
-      revenueGenerated: "₦ 150,000,000,000.00",
-      status: "Active",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Student Loans",
-      type: "Education",
-      amount: "₦ 50,000,000.00",
-      creditScore: "690",
-      duration: "12 Months",
-      revenueGenerated: "₦ 35,000,000,000.00",
-      status: "Repaid",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Vehicle Loans",
-      type: "Auto",
-      amount: "₦ 80,000,000.00",
-      creditScore: "720",
-      duration: "5 Months",
-      revenueGenerated: "₦ 60,000,000,000.00",
-      status: "Overdue",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Home Loans",
-      type: "Mortgage",
-      amount: "₦ 300,000,000.00",
-      creditScore: "850",
-      duration: "24 Months",
-      revenueGenerated: "₦ 270,000,000,000.00",
-      status: "Active",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-    {
-      name: "Startup Loans",
-      type: "Business",
-      amount: "₦ 500,000,000.00",
-      creditScore: "770",
-      duration: "18 Months",
-      revenueGenerated: "₦ 450,000,000,000.00",
-      status: "Inactive",
-      imageUrl: "https://bit.ly/dan-abramov",
-    },
-  ];
-
   const titleProps = {
     mainTitle: "Loan Products",
-    count: "200 Products",
+    count: total_count + " Products",
     subtitle: "List of loan product created"
   };
 
+  const [toggleStates, setToggleStates] = useState<boolean[]>([]);
+  const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+
+  useEffect(() => {
+    if (laon_table_data_all && laon_table_data_all.length > 0) {
+      setToggleStates(laon_table_data_all.map(() => false));
+    }
+  }, [laon_table_data_all]);
+
+  const handleToggle = (index: number) => {
+    const newToggleStates = [...toggleStates];
+    newToggleStates[index] = !newToggleStates[index];
+    setToggleStates(newToggleStates);
+
+    const allChecked = newToggleStates.every((state) => state);
+    if (allChecked) {
+      setIsHeaderChecked(true);
+    } else {
+      setIsHeaderChecked(false);
+    }
+  };
+
+  const handleHeaderToggle = () => {
+    const newHeaderState = !isHeaderChecked;
+    setIsHeaderChecked(newHeaderState);
+
+    const newToggleStates = laon_table_data_all.map(() => newHeaderState);
+    setToggleStates(newToggleStates);
+  };
+
+  const renderHeader = (isHeaderChecked: boolean, handleHeaderToggle: () => void) => (
+    <CustomCheckbox id={-1} checked={isHeaderChecked} onChange={handleHeaderToggle} />
+  );
+
   const renderStatus = (status: string) => {
     switch (status) {
-      case "Active":
+      case "active":
         return (
           <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold">
             <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
             Active
           </button>
         );
-      case "Repaid":
+      case "repaid":
         return (
           <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold">
             <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
@@ -142,7 +104,7 @@ export const LoanProduct = ({ setStep }: { setStep: any }) => {
             Overdue
           </button>
         );
-      case "Inactive":
+      case "inactive":
         return (
           <button className="flex items-center border border-[#FFF2C2] bg-[#FFFBEF] text-[#F4C418] px-2 h-[23px] rounded-full text-xs font-semibold">
             <FaCircle className="text-[#F4C418] w-2 h-2 mr-1" />
@@ -157,21 +119,16 @@ export const LoanProduct = ({ setStep }: { setStep: any }) => {
   const renderRow = (item: LoanData, index: number) => (
     <>
       <td className="pl-[27px] py-4 px-6">
-        <div className="flex items-center gap-4 h-full">
-          <input type="checkbox" onClick={(e) => e.stopPropagation()} />
-          <img
-            src={item.imageUrl || "https://bit.ly/dan-abramov"}
-            alt={item.name}
-            className="w-8 h-8 rounded-full"
-          />
-          <p className="truncate max-w-[120px]">{item.name}</p>
+        <div className="flex items-center gap-4 h-full" onClick={(e) => e.stopPropagation()}>
+          <CustomCheckbox id={index} checked={toggleStates[index]} onChange={handleToggle} />
+          <p className="truncate max-w-[120px]">{item.product_name}</p>
         </div>
       </td>
-      <td className="truncate max-w-[200px] py-4 px-6">{item.type}</td>
-      <td className="truncate max-w-[120px] py-4 px-6">{item.amount}</td>
-      <td className="truncate max-w-[35px] py-4 px-6">{item.creditScore}</td>
+      <td className="truncate max-w-[200px] py-4 px-6">{item.loan_type}</td>
+      <td className="truncate max-w-[120px] py-4 px-6">{item.maximum_amount}</td>
+      <td className="truncate max-w-[35px] py-4 px-6">{item.minimum_credit_score}</td>
       <td className="truncate max-w-[110px] py-4 px-6">{item.duration}</td>
-      <td className="truncate max-w-[154px] py-4 px-6">{item.revenueGenerated}</td>
+      <td className="truncate max-w-[154px] py-4 px-6">{item.total_revenue_generated}</td>
       <td className="truncate max-w-[154px] py-4 px-4">
         {renderStatus(item.status)}
       </td>
@@ -181,12 +138,17 @@ export const LoanProduct = ({ setStep }: { setStep: any }) => {
   return (
     <LoanProductTable
       headers={loanHeaders}
-      data={loanData}
+      data={laon_table_data_all}
       titleProps={titleProps}
       href="/dashboard/loan-products/performance"
-      itemsPerPage={5}
       renderRow={renderRow}
+      renderHeader={renderHeader}
+      isHeaderChecked={isHeaderChecked}
+      handleHeaderToggle={handleHeaderToggle}
       setStep={setStep}
+      setCurrentPage={setCurrentPage}
+      currentPage={currentPage}
+      totalPages={totalPages}
     />
   );
 };

@@ -4,12 +4,10 @@ import React, { JSX } from "react";
 import Card from "../Card";
 import EqualHeightContainer, { TheeContainer } from "../equator";
 import LoanRequestActions from "../Search";
-import Table from "../Tableone/Datatable";
-import ChartCard from "../DefaultRate";
-import BarChartCard from "../Revenuechart";
 import LoanApprovalChart from "../ChartCards/Piechart";
-import ProgressBarCard, { LoanProductProgressBarCard } from "../Loanperformance";
-import { Protest_Guerrilla } from "next/font/google";
+import ProgressBarCard, {
+  LoanProductProgressBarCard,
+} from "../Loanperformance";
 import { LoanProduct } from "./LoanProductTable.tsx";
 
 interface Stat {
@@ -62,6 +60,7 @@ interface DashboardProps {
   chartData: ChartData[];
   barChartData: BarChartData[];
   pieChartData: PieChartData[];
+  pieChartDataTwo: PieChartData[];
   progressBarData: ProgressBarData[];
   tableData: TableData[];
   tableHeaders: string[];
@@ -87,7 +86,15 @@ interface DashboardProps {
   progressBarTitle: string;
   progressBarDescription: string;
   href: string;
-  setStep:any
+  setStep: any;
+  laon_table_data_all: any;
+  setCurrentPage: any;
+  currentPage: any;
+  totalPages: any;
+  total_count:number
+  pieChartTitleTwo:any,
+  pieChartDescriptionTwo:any,
+  pieChartTotalTwo:any
 }
 
 export default function LoanProducts({
@@ -112,6 +119,10 @@ export default function LoanProducts({
   pieChartTitle,
   pieChartDescription,
   pieChartTotal,
+  pieChartTitleTwo,
+  pieChartDescriptionTwo,
+  pieChartTotalTwo,
+  pieChartDataTwo,
   lineChartTitle,
   lineChartDescription,
   lineChartTotalRevenue,
@@ -121,6 +132,11 @@ export default function LoanProducts({
   progressBarTitle,
   progressBarDescription,
   href,
+  laon_table_data_all,
+  setCurrentPage,
+  currentPage,
+  totalPages,
+  total_count
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -147,19 +163,20 @@ export default function LoanProducts({
               />
             }
             middle={
-              <LoanProductProgressBarCard
-                loanData={progressBarData}
-                title={progressBarTitle}
-                description={progressBarDescription}
-              />
-            }
-            rightContent={
               <LoanApprovalChart
-                title={pieChartTitle}
-                description={pieChartDescription}
-                total={pieChartTotal}
-                data={pieChartData}
-              />
+                title={pieChartTitleTwo}
+                description={pieChartDescriptionTwo}
+                total={pieChartTotalTwo}
+                data={pieChartDataTwo}
+              />}
+
+              rightContent={
+                <LoanProductProgressBarCard
+                  loanData={progressBarData}
+                  title={progressBarTitle}
+                  description={progressBarDescription}
+                />
+              
             }
           />
         </div>
@@ -168,8 +185,12 @@ export default function LoanProducts({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <LoanProduct setStep={setStep}         
-        />
+       <LoanProduct
+          setStep={setStep}
+          laon_table_data_all={laon_table_data_all}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          totalPages={totalPages} total_count={total_count}/>
       </div>
     </section>
   );

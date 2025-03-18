@@ -91,7 +91,7 @@ export const PerformanceLoanProduct: React.FC<LoanPerformanceProps> = ({ loanDat
   return (
     <div className="bg-white border rounded-lg pl-[16px] pr-[24px] pb-[38px] pt-[22px] w-full h-[482px] relative">
       {/* Header */}
-      <div className="mb-[-16]">
+      <div className={`${loanData.length > 5?"mb-9":"mb-16"}`}>
         <h2 className="text-lg font-semibold text-[#333333] mb-1">{title}</h2>
         <p className="text-sm text-[#333333]">{description}</p>
       </div>

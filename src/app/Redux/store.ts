@@ -2,11 +2,14 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import authReducer from '../Redux/auth/authSlice'
 import walletReducer from '../Redux/dashboard/dashboardSlice';
-
+import loanProductReducer from'../Redux/Loan_Product/loan_product_slice';
+import loanProductsTableReducer from'../Redux/Loan_Product/loanProductTableSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     wallet: walletReducer,
+    loanProduct: loanProductReducer,
+    loanProductsTable: loanProductsTableReducer,
   },
 });
 
@@ -18,3 +21,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   Action<string>
 >;
+

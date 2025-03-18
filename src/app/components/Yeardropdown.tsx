@@ -29,7 +29,7 @@ export const YearDropdown = ({ years, selectedYear, setSelectedYear }:{ years:an
       </button>
       {isOpen && (
         <div ref={modalRef} className="right-0 top-10 absolute">
-          <div className="bg-white p-6 rounded-lg w-[132px]">
+          <div className="bg-white py-6 px-2 rounded-lg w-24 shadow-lg">
             <h3 className="text-[13px] font-semibold text-gray-900">Select Year</h3>
             <div className="mt-4 space-y-2">
               {years.map((year:any) => (

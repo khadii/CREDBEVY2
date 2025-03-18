@@ -6,7 +6,7 @@ import Form from '@/app/components/LoanProduct/Form';
 import React, { useState } from 'react';
 
 export default function Page() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
 
   const switchPage = (step: number) => {
     switch (step) {

@@ -108,8 +108,6 @@ const walletSlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // Handle the pending state of the thunk
-
       //wallet balance
       .addCase(dashboard_wallet.pending, (state) => {
         state.loading = true;
