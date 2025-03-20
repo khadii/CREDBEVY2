@@ -1,17 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { _loan_products_all, _loan_products_stats } from "./loan_product_thunk"; // Assuming you add the new thunk
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { _loan_products_all, _loan_products_stats, _single_loan_products_stats } from "./loan_product_thunk";
 
 interface LoanProductsState {
-  data: any; // API response data for loan products
-  loading: boolean; // Loading state
-  error: string | null; // Error message
-  tabledata: any[]; // Table data extracted from the API response
-  total: any; // Total pages for pagination
-  total_count: any; // Total count of loan products
-  loanProductsStats: { // New state for loan products stats
-    data: any; // API response data for loan products stats
-    loading: boolean; // Loading state for stats
-    error: string | null; // Error message for stats
+  data: any; 
+  loading: boolean; 
+  error: string | null; 
+  tabledata: any[];
+  total: any; 
+  total_count: any;
+  loanProductsStats: { 
+    data: any;
+    loading: boolean;
+    error: string | null; 
+    
+  };
+  singleLoanProduct: { 
+    data: any; 
+    loading: boolean;
+    error: string | null; 
+
   };
 }
 
@@ -22,12 +29,19 @@ const initialState: LoanProductsState = {
   tabledata: [],
   total: null,
   total_count: null,
-  loanProductsStats: { // Initial state for loan products stats
+  loanProductsStats: { 
     data: null,
     loading: false,
     error: null,
   },
+  singleLoanProduct: { 
+    data: null,
+    loading: false,
+    error: null,
+  },
+  
 };
+
 
 const loanProductsTable = createSlice({
   name: "loanProductsTable",
@@ -41,10 +55,15 @@ const loanProductsTable = createSlice({
       state.total = null;
       state.total_count = null;
     },
-    resetLoanProductsStatsState: (state) => { // New reducer to reset stats state
+    resetLoanProductsStatsState: (state) => { 
       state.loanProductsStats.data = null;
       state.loanProductsStats.loading = false;
       state.loanProductsStats.error = null;
+    },
+    resetSingleLoanProductState: (state) => { 
+      state.singleLoanProduct.data = null;
+      state.singleLoanProduct.loading = false;
+      state.singleLoanProduct.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -78,9 +97,28 @@ const loanProductsTable = createSlice({
       .addCase(_loan_products_stats.rejected, (state, action) => {
         state.loanProductsStats.loading = false;
         state.loanProductsStats.error = action.payload as string;
+      })
+
+      // New cases for fetchLoan (single loan product)
+      .addCase(_single_loan_products_stats.pending, (state) => {
+        state.singleLoanProduct.loading = true;
+        state.singleLoanProduct.error = null;
+      })
+      .addCase(_single_loan_products_stats.fulfilled, (state, action) => {
+        state.singleLoanProduct.loading = false;
+        state.singleLoanProduct.data = action.payload;
+      })
+      .addCase(_single_loan_products_stats.rejected, (state, action) => {
+        state.singleLoanProduct.loading = false;
+        state.singleLoanProduct.error = action.payload as string;
       });
   },
 });
 
-export const { resetLoanProductsState, resetLoanProductsStatsState } = loanProductsTable.actions;
+export const {
+  resetLoanProductsState,
+  resetLoanProductsStatsState,
+  resetSingleLoanProductState, 
+} = loanProductsTable.actions;
+
 export default loanProductsTable.reducer;

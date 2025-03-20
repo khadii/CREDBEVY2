@@ -1,8 +1,10 @@
-// pages/customers.js
-import Head from 'next/head';
-import Link from 'next/link';
 
-export default function Customers({setStep}:{setStep:any}) {
+'use client'
+
+import { useRouter } from "next/navigation";
+
+export default function Customers() {
+  const router=useRouter()
   return (
     <div className="min-h-screen">
       <div>
@@ -32,7 +34,7 @@ export default function Customers({setStep}:{setStep:any}) {
           
           {/* CTA Button */}
           <div>
-            <button className="bg-[#156064] hover:bg-[#156064] text-white text-sm w-[279px] h-[44px] rounded-lg font-bold text-[12px] transition-colors" onClick={()=>setStep(2)}>
+            <button className="bg-[#156064] hover:bg-[#156064] text-white text-sm w-[279px] h-[44px] rounded-lg font-bold text-[12px] transition-colors" onClick={()=>router.push("/dashboard/loan-products/form")}>
             Add New Product
             </button>
           </div>

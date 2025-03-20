@@ -4,12 +4,14 @@ import authReducer from '../Redux/auth/authSlice'
 import walletReducer from '../Redux/dashboard/dashboardSlice';
 import loanProductReducer from'../Redux/Loan_Product/loan_product_slice';
 import loanProductsTableReducer from'../Redux/Loan_Product/loanProductTableSlice';
+import bulkActionReducer from'../Redux/Loan_Product/Bulkslice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     wallet: walletReducer,
     loanProduct: loanProductReducer,
     loanProductsTable: loanProductsTableReducer,
+    bulkAction: bulkActionReducer,
   },
 });
 

@@ -125,3 +125,78 @@ export const _loan_products_stats = createAsyncThunk(
     }
   );
   
+  interface Year2{
+    year?: any;
+    product_id: any;
+  }
+  
+
+  
+  export const _single_loan_products_stats = createAsyncThunk(
+    "_single_loan_products_stats",
+    async ({ year, product_id}: Year2, { rejectWithValue }: { rejectWithValue: Function }) => {
+      try {
+        const token = Cookies.get("authToken");
+        if (!token) {
+          return rejectWithValue("Authentication token is missing.");
+        }
+  
+        const response = await axios.post(
+          `https://credbevy.jbenergyservices.com/public/api/partner/loan-products/stats-per-product/${product_id}?page=${year}`, // Assuming page = year
+          { year }, // Send the year in the body (if needed)
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data; // Return the API response
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message || "Unauthorized");
+        } else if (error.request) {
+          return rejectWithValue("No response from the server. Please check your network connection.");
+        } else {
+          return rejectWithValue("An unexpected error occurred. Please try again.");
+        }
+      }
+    }
+  );
+
+  interface Delete{
+    loan_product_ids?: any;
+    action: any;
+  }
+  
+
+  
+  export const bulk_action = createAsyncThunk(
+    "bulk_action",
+    async ({loan_product_ids,action}: Delete, { rejectWithValue }: { rejectWithValue: Function }) => {
+      try {
+        const token = Cookies.get("authToken");
+        if (!token) {
+          return rejectWithValue("Authentication token is missing.");
+        }
+  
+        const response = await axios.post(
+         " https://credbevy.jbenergyservices.com/public/api/partner/loan-products/bulk-action",
+          { loan_product_ids,action }, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message || "Unauthorized");
+        } else if (error.request) {
+          return rejectWithValue("No response from the server. Please check your network connection.");
+        } else {
+          return rejectWithValue("An unexpected error occurred. Please try again.");
+        }
+      }
+    }
+  );

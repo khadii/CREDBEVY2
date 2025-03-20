@@ -14,15 +14,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   _loan_products_all,
   _loan_products_stats,
+  bulk_action,
 } from "@/app/Redux/Loan_Product/loan_product_thunk";
-import { AppDispatch } from "@/app/Redux/store";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { useRouter } from "next/navigation";
+import { useDashboard } from "@/app/Context/DahboardContext";
+import DeleteModal from "../Modals/DeleteModal";
+import toast from "react-hot-toast";
 // import Dashboardone from "../dashboard/reuseabledashboaardone.";
 
-export default function Dashboard({ setStep }: { setStep: any }) {
+export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
-
+const router =useRouter()
   // Memoize the filters object using usememo
   const [currentPage, setCurrentPage] = useState(1);
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const filters = {
     search: "",
@@ -37,6 +44,15 @@ export default function Dashboard({ setStep }: { setStep: any }) {
 
   const [selectedYear, setSelectedYear] = useState("2022");
   const years = ["2022", "2023", "2024", "2025", "2026"];
+ const { selectedIds, setSelectedIds } = useDashboard();
+ const {
+  loading: bulkActionLoading,
+  success: bulkActionSuccess,
+  error: bulkActionError,
+  data: bulkActionData,
+} = useSelector((state: RootState) => state.bulkAction);
+
+
 
   const Year = { year: selectedYear };
   const {
@@ -48,6 +64,7 @@ export default function Dashboard({ setStep }: { setStep: any }) {
     total_count,
     loanProductsStats,
   } = useSelector((state: any) => state.loanProductsTable);
+  
   // const [totalPages, setTotalPages] = useState(total);
   useEffect(() => {
     dispatch(_loan_products_all(filters));
@@ -60,6 +77,35 @@ export default function Dashboard({ setStep }: { setStep: any }) {
     console.log({ loanProductsStats: loanProductsStats });
   }, [dispatch, Year.year]);
 
+
+  useEffect(() => {
+    const prod = tabledata?.length;
+    if (prod<0) {
+      router.push("loan-products/no-product");
+    }
+  }, [tabledata]); 
+  const handleOpenModal = () => {
+    if (selectedIds.length >= 1) {
+      setIsDeleteModalOpen(true);
+    } else {
+      toast.error("Please select more than one item to perform this action.");
+    }
+  };
+
+  const handleSubmit = async () => {
+    dispatch(bulk_action({ loan_product_ids: selectedIds, action:"deactivate" }));
+  };
+
+  useEffect(() => {
+    if (bulkActionSuccess) {
+      toast.success("Deactivate Successful");
+      setIsDeleteModalOpen(false);
+    }
+    if (bulkActionError) {
+      toast.error(bulkActionError);
+    }
+  }, [bulkActionSuccess, bulkActionError]);
+  
   const stats = [
     {
       title: "Total Loan Product",
@@ -165,11 +211,11 @@ export default function Dashboard({ setStep }: { setStep: any }) {
   const requests = [
     {
       name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`, // Number with prefix
-      amount: `${formatCurrency(134000000.0)}`, // Number with prefix
-      cs: 743, // Number without prefix
-      ir: `${23}%`, // Number with suffix
-      duration: `${3} Months`, // Number with suffix
+      income: `${formatCurrency(134000000.0)}`, 
+      amount: `${formatCurrency(134000000.0)}`, 
+      cs: 743, 
+      ir: `${23}%`, 
+      duration: `${3} Months`, 
       status: "Interested",
     },
     {
@@ -229,7 +275,7 @@ export default function Dashboard({ setStep }: { setStep: any }) {
   ];
 
   const handleYearChange = (year: string) => {
-    console.log("Selected Year:", year);
+  setSelectedYear(year)
   };
 
   const tableTitleProps = {
@@ -288,9 +334,7 @@ export default function Dashboard({ setStep }: { setStep: any }) {
               barChartHighlightColor="#EC7910"
               pieChartTitle="Loan Default Rate"
               pieChartDescription="Total unpaid loan metrics."
-              pieChartTotal={
-                loanProductsStats?.data?.loanDefaultRate?.total_defaulted_loans
-              }
+              pieChartTotal={loanProductsStats?.data?.loanDefaultRate?.total_defaulted_loans}
               lineChartTitle="Default Rate"
               lineChartDescription="Total unpaid loan value."
               lineChartTotalRevenue="₦ 20,000,000.00"
@@ -300,7 +344,6 @@ export default function Dashboard({ setStep }: { setStep: any }) {
               progressBarTitle="Sales Performance"
               progressBarDescription="Total sales performance of different products"
               href={"#"}
-              setStep={setStep}
               laon_table_data_all={tabledata}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
@@ -308,17 +351,13 @@ export default function Dashboard({ setStep }: { setStep: any }) {
               total_count={total_count}
               pieChartDataTwo={pieChartDataTwo}
               pieChartTitleTwo={"Loan Approval Rate"}
-              pieChartDescriptionTwo={
-                "The percentage of loan requests approved."
-              }
-              pieChartTotalTwo={
-                loanProductsStats?.data?.loanApprovalRate
-                  ?.total_loan_applications
-              }
-            />
+              pieChartDescriptionTwo={"The percentage of loan requests approved."}
+              pieChartTotalTwo={loanProductsStats?.data?.loanApprovalRate
+                ?.total_loan_applications}   bulkAction={()=>handleOpenModal()}            />
           </div>
         </div>
       </div>
+     < DeleteModal isOpen={isDeleteModalOpen}   onClose={() => setIsDeleteModalOpen(false)} onConfirm={()=>handleSubmit()}/>
     </section>
   );
 }

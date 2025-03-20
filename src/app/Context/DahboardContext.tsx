@@ -9,9 +9,10 @@ const DashboardContext = createContext<any | undefined>(undefined);
 
 export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [interested, setInterested] = useState<boolean>(false);
+   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   return (
-    <Provider store={store}> <DashboardContext.Provider value={{ interested, setInterested }}>
+    <Provider store={store}> <DashboardContext.Provider value={{ interested, setInterested,selectedIds, setSelectedIds}}>
        <Toaster
         position="bottom-right"
         toastOptions={{

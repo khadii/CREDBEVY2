@@ -56,6 +56,7 @@ interface TitleProps {
 }
 
 interface DashboardProps {
+  bulkAction:any
   stats: Stat[];
   chartData: ChartData[];
   barChartData: BarChartData[];
@@ -86,7 +87,7 @@ interface DashboardProps {
   progressBarTitle: string;
   progressBarDescription: string;
   href: string;
-  setStep: any;
+ 
   laon_table_data_all: any;
   setCurrentPage: any;
   currentPage: any;
@@ -98,7 +99,7 @@ interface DashboardProps {
 }
 
 export default function LoanProducts({
-  setStep,
+
   stats,
   chartData,
   barChartData,
@@ -136,7 +137,7 @@ export default function LoanProducts({
   setCurrentPage,
   currentPage,
   totalPages,
-  total_count
+  total_count,bulkAction
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -186,11 +187,11 @@ export default function LoanProducts({
           onSeeAllClick={onSeeAllClick}
         />
        <LoanProduct
-          setStep={setStep}
+   
           laon_table_data_all={laon_table_data_all}
           setCurrentPage={setCurrentPage}
           currentPage={currentPage}
-          totalPages={totalPages} total_count={total_count}/>
+          totalPages={totalPages} total_count={total_count} bulkAction={bulkAction}/>
       </div>
     </section>
   );

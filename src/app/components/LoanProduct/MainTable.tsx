@@ -8,6 +8,7 @@ import TableHeader from "../TableTwo/modifiedTabletwo/TableHeader";
 
 
 interface TableProps<T> {
+  
   headers: string[];
   data: T[];
   titleProps: {
@@ -24,6 +25,7 @@ interface TableProps<T> {
   renderHeader?: (isHeaderChecked: boolean, handleHeaderToggle: () => void) => React.ReactNode;
   isHeaderChecked?: boolean;
   handleHeaderToggle?: () => void;
+  bulkAction:()=>void
 }
 
 const LoanProductTable = <T,>({
@@ -39,11 +41,13 @@ const LoanProductTable = <T,>({
   renderHeader,
   isHeaderChecked,
   handleHeaderToggle,
+  bulkAction
+  
 }: TableProps<T>) => {
   const router = useRouter();
 
-  const handleRowClick = (index: number) => {
-    router.push(`${href}`);
+  const handleRowClick = (item: number) => {
+    router.push(`${href}/${item}`);
   };
 
   return (
@@ -65,11 +69,11 @@ const LoanProductTable = <T,>({
         <div className="flex gap-[12px]">
           <button
             className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
-            onClick={() => setStep && setStep(2)}
-          >
+            onClick={()=>router.push("/dashboard/loan-products/form")}>
+          
             <Plus size={16} /> Add Product
           </button>
-          <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold">
+          <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold" onClick={()=>bulkAction()}>
             Bulk Action <LucideChevronDown size={16} />
           </button>
         </div>
@@ -88,7 +92,7 @@ const LoanProductTable = <T,>({
               key={index}
               item={item}
               index={index}
-              onClick={() => handleRowClick(index)}
+              onClick={() => handleRowClick(item.uuid)}
               renderRow={renderRow}
             />
           ))}

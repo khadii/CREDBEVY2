@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { LucideChevronDown, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { FaCircle } from "react-icons/fa";
 import LoanProductTable from "@/app/components/LoanProduct/MainTable";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
+import { useDashboard } from "@/app/Context/DahboardContext";
 
 interface TableProps<T> {
+
   headers: string[];
   data: T[];
   titleProps: {
@@ -20,6 +22,7 @@ interface TableProps<T> {
 }
 
 interface LoanData {
+  id: string; 
   product_name: string;
   loan_type: string;
   maximum_amount: string;
@@ -27,10 +30,11 @@ interface LoanData {
   duration: string;
   total_revenue_generated: string;
   status: "Active" | "Repaid" | "Overdue" | "Inactive";
-  imageUrl?: string; // Optional field for image URL
+  imageUrl?: string; 
+  uuid: string; 
 }
 
-export const LoanProduct = ({ setStep, laon_table_data_all, setCurrentPage, currentPage, totalPages,total_count }: { setStep: any, laon_table_data_all: any, setCurrentPage: any, currentPage: any, totalPages: any ,total_count:any}) => {
+export const LoanProduct = ({    bulkAction,  laon_table_data_all, setCurrentPage, currentPage, totalPages, total_count }: { laon_table_data_all: any, setCurrentPage: any, currentPage: any, totalPages: any, total_count: any,  bulkAction:any }) => {
   const loanHeaders = [
     "Product Name",
     "Type",
@@ -46,35 +50,46 @@ export const LoanProduct = ({ setStep, laon_table_data_all, setCurrentPage, curr
     count: total_count + " Products",
     subtitle: "List of loan product created"
   };
+ 
 
-  const [toggleStates, setToggleStates] = useState<boolean[]>([]);
+ 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
-
+  const { selectedIds, setSelectedIds } = useDashboard();
   useEffect(() => {
     if (laon_table_data_all && laon_table_data_all.length > 0) {
-      setToggleStates(laon_table_data_all.map(() => false));
+      setSelectedIds([]);
     }
   }, [laon_table_data_all]);
 
-  const handleToggle = (index: number) => {
-    const newToggleStates = [...toggleStates];
-    newToggleStates[index] = !newToggleStates[index];
-    setToggleStates(newToggleStates);
-
-    const allChecked = newToggleStates.every((state) => state);
-    if (allChecked) {
+  // Effect to update the header checkbox state based on selectedIds
+  useEffect(() => {
+    if (selectedIds.length === laon_table_data_all.length) {
       setIsHeaderChecked(true);
     } else {
       setIsHeaderChecked(false);
     }
+  }, [selectedIds, laon_table_data_all]);
+
+  const handleToggle = (uuid: string) => {
+    setSelectedIds((prevSelectedIds:any) => {
+      if (prevSelectedIds.includes(uuid)) {
+        return prevSelectedIds.filter((selectedId:any )=> selectedId !== uuid);
+      } else {
+        return [...prevSelectedIds, uuid];
+      }
+    });
   };
 
   const handleHeaderToggle = () => {
     const newHeaderState = !isHeaderChecked;
     setIsHeaderChecked(newHeaderState);
 
-    const newToggleStates = laon_table_data_all.map(() => newHeaderState);
-    setToggleStates(newToggleStates);
+    if (newHeaderState) {
+      const allUuids = laon_table_data_all.map((item: LoanData) => item.uuid);
+      setSelectedIds(allUuids);
+    } else {
+      setSelectedIds([]);
+    }
   };
 
   const renderHeader = (isHeaderChecked: boolean, handleHeaderToggle: () => void) => (
@@ -120,7 +135,7 @@ export const LoanProduct = ({ setStep, laon_table_data_all, setCurrentPage, curr
     <>
       <td className="pl-[27px] py-4 px-6">
         <div className="flex items-center gap-4 h-full" onClick={(e) => e.stopPropagation()}>
-          <CustomCheckbox id={index} checked={toggleStates[index]} onChange={handleToggle} />
+          <CustomCheckbox id={item.uuid} checked={selectedIds.includes(item.uuid)} onChange={() => handleToggle(item.uuid)} />
           <p className="truncate max-w-[120px]">{item.product_name}</p>
         </div>
       </td>
@@ -145,10 +160,8 @@ export const LoanProduct = ({ setStep, laon_table_data_all, setCurrentPage, curr
       renderHeader={renderHeader}
       isHeaderChecked={isHeaderChecked}
       handleHeaderToggle={handleHeaderToggle}
-      setStep={setStep}
       setCurrentPage={setCurrentPage}
       currentPage={currentPage}
-      totalPages={totalPages}
-    />
+      totalPages={totalPages} bulkAction={ bulkAction}    />
   );
 };
