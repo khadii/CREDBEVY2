@@ -1,14 +1,19 @@
-import React from 'react'
-import LoanPerformance from '../../loanPerformance'
-import Layout from '@/app/components/Layout/Layout'
+import React from 'react';
+import LoanPerformance from '../../loanPerformance';
+import Layout from '@/app/components/Layout/Layout';
 
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params
+export default async function Page({ params }: PageProps) {
+  // Resolve the params Promise
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
   return (
     <Layout>
-      <LoanPerformance params={id} />
+      <LoanPerformance params={{ id }} />
     </Layout>
-  )
+  );
 }
