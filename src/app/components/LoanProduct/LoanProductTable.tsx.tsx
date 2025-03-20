@@ -27,6 +27,7 @@ interface LoanData {
   loan_type: string;
   maximum_amount: string;
   minimum_credit_score: string;
+  maximum_credit_score:string
   duration: string;
   total_revenue_generated: string;
   status: "Active" | "Repaid" | "Overdue" | "Inactive";
@@ -141,7 +142,7 @@ export const LoanProduct = ({    bulkAction,  laon_table_data_all, setCurrentPag
       </td>
       <td className="truncate max-w-[200px] py-4 px-6">{item.loan_type}</td>
       <td className="truncate max-w-[120px] py-4 px-6">{item.maximum_amount}</td>
-      <td className="truncate max-w-[35px] py-4 px-6">{item.minimum_credit_score}</td>
+      <td className="truncate max-w-[35px] py-4 px-6">{item.minimum_credit_score}/{item.maximum_credit_score}</td>
       <td className="truncate max-w-[110px] py-4 px-6">{item.duration}</td>
       <td className="truncate max-w-[154px] py-4 px-6">{item.total_revenue_generated}</td>
       <td className="truncate max-w-[154px] py-4 px-4">
@@ -162,6 +163,6 @@ export const LoanProduct = ({    bulkAction,  laon_table_data_all, setCurrentPag
       handleHeaderToggle={handleHeaderToggle}
       setCurrentPage={setCurrentPage}
       currentPage={currentPage}
-      totalPages={totalPages} bulkAction={ bulkAction}    />
+      totalPages={totalPages} bulkAction={ bulkAction}/>
   );
 };

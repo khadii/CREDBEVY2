@@ -187,7 +187,6 @@ export default function LoanProducts({
           onSeeAllClick={onSeeAllClick}
         />
        <LoanProduct
-   
           laon_table_data_all={laon_table_data_all}
           setCurrentPage={setCurrentPage}
           currentPage={currentPage}

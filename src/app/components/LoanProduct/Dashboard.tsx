@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import DeleteModal from "../Modals/DeleteModal";
 import toast from "react-hot-toast";
+import Deactivate from "../Modals/Deactivate";
 // import Dashboardone from "../dashboard/reuseabledashboaardone.";
 
 export default function Dashboard() {
@@ -99,12 +100,13 @@ const router =useRouter()
   useEffect(() => {
     if (bulkActionSuccess) {
       toast.success("Deactivate Successful");
+      dispatch(_loan_products_all(filters));
       setIsDeleteModalOpen(false);
     }
     if (bulkActionError) {
       toast.error(bulkActionError);
     }
-  }, [bulkActionSuccess, bulkActionError]);
+  }, [bulkActionSuccess, bulkActionError,dispatch, Year.year]);``
   
   const stats = [
     {
@@ -357,7 +359,7 @@ const router =useRouter()
           </div>
         </div>
       </div>
-     < DeleteModal isOpen={isDeleteModalOpen}   onClose={() => setIsDeleteModalOpen(false)} onConfirm={()=>handleSubmit()}/>
+     < Deactivate isOpen={isDeleteModalOpen}   onClose={() => setIsDeleteModalOpen(false)} onConfirm={()=>handleSubmit()}/>
     </section>
   );
 }
