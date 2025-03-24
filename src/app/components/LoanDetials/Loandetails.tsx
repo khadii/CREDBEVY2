@@ -1,9 +1,31 @@
-import React from "react";
+
+'use client'
+
+import React, { useEffect } from "react";
 import ProfileCard from "./ProfileCard";
 import Layout from "../Layout/Layout";
 import FinancialInfo from "./FinancialInfo";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 
-export default function Loandetails() {
+export default function Loandetails({id}:{id:any}) {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const Userid = {
+    product_id: id,
+  };
+  useEffect(() => {
+    dispatch(_single_loan_products_request(Userid));
+  }, [dispatch, Userid.product_id ]);
+  const {
+    loading,
+    success,
+    error,
+    data,
+  } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
+
+
 
   return (
     <Layout>

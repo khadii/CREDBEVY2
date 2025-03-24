@@ -96,7 +96,7 @@ const TableWithPagination = <T,>({
               key={index}
               item={item}
               index={index}
-              onClick={() => handleRowClick(item.uuid)}
+              onClick={() => handleRowClick(item.uuid || item.loan_uuid)}
               renderRow={renderRow}
             />
           ))}

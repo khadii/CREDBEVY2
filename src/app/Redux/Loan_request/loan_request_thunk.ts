@@ -117,3 +117,95 @@ export const _loan_request_trend = createAsyncThunk(
       }
     }
   );
+
+  
+
+
+
+
+    
+  interface product_id{
+    product_id: any;
+  }
+  
+
+  
+  export const _single_loan_products_request = createAsyncThunk(
+    "single-loan-request",
+    async ({ product_id}: product_id, { rejectWithValue }: { rejectWithValue: Function }) => {
+      try {
+        const token = Cookies.get("authToken");
+        if (!token) {
+          return rejectWithValue("Authentication token is missing.");
+        }
+  
+        const response = await axios.post(
+          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/single-loan-request/${product_id}`,
+          
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data; // Return the API response
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message || "Unauthorized");
+        } else if (error.request) {
+          return rejectWithValue("No response from the server. Please check your network connection.");
+        } else {
+          return rejectWithValue("An unexpected error occurred. Please try again.");
+        }
+      }
+    })
+
+
+
+
+
+    interface product_id{
+      product_id: any;
+    }
+    
+  
+  
+
+
+
+
+      interface product_id{
+        product_id: any;
+      }
+      
+    
+      
+      export const approve_loan = createAsyncThunk(
+        "approve_loan",
+        async ({ product_id}: product_id, { rejectWithValue }: { rejectWithValue: Function }) => {
+          try {
+            const token = Cookies.get("authToken");
+            if (!token) {
+              return rejectWithValue("Authentication token is missing.");
+            }
+      
+            const response = await axios.post(
+              `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/approve-loan/${product_id}`,
+              
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            return response.data; // Return the API response
+          } catch (error: any) {
+            if (error.response && error.response.data) {
+              return rejectWithValue(error.response.data.message || "Unauthorized");
+            } else if (error.request) {
+              return rejectWithValue("No response from the server. Please check your network connection.");
+            } else {
+              return rejectWithValue("An unexpected error occurred. Please try again.");
+            }
+          }
+        })

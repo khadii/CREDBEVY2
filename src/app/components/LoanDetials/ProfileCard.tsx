@@ -7,7 +7,7 @@ import DeclineRequest from "../Modals/DeclineRequest";
 import Modal from "../Modals/indicateInterest";
 import { useState } from "react";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { CSSProperties } from "react"; // Import CSSProperties for type safety
+import { CSSProperties } from "react"; 
 
 const userData = [
   { label: "Date of Birth", value: "Dec. 16, 1999" },
@@ -42,7 +42,7 @@ export default function ProfileCard() {
   const blurStyles: CSSProperties = {
     filter: "blur(4px)",
     userSelect: "none",
-    pointerEvents: "none", // Correctly typed as a valid CSS value
+    pointerEvents: "none", 
   };
 
   return (

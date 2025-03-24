@@ -2,7 +2,6 @@
 import React from "react";
 // import { LoanRequestHeaderWithTabs } from "./ReuseableHeader";
 import Search from "@/app/components/Search";
-import { LoanTable } from "@/app/components/LoanRequest/TableForAllApprovedRequest";
 // import { Tab } from "@/types";
 import { LoanRequestHeaderWithTabs } from "@/app/dashboard/loan-request/ReuseableHeader";
 import { LoanRequestWithPagination } from "./loanRequestTableApproved";

@@ -20,6 +20,7 @@ import {
 import toast from "react-hot-toast";
 import SpinningFaceExact from "../credbevyLoader";
 import { loan_approval_rates } from "@/app/Redux/dashboard/dashboardThunk";
+import { HeaderWithTabs } from "../HeadersTab";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -369,7 +370,17 @@ useEffect(()=>{
     }
   };
   if (LoanRequestAll_loading) {
-    return <SpinningFaceExact />;
+    return <Layout> 
+     <div className="h-[50%]">
+     <HeaderWithTabs
+            title="Loan Request"
+            tabs={tabs}
+            years={years}
+            onTabChange={setActiveTab}
+            onYearChange={handleYearChange}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          /><div className=""><SpinningFaceExact /></div></div></Layout>;
   }
 
   return <Layout>{renderContent()}</Layout>;

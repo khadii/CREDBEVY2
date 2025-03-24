@@ -7,7 +7,6 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  // Resolve the params Promise
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
