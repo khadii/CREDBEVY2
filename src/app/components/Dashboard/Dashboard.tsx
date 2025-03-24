@@ -171,15 +171,7 @@ export default function Dashboard() {
     { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
   ];
 
-  // const progressBarData = [
-  //   { label: "Product A", value: 50000, maxValue: 100000 },
-  //   { label: "Product B", value: 75000, maxValue: 100000 },
-  //   { label: "Product C", value: 90000, maxValue: 100000 },
-  //   { label: "Product D", value: 30000, maxValue: 100000 },
-  //   { label: "Product D", value: 30000, maxValue: 100000 },
-  //   { label: "Product D", value: 30000, maxValue: 100000 },
-  //   { label: "Product D", value: 30000, maxValue: 100000 },
-  // ];
+ 
 
   const progressBarData = loan_performance?.map((item: any) => ({
     label: item.product_name,

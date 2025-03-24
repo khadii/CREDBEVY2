@@ -21,6 +21,12 @@ interface AllRequestProps {
   handleSeeAllClick: () => void;
   handleFundWallet: () => void;
   handleYearChange: (year: string) => void;
+  setSelectedYear:any,
+  selectedYear:any
+  total_count:any
+bulkAction:any
+barChartTotalAmount:any
+pieChartTotal:any
 }
 
 export default function AllRequest({
@@ -41,6 +47,12 @@ export default function AllRequest({
   handleSeeAllClick,
   handleFundWallet,
   handleYearChange,
+  setSelectedYear,
+  selectedYear,
+  total_count,
+bulkAction,
+barChartTotalAmount,
+pieChartTotal
 }: AllRequestProps) {
   return (
     <>
@@ -66,14 +78,14 @@ export default function AllRequest({
         onFilterClick={handleFilterClick}
         onSeeAllClick={handleSeeAllClick}
         onFundWallet={handleFundWallet}
-        barChartTitle="Loan Disbursement"
-        barChartDescription="Total loan amount disbursed over time."
-        barChartTotalAmount="₦ 50,000,000.00"
+        barChartTitle="Loan Request Trend"
+        barChartDescription="Total Amount requested."
+        barChartTotalAmount={barChartTotalAmount}
         barChartHighlightBar="Dec"
         barChartHighlightColor="#EC7910"
         pieChartTitle="Loan Approval Rate"
         pieChartDescription="The percentage of loan requests approved."
-        pieChartTotal="80,000"
+        pieChartTotal={pieChartTotal}
         lineChartTitle="Default Rate"
         lineChartDescription="Total unpaid loan value."
         lineChartTotalRevenue="₦ 20,000,000.00"
@@ -82,8 +94,7 @@ export default function AllRequest({
         lineChartDefaultSelectedYear="This Year"
         progressBarTitle="Sales Performance"
         progressBarDescription="Total sales performance of different products"
-        href={"/dashboard/loan-request/details"}
-      />
+        href={"/dashboard/loan-request/details"} selectedYear={selectedYear} setSelectedYear={setSelectedYear} total_count={total_count} bulkAction={bulkAction}      />
     </>
   );
 }

@@ -9,6 +9,7 @@ const DashboardContext = createContext<any | undefined>(undefined);
 
 export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [interested, setInterested] = useState<boolean>(false);
+  const [isActivated, setIsActivated] = useState<boolean>(false);
    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   return (
@@ -41,9 +42,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 };
 export const useDashboard = () => {
   const context = useContext(DashboardContext);
-  // if (!context) {
-  //   throw new Error("useDashboard must be used within a DashboardProvider");
-  // }
   return context;
 };
 

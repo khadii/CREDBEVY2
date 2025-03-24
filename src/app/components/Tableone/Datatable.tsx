@@ -16,15 +16,15 @@ import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 interface TableProps {
   headers: string[];
   data: Array<{
-    first_name: string;
-    last_name: string;
-    average_income: string;
-    amount_requested: string;
-    credit_score: number;
-    interest_rate: string;
-    loan_duration: string;
+    first_name?: string;
+    last_name?: string;
+    average_income?: string;
+    amount_requested?: string;
+    credit_score?: number;
+    interest_rate?: string;
+    loan_duration?: string;
     info_status?: string;
-    image: string; // Add image property
+    image?: string; // Add image property
     
   }>;
   titleProps: {
@@ -143,7 +143,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps, href }) => {
               className="border-t odd:bg-gray-100 even:bg-white h-[72px] cursor-pointer"
             >
               <td className="pl-[27px] py-4 px-6">
-                <div className="flex items-center gap-4 h-full">
+                <div className="flex items-center gap-4 h-full" onClick={(e) => e.stopPropagation()}>
                   <CustomCheckbox
                     id={index}
                     checked={toggleStates[index] ?? false}
@@ -228,3 +228,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps, href }) => {
 };
 
 export default Table;
+
+
+
+

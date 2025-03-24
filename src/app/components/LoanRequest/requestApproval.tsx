@@ -5,6 +5,7 @@ import Search from "@/app/components/Search";
 import { LoanTable } from "@/app/components/LoanRequest/TableForAllApprovedRequest";
 // import { Tab } from "@/types";
 import { LoanRequestHeaderWithTabs } from "@/app/dashboard/loan-request/ReuseableHeader";
+import { LoanRequestWithPagination } from "./loanRequestTableApproved";
 
 interface ApprovedRequestsProps {
   tabs: any;
@@ -13,6 +14,12 @@ interface ApprovedRequestsProps {
   handleSearchClick: () => void;
   handleFilterClick: () => void;
   handleSeeAllClick: () => void;
+  laon_table_data_all:any,
+  setCurrentPage:any,
+  currentPage:any,
+  totalPages:any,
+  total_count:any,
+  bulkAction:any
 }
 
 export default function ApprovedRequests({
@@ -22,9 +29,14 @@ export default function ApprovedRequests({
   handleSearchClick,
   handleFilterClick,
   handleSeeAllClick,
+  laon_table_data_all,
+  currentPage,
+  setCurrentPage,totalPages,
+  total_count,
+  bulkAction
 }: ApprovedRequestsProps) {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full min-h-screen">
       <LoanRequestHeaderWithTabs
         title="Loan Request"
         tabs={tabs}
@@ -36,7 +48,7 @@ export default function ApprovedRequests({
         onFilterClick={handleFilterClick}
         onSeeAllClick={handleSeeAllClick}
       />
-      <LoanTable />
+      <LoanRequestWithPagination laon_table_data_all={laon_table_data_all} setCurrentPage={setCurrentPage} currentPage={currentPage} totalPages={totalPages} total_count={total_count} bulkAction={bulkAction} />
     </div>
   );
 }

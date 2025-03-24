@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX } from "react";
+import React, { JSX, useEffect, useMemo } from "react";
 import Card from "../Card";
 import EqualHeightContainer from "../equator";
 import Search from "../Search";
@@ -9,6 +9,10 @@ import ChartCard from "../DefaultRate";
 import BarChartCard from "../Revenuechart";
 import LoanApprovalChart from "../ChartCards/Piechart";
 import ProgressBarCard from "../Loanperformance";
+import { all_loan_requests } from "@/app/Redux/Loan_request/loan_request_thunk";
+import { AppDispatch } from "@/app/Redux/store";
+import { useDispatch } from "react-redux";
+import { LoanRequest } from "./loanRequestTable";
 
 interface Stat {
   title: string;
@@ -85,6 +89,10 @@ interface DashboardProps {
   progressBarTitle: string;
   progressBarDescription: string;
   href:string
+  selectedYear:any
+  setSelectedYear:any
+total_count:any
+bulkAction:any
 }
 
 export default function Dashboard({
@@ -108,16 +116,20 @@ export default function Dashboard({
   pieChartTitle,
   pieChartDescription,
   pieChartTotal,
-  lineChartTitle,
-  lineChartDescription,
+  selectedYear,
+  setSelectedYear,
   lineChartTotalRevenue,
   lineChartRevenueChange,
   lineChartLineColor,
   lineChartDefaultSelectedYear,
   progressBarTitle,
   progressBarDescription,
-  href
+  href,
+  total_count,
+  bulkAction
 }: DashboardProps) {
+
+ 
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
       <div>
@@ -145,6 +157,8 @@ export default function Dashboard({
                 barSize={11}
                 showValuesOnTop={true}
                 tooltip={true}
+                selectedYear={selectedYear}
+                setSelectedYear={setSelectedYear}
               />
             }
             rightContent={
@@ -163,8 +177,11 @@ export default function Dashboard({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        {/* <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />x */}
+        <LoanRequest laon_table_data_all={tableData} total_count={total_count} bulkAction={bulkAction}   />
       </div>
     </section>
   );
 }
+
+
+// data={tableData}

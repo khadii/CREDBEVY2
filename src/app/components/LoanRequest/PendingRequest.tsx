@@ -7,17 +7,22 @@ import Search from "@/app/components/Search";
 import { LoanRequestHeaderWithTabs } from "@/app/dashboard/loan-request/ReuseableHeader";
 import Pagination from "../TableTwo/Pagination";
 import Table from "../Tablefive/Table";
+import { LoanRequestWithPagination } from "./loanRequestTablepending";
 
 interface PendingRequestProps {
-  tabs:any;
+  tabs: any;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   requests: any;
-  tableHeaders: any;
-  tableTitleProps:any
+  tableTitleProps: any;
   handleSearchClick: () => void;
   handleFilterClick: () => void;
   handleSeeAllClick: () => void;
+  bulkAction: any;
+  setCurrentPage: any;
+  currentPage: any;
+  totalPages: any;
+  total_count:any
 }
 
 export default function PendingRequest({
@@ -25,14 +30,18 @@ export default function PendingRequest({
   activeTab,
   setActiveTab,
   requests,
-  tableHeaders,
   tableTitleProps,
   handleSearchClick,
   handleFilterClick,
   handleSeeAllClick,
+  bulkAction,
+  setCurrentPage,
+  currentPage,
+  totalPages,
+  total_count
 }: PendingRequestProps) {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full min-h-screen pb-36">
       <LoanRequestHeaderWithTabs
         title="Loan Request"
         tabs={tabs}
@@ -44,13 +53,14 @@ export default function PendingRequest({
         onFilterClick={handleFilterClick}
         onSeeAllClick={handleSeeAllClick}
       />
-      <Table
-        headers={tableHeaders}
-        data={requests}
-        titleProps={tableTitleProps}
-        href={"#"}
+      <LoanRequestWithPagination
+        laon_table_data_all={requests}
+        total_count={total_count}
+        bulkAction={bulkAction}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
       />
-     
     </div>
   );
 }

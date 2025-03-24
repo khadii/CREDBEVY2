@@ -80,11 +80,13 @@ const LoanApprovedTable = <T,>({
         </tbody>
       </table>
 
-      <Pagination
+    <div className="w-full justify-center">
+    <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
+    </div>
     </div>
   );
 };

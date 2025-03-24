@@ -6,9 +6,7 @@ import TableRow from "../TableTwo/TableRow";
 import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
 import TableHeader from "../TableTwo/modifiedTabletwo/TableHeader";
 
-
 interface TableProps<T> {
-  
   headers: string[];
   data: T[];
   titleProps: {
@@ -25,10 +23,11 @@ interface TableProps<T> {
   renderHeader?: (isHeaderChecked: boolean, handleHeaderToggle: () => void) => React.ReactNode;
   isHeaderChecked?: boolean;
   handleHeaderToggle?: () => void;
-  bulkAction:()=>void
+  bulkAction: () => void;
+  showAddProductButton?: boolean; 
 }
 
-const LoanProductTable = <T,>({
+const TableWithPagination = <T,>({
   headers,
   data,
   titleProps,
@@ -41,8 +40,8 @@ const LoanProductTable = <T,>({
   renderHeader,
   isHeaderChecked,
   handleHeaderToggle,
-  bulkAction
-  
+  bulkAction,
+  showAddProductButton = true,
 }: TableProps<T>) => {
   const router = useRouter();
 
@@ -67,24 +66,29 @@ const LoanProductTable = <T,>({
           </p>
         </div>
         <div className="flex gap-[12px]">
+          {showAddProductButton && (
+            <button
+              className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
+              onClick={() => router.push("/dashboard/loan-products/form")}
+            >
+              <Plus size={16} /> Add Product
+            </button>
+          )}
           <button
-            className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
-            onClick={()=>router.push("/dashboard/loan-products/form")}>
-          
-            <Plus size={16} /> Add Product
-          </button>
-          <button className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold" onClick={()=>bulkAction()}>
+            className="bg-[#24262D] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
+            onClick={() => bulkAction()}
+          >
             Bulk Action <LucideChevronDown size={16} />
           </button>
         </div>
       </div>
 
       <table className="w-full text-left">
-        <TableHeader 
-          headers={headers} 
-          renderHeader={renderHeader} 
-          isHeaderChecked={isHeaderChecked} 
-          handleHeaderToggle={handleHeaderToggle} 
+        <TableHeader
+          headers={headers}
+          renderHeader={renderHeader}
+          isHeaderChecked={isHeaderChecked}
+          handleHeaderToggle={handleHeaderToggle}
         />
         <tbody className="text-[#333333] font-semibold text-xs">
           {data?.map((item: any, index: any) => (
@@ -102,10 +106,13 @@ const LoanProductTable = <T,>({
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        setCurrentPage={ setCurrentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );
 };
 
-export default LoanProductTable;
+export default TableWithPagination;
+
+
+// showAddProductButton={false}
