@@ -8,7 +8,8 @@ import LoanApprovalChart from "../ChartCards/Piechart";
 import ProgressBarCard, {
   LoanProductProgressBarCard,
 } from "../Loanperformance";
-import { LoanProduct } from "./LoanProductTable.tsx";
+import { LoanProduct } from "./LoanProductTable";
+// import { LoanProduct } from "./LoanProductTable.tsx";
 
 interface Stat {
   title: string;

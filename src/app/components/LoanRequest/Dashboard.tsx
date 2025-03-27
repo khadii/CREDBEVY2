@@ -371,7 +371,7 @@ useEffect(()=>{
   };
   if (LoanRequestAll_loading) {
     return <Layout> 
-     <div className="h-[50%]">
+     <div className="">
      <HeaderWithTabs
             title="Loan Request"
             tabs={tabs}
@@ -383,5 +383,5 @@ useEffect(()=>{
           /><div className=""><SpinningFaceExact /></div></div></Layout>;
   }
 
-  return <Layout>{renderContent()}</Layout>;
+  return <Layout><div className="max-w-7xl">{renderContent()}</div></Layout>;
 }

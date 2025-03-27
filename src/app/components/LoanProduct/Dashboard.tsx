@@ -301,7 +301,7 @@ const router =useRouter()
   };
   return (
     <section className="w-full  bg-[#FAFAFA] ">
-      <div className="">
+      <div className="max-w-7xl">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">

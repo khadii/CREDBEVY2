@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Bigcard from "../BigCard";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
-import Dashboardone from "./reuseabledashboaardone.";
+// import Dashboardone from "./reuseabledashboaardone.";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import {
@@ -22,6 +22,7 @@ import {
 import { clearWalletBalance } from "@/app/Redux/dashboard/dashboardSlice";
 import toast from "react-hot-toast";
 import SpinningFaceExact from "../credbevyLoader";
+import Dashboardone from "./reuseabledashboaardone.";
 
 export default function Dashboard() {
   
@@ -221,7 +222,7 @@ export default function Dashboard() {
 
   return (
     <section className="w-full  bg-[#FAFAFA] ">
-      <div className="">
+      <div className="max-w-7xl">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
@@ -284,6 +285,9 @@ export default function Dashboard() {
               progressBarTitle="Sales Performance"
               progressBarDescription="Total sales performance of different products"
               href={"#"}
+              total_count={total_count}
+              laon_table_data_all={pending_loans}
+              bulkAction={undefined}
             />
           </div>
         </div>

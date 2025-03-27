@@ -36,11 +36,11 @@ export default function SettingsHome() {
             case "Integrations":
                 return <IntegrationGrid />;
             case "User management":
-                return <User_management/>; 
+                return <div  className='max-w-7xl'><User_management/></div> ; 
             case "Group Management":
                 return <div>Group Management Content</div>; 
             case "User Roles":
-                return <div><User_Roles/></div>; 
+                return <div className='max-w-7xl'><User_Roles/></div>; 
             case "Security & Password":
                 return <div><SecuritySettings/></div>; 
             case "Logs":

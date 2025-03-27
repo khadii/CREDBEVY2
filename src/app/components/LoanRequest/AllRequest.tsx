@@ -55,7 +55,7 @@ barChartTotalAmount,
 pieChartTotal
 }: AllRequestProps) {
   return (
-    <>
+    <div className="">
       <HeaderWithTabs
         title="Loan Request"
         tabs={tabs}
@@ -95,6 +95,6 @@ pieChartTotal
         progressBarTitle="Sales Performance"
         progressBarDescription="Total sales performance of different products"
         href={"/dashboard/loan-request/details"} selectedYear={selectedYear} setSelectedYear={setSelectedYear} total_count={total_count} bulkAction={bulkAction}      />
-    </>
+    </div>
   );
 }

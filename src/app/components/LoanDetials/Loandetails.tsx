@@ -29,7 +29,7 @@ export default function Loandetails({id}:{id:any}) {
 
   return (
     <Layout>
-      <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col  h-full">
+      <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col  h-full max-w-7xl">
         <div><p className="mb-[32px] text-[34px] font-bold">Loan Request Details</p></div>
       <div className="w-full flex gap-6 ">
       <div className="md:w-[32%] w-full ">

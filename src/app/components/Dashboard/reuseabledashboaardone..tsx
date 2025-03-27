@@ -9,6 +9,7 @@ import ChartCard from "../DefaultRate";
 import BarChartCard from "../Revenuechart";
 import LoanApprovalChart from "../ChartCards/Piechart";
 import ProgressBarCard from "../Loanperformance";
+import { LoanRequest } from "../LoanRequest/loanRequestTable";
 
 interface Stat {
   title: any;
@@ -91,6 +92,9 @@ interface DashboardProps {
   setSelectedYear?:any
   barselectedYear?:any
   barsetSelectedYear?:any
+  total_count?:any
+  bulkAction?:any
+  laon_table_data_all?:any
 }
 
 export default function Dashboardone({
@@ -126,8 +130,10 @@ export default function Dashboardone({
   selectedYear,
   setSelectedYear,
   barselectedYear,
-  barsetSelectedYear
-  
+  barsetSelectedYear,
+  total_count,
+  bulkAction,
+  laon_table_data_all
 }: DashboardProps) {
   return (
     <section className="w-full bg-[#FAFAFA] pb-20">
@@ -197,7 +203,7 @@ export default function Dashboardone({
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
         />
-        <Table headers={tableHeaders} data={tableData} titleProps={tableTitleProps} href={href} />
+        <LoanRequest laon_table_data_all={laon_table_data_all} total_count={total_count} bulkAction={bulkAction} />
       </div>
     </section>
   );

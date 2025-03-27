@@ -3,3 +3,13 @@
 @tailwind utilities;
 
 
+
+
+
+:root {
+  --background: #FAFAFA;
+}
+
+body {
+    background: var(--background);
+  }
