@@ -5,14 +5,14 @@ interface LoanRequest {
   LoanRequestStat: { data: any; loading: boolean; error: string | null,  success: string | null; };
   LoanRequestAll: { data: any; loading: boolean; error: string | null,  success: string | null; total_count:string | null; };
   loan_request_trend: { data: any; loading: boolean; error: string | null,  success: string | null; };
-  single_loan_products_request:{ data: any; loading: boolean; error: string | null,  success: string | null; };
+  single_loan_products_request:{ data: any; loading: boolean; error: string | null,  success: string | null; user_info_status:any };
 }
 
 const initialState: LoanRequest = {
   LoanRequestStat: { data: null, loading: false, error: null,  success:null},
   LoanRequestAll: { data: null, loading: false, error: null,success:null,total_count:null },
   loan_request_trend: { data: null, loading: false, error: null, success: null },
-  single_loan_products_request: { data: null, loading: false, error: null, success: null },
+  single_loan_products_request: { data: null, loading: false, error: null, success: null ,user_info_status:null},
 };
 
 const loanRequestSlice = createSlice({
@@ -75,12 +75,13 @@ const loanRequestSlice = createSlice({
         state.single_loan_products_request.error = null;
       })
       .addCase(_single_loan_products_request.fulfilled, (state, action) => {
-        state.loan_request_trend.loading = false;
+        state.single_loan_products_request.loading = false;
         if (action.payload.error) {
             state.single_loan_products_request.error = action.payload.message;
           }
         state.single_loan_products_request.data = action.payload.data;
         state.single_loan_products_request.success = action.payload.message; 
+        state.single_loan_products_request.user_info_status=action.payload.data?.loan.request_details.user_info_status
       })
       .addCase(_single_loan_products_request.rejected, (state, action) => {
         state.single_loan_products_request.loading = false;

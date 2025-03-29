@@ -10,7 +10,7 @@ import PendingRequest from "@/app/components/LoanRequest/PendingRequest";
 import ApprovedRequests from "@/app/components/LoanRequest/requestApproval";
 import CanceledRequests from "@/app/components/LoanRequest/CanceledRequests";
 import AllRequest from "@/app/components/LoanRequest/AllRequest";
-import { useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import {
   _loan_request_trend,
@@ -21,13 +21,17 @@ import toast from "react-hot-toast";
 import SpinningFaceExact from "../credbevyLoader";
 import { loan_approval_rates } from "@/app/Redux/dashboard/dashboardThunk";
 import { HeaderWithTabs } from "../HeadersTab";
+import { useDashboard } from "@/app/Context/DahboardContext";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
+   const { authPin, setAuhPin, selectedIds ,tabs,pendingRequestCount, setPendingRequestCount,activeTab, setActiveTab,refreshData,filters,filtersPending,filtersApproved} = useDashboard();
   // Fetch data on component mount
   const [selectedYear, setSelectedYear] = useState("2022");
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
+
 
   const [currentPage, setCurrentPage] = useState<number | undefined>(1);
   const Year = {
@@ -45,47 +49,7 @@ export default function Dashboard() {
   useEffect(() => {
     dispatch(_loan_request_trend(Period));
   }, [dispatch, Period.year]);
-  const filters = useMemo(
-    () => ({
-      search: "",
-      sort_by: "DESC",
-      start_date: "",
-      end_date: "",
-      single: false,
-      limit: "",
-      paginate: false,
-      filter_by: "",
-      approvalStatus: "",
-      page: "",
-    }),
-    []
-  );
-
-  const filtersApproved = {
-    search: "",
-    sort_by: "DESC",
-    start_date: "",
-    end_date: "",
-    single: false,
-    limit: "",
-    paginate: true,
-    filter_by: "",
-    approvalStatus: "approved",
-    page: currentPage,
-  };
-
-  const filtersPending = {
-    search: "",
-    sort_by: "DESC",
-    start_date: "",
-    end_date: "",
-    single: false,
-    limit: "",
-    paginate: true,
-    filter_by: "",
-    approvalStatus: "pending",
-    page: currentPage,
-  };
+  
   const {
     loading: LoanRequestAll_loading,
     success: LoanRequestAll_Success,
@@ -93,24 +57,28 @@ export default function Dashboard() {
     data: LoanRequestAll_Data,
     total_count: total_count_all_loan_data,
   } = useSelector((state: RootState) => state.loanRequest.LoanRequestAll);
-  const tabs = [
-    { name: "All Request" },
-    { name: "Pending Request", count: LoanRequestAll_Data?.total_count },
-    { name: "Approved Requests" },
-    { name: "Canceled Requests" },
-  ];
-
-  const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
 
   useEffect(() => {
-    if (activeTab === "Pending Request") {
-      dispatch(all_loan_requests(filtersPending));
-    } else if (activeTab === "Approved Requests") {
-      dispatch(all_loan_requests(filtersApproved));
-    } else {
-      dispatch(all_loan_requests(filters));
-    }
+    const fetchPendingCount = async () => {
+      try {
+        const result = await dispatch(all_loan_requests(filtersPending,
+        )).unwrap();
+        
+        setPendingRequestCount(result?.data?.total_count);
+      } catch (error) {
+        console.error("Failed to fetch pending count:", error);
+      }
+    };
+    
+    fetchPendingCount();
+  }, [dispatch]);
+
+
+
+  useEffect(() => {
+    refreshData();
   }, [activeTab, dispatch, filters, filtersApproved.page, filtersPending.page]);
+  
 useEffect(()=>{
    dispatch(loan_approval_rates());
 },[dispatch])

@@ -71,7 +71,7 @@ interface FiltersProps {
             },
           }
         );
-        return response.data; // Return the entire API response
+        return response.data; 
       } catch (error: any) {
         if (error.response && error.response.data) {
           return rejectWithValue(error.response.data.message || "Unauthorized");
@@ -125,22 +125,22 @@ export const _loan_request_trend = createAsyncThunk(
 
     
   interface product_id{
-    product_id: any;
+    id: any;
   }
   
 
   
   export const _single_loan_products_request = createAsyncThunk(
     "single-loan-request",
-    async ({ product_id}: product_id, { rejectWithValue }: { rejectWithValue: Function }) => {
+    async ({ id}: product_id, { rejectWithValue }: { rejectWithValue: Function }) => {
       try {
         const token = Cookies.get("authToken");
         if (!token) {
           return rejectWithValue("Authentication token is missing.");
         }
   
-        const response = await axios.post(
-          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/single-loan-request/${product_id}`,
+        const response = await axios.get(
+          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/single-loan-request/${id}`,
           
           {
             headers: {
@@ -148,7 +148,7 @@ export const _loan_request_trend = createAsyncThunk(
             },
           }
         );
-        return response.data; // Return the API response
+        return response.data; 
       } catch (error: any) {
         if (error.response && error.response.data) {
           return rejectWithValue(error.response.data.message || "Unauthorized");
@@ -160,52 +160,157 @@ export const _loan_request_trend = createAsyncThunk(
       }
     })
 
+  
+  
 
 
 
-
-    interface product_id{
-      product_id: any;
+    interface RequestParams {
+      product_id: string []| number[]; 
+      pin: any[]; 
     }
     
-  
-  
-
-
-
-
-      interface product_id{
-        product_id: any;
-      }
-      
+    export const accept_interest = createAsyncThunk(
+      "accept_interest",
+      async ({ product_id, pin }: RequestParams, { rejectWithValue }: { rejectWithValue: Function }) => {
+        try {
+          const token = Cookies.get("authToken");
+          if (!token) {
+            return rejectWithValue("Authentication token is missing.");
+          }
     
-      
-      export const approve_loan = createAsyncThunk(
-        "approve_loan",
-        async ({ product_id}: product_id, { rejectWithValue }: { rejectWithValue: Function }) => {
-          try {
-            const token = Cookies.get("authToken");
-            if (!token) {
-              return rejectWithValue("Authentication token is missing.");
+          const response = await axios.post(
+            `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/accept-interest`,
+            { pin: pin.join(''),
+              loan_ids:product_id
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             }
-      
-            const response = await axios.post(
-              `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/approve-loan/${product_id}`,
-              
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
+          );
+          return response.data;
+        } catch (error: any) {
+          if (error.response && error.response.data) {
+            return rejectWithValue(error.response.data.message || "Unauthorized");
+          } else if (error.request) {
+            return rejectWithValue("No response from the server. Please check your network connection.");
+          } else {
+            return rejectWithValue("An unexpected error occurred. Please try again.");
+          }
+        }
+      }
+    );
+
+
+
+
+
+
+
+
+    interface RequestParamsreject {
+      product_id: string []| number[]; 
+    }
+
+    
+    export const decline_interest = createAsyncThunk(
+      "decline_interest",
+      async ({ product_id }: RequestParamsreject, { rejectWithValue }: { rejectWithValue: Function }) => {
+        try {
+          const token = Cookies.get("authToken");
+          if (!token) {
+            return rejectWithValue("Authentication token is missing.");
+          }
+    
+          const response = await axios.post(
+            `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/decline-interest`,
+            { loan_ids: product_id},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          return response.data;
+        } catch (error: any) {
+          if (error.response && error.response.data) {
+            return rejectWithValue(error.response.data.message || "Unauthorized");
+          } else if (error.request) {
+            return rejectWithValue("No response from the server. Please check your network connection.");
+          } else {
+            return rejectWithValue("An unexpected error occurred. Please try again.");
+          }
+        }
+      }
+    );
+            
+
+
+
+
+
+
+
+
+            interface ProductId {
+              product_id: string;
+            }
+            
+            
+            export const approve_loan = createAsyncThunk(
+              "approve_loan",
+              async ({ product_id }: ProductId, { rejectWithValue }) => {
+                try {
+                  const token = Cookies.get("authToken");
+                  if (!token) {
+                    return rejectWithValue({ message: "Authentication token is missing." });
+                  }
+            
+                  const response = await axios.post(
+                    `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/approve-loan/${product_id}`,
+                    null,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  return response.data;
+                } catch (error: any) {
+                  if (error.response?.data) {
+                    return rejectWithValue(error.response.data);
+                  }
+                  return rejectWithValue({ message: error.message || "An unexpected error occurred" });
+                }
               }
             );
-            return response.data; // Return the API response
-          } catch (error: any) {
-            if (error.response && error.response.data) {
-              return rejectWithValue(error.response.data.message || "Unauthorized");
-            } else if (error.request) {
-              return rejectWithValue("No response from the server. Please check your network connection.");
-            } else {
-              return rejectWithValue("An unexpected error occurred. Please try again.");
-            }
-          }
-        })
+            
+            export const reject_loan = createAsyncThunk(
+              "reject_loan",
+              async ({ product_id }: ProductId, { rejectWithValue }) => {
+                try {
+                  const token = Cookies.get("authToken");
+                  if (!token) {
+                    return rejectWithValue({ message: "Authentication token is missing." });
+                  }
+            
+                  const response = await axios.post(
+                    `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/disapprove-loan/${product_id}`,
+                    null, 
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  return response.data;
+                } catch (error: any) {
+                  if (error.response?.data) {
+                    return rejectWithValue(error.response.data);
+                  }
+                  return rejectWithValue({ message: error.message || "An unexpected error occurred" });
+                }
+              }
+            );

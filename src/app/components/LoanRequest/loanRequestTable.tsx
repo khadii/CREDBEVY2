@@ -169,13 +169,15 @@ export const LoanRequest= ({    bulkAction,  laon_table_data_all,  total_count }
             <button onChange={(e)=> e.stopPropagation()} className="flex w-full gap-[27px]">
               <LucideThumbsUp
               onChange={(e)=>e.stopPropagation()}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() =>{ setIsModalOpen(true);
+                  setSelectedIds(item.loan_uuid)}}
                 size={24}
                 className="text-[#067647] cursor-pointer"
+
               />
               <LucideThumbsDown
                 onChange={(e)=>e.stopPropagation()}
-                onClick={() => setIsModalOpenDeclineRequest(true)}
+                onClick={() => {setIsModalOpenDeclineRequest(true) ;setSelectedIds(item.loan_uuid)}}
                 size={24}
                 className="text-[#B42318] cursor-pointer"
               />

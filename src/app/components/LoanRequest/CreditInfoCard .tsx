@@ -1,5 +1,6 @@
 import React from "react";
 
+
 // Type definitions for Card props
 interface CardProps {
   title: string;
@@ -16,7 +17,8 @@ const Card: React.FC<CardProps> = ({ title, detail, description, color }) => {
     yellow: "border-[#F4C418]",
     red: "border-[#E33A24]",
   };
-
+  
+  
   return (
     <div className={`bg-[#FAFAFA] p-6 rounded-md border-l-2 ${borderColorMap[color]}`}>
       <div className="flex flex-col items-start">

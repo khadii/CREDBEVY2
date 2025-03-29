@@ -11,33 +11,17 @@ import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_req
 
 export default function Loandetails({id}:{id:any}) {
 
-  const dispatch = useDispatch<AppDispatch>();
-  const Userid = {
-    product_id: id,
-  };
-  useEffect(() => {
-    dispatch(_single_loan_products_request(Userid));
-  }, [dispatch, Userid.product_id ]);
-  const {
-    loading,
-    success,
-    error,
-    data,
-  } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
-
-
-
   return (
     <Layout>
       <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col  h-full max-w-7xl">
         <div><p className="mb-[32px] text-[34px] font-bold">Loan Request Details</p></div>
       <div className="w-full flex gap-6 ">
       <div className="md:w-[32%] w-full ">
-          <ProfileCard />
+          <ProfileCard id={id} />
         </div>
         <div className="w-[68%] ">
           {" "}
-          <FinancialInfo />
+          <FinancialInfo id={id} />
         </div>
       </div>
       </div>

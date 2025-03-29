@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 // Define the props interface
 interface CreditScoreGaugeProps {
   creditScore?: number;
+  lastUpdated?: string;
+  pointChange?: number;
 }
 
 // Define the credit rating type
@@ -17,25 +19,28 @@ interface AnimationState {
   progress: number;
 }
 
-const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }) => {
+const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ 
+  creditScore = 660,
+  lastUpdated = "21st June 2022",
+  pointChange = 24
+}) => {
   const [animatedScore, setAnimatedScore] = useState<number>(400);
   const [previousScore, setPreviousScore] = useState<number>(400);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<AnimationState | null>(null);
   
   // Constants for gauge dimensions and calculations
-  const [size, setSize] = useState<number>(200); // Initial size, will be adjusted dynamically
-  const center: number = size / 2;
-  const radius: number = size / 2 - 8; // Adjust for stroke width
+  const [size, setSize] = useState<number>(200); // Will be adjusted dynamically
   const minScore: number = 400;
   const maxScore: number = 800;
   
   // Calculate credit score rating text and color
   const getCreditRating = (score: number): CreditRating => {
-    if (score >= 750) return { text: "Excellent", color: "text-[#42BE65]" };
-    if (score >= 700) return { text: "Good", color: "text-[#42BE65]" };
-    if (score >= 650) return { text: "Good", color: "text-[#42BE65]" };
-    if (score >= 600) return { text: "Fair", color: "text-yellow-500" };
+    if (score >= 800) return { text: "Excellent", color: "text-emerald-500" };
+    if (score >= 740) return { text: "very Good", color: "text-emerald-500" };
+    if (score >= 670) return { text: "Good", color: "text-emerald-500" };
+    if (score >= 580) return { text: "Fair", color: "text-yellow-500" };
     return { text: "Poor", color: "text-red-500" };
   };
   
@@ -48,12 +53,15 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
   };
   
   // Draw the gauge on the canvas
-  const drawGauge = (ctx: CanvasRenderingContext2D, scoreValue: number): void => {
-    ctx.clearRect(0, 0, size, size);
+  const drawGauge = (ctx: CanvasRenderingContext2D, scoreValue: number, canvasSize: number): void => {
+    const center: number = canvasSize / 2;
+    const radius: number = canvasSize / 2 * 0.8; // 80% of half size for better proportions
+    
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
     const normalizedScore = normalizeScore(scoreValue);
     
     // Draw the background arcs
-    drawArcs(ctx);
+    drawArcs(ctx, center, radius);
     
     // Draw the knob
     const angle = Math.PI + (normalizedScore * Math.PI);
@@ -62,9 +70,9 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
     
     // Draw knob outline
     ctx.beginPath();
-    ctx.arc(knobX, knobY, 10, 0, 2 * Math.PI); // Smaller knob
+    ctx.arc(knobX, knobY, radius * 0.08, 0, 2 * Math.PI); // Size relative to radius
     ctx.strokeStyle = '#1e3f3f';
-    ctx.lineWidth = 3; // Thinner stroke
+    ctx.lineWidth = radius * 0.02; // Thickness relative to radius
     ctx.stroke();
     
     // Fill knob
@@ -73,14 +81,14 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
   };
   
   // Draw the gradient arcs
-  const drawArcs = (ctx: CanvasRenderingContext2D): void => {
+  const drawArcs = (ctx: CanvasRenderingContext2D, center: number, radius: number): void => {
     // Define arc segments and gaps
     const arcAngles: number[] = [0.33, 0.14, 0.14, 0.255];
     const gapAngle: number = Math.PI * 0.05;
     
     let startAngle: number = Math.PI;
     
-    ctx.lineWidth = 12; // Thinner arcs
+    ctx.lineWidth = radius * 0.08; // Arc thickness relative to radius
     ctx.lineCap = 'round';
     
     // Draw each segment with its own color
@@ -135,16 +143,34 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
     }
   };
   
-  // Handle window resize to adjust canvas size
+  // Responsive sizing based on container width
+  const updateSize = () => {
+    if (!containerRef.current) return;
+    
+    // Get the width of the container
+    const containerWidth = containerRef.current.clientWidth;
+    
+    // Calculate new size (responsive to container width)
+    // Use a percentage of container width with min/max constraints
+    const newSize = Math.max(
+      Math.min(containerWidth * 0.9, 350), // Max size 350px, 90% of container
+      180 // Min size 180px
+    );
+    
+    setSize(newSize);
+  };
+  
+  // Handle component mount and resize events
   useEffect(() => {
+    updateSize(); // Initial size calculation
+    
+    // Handle window resize
     const handleResize = () => {
-      const newSize = Math.min(window.innerWidth * 0.2, 300); // Adjust max size as needed
-      setSize(newSize);
+      updateSize();
     };
-
+    
     window.addEventListener('resize', handleResize);
-    handleResize(); // Set initial size
-
+    
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
@@ -160,10 +186,15 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
     const dpr = window.devicePixelRatio || 1;
     canvas.width = size * dpr;
     canvas.height = size * dpr;
+    
+    // Set display size
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
+    
     ctx.scale(dpr, dpr);
     
     // Draw initial state
-    drawGauge(ctx, animatedScore);
+    drawGauge(ctx, animatedScore, size);
     
     // Animate when credit score changes
     if (creditScore !== previousScore) {
@@ -180,60 +211,77 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({ creditScore = 660 }
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-    drawGauge(ctx, animatedScore);
+    drawGauge(ctx, animatedScore, size);
   }, [animatedScore, size]);
   
+  // Calculate font sizes based on component size
+  const scoreFontSize = `${Math.max(size * 0.12, 24)}px`;
+  const ratingFontSize = `${Math.max(size * 0.05, 11)}px`;
+  const labelFontSize = `${Math.max(size * 0.05, 10)}px`;
+  const changeFontSize = `${Math.max(size * 0.045, 10)}px`;
+  
   return (
-    <div className="relative w-full max-w-md mx-auto bg-[#f0fafc] p-4">
-      <div className="relative" style={{ width: size, height: size }}>
-        <canvas 
-          ref={canvasRef} 
-          width={size} 
-          height={size} 
-          className="w-full h-auto"
-        />
-        
-        {/* Score display in center */}
-        <div className="absolute" style={{ 
-          top: '30%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)'
-        }}>
-          <div className={`text-[11px] font-medium ${rating.color} mb-1 text-center`}>
-            {rating.text}
+    <div ref={containerRef} className="w-full mx-auto bg-[#EDFEFF] p-4 ">
+      <div className="relative flex justify-center items-center">
+        <div className="relative" style={{ width: `${size}px`, height: `${size}px` }}>
+          <canvas 
+            ref={canvasRef} 
+            className="w-full h-full"
+          />
+          
+          {/* Score display in center */}
+          <div className="absolute" style={{ 
+            top: '35%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)',
+            width: '80%',
+          }}>
+            <div className={`font-medium ${rating.color} mb-1 text-center`} style={{ fontSize: ratingFontSize }}>
+              {rating.text}
+            </div>
+            <div className="font-bold text-[#333333] tracking-tighter text-center" style={{ fontSize: scoreFontSize }}>
+              {Math.round(animatedScore)}
+            </div>
+            {pointChange > 0 && (
+              <div className="text-emerald-500 font-semibold mt-2 text-center" style={{ fontSize: changeFontSize }}>
+                + {pointChange} pts
+              </div>
+            )}
+            {pointChange < 0 && (
+              <div className="text-red-500 font-semibold mt-2 text-center" style={{ fontSize: changeFontSize }}>
+                {pointChange} pts
+              </div>
+            )}
           </div>
-          <div className="text-4xl font-bold text-[#333333] tracking-tighter text-center">
-            {Math.round(animatedScore)}
+          
+          {/* Min score label - responsive positioning */}
+          <div className="absolute text-[#333333] font-semibold" style={{ 
+            bottom: `${size * 0.25}px`, 
+            left: `${size * 0.05}px`,
+            fontSize: labelFontSize
+          }}>
+            {minScore}
           </div>
-          <div className="text-[#42BE65] text-xs font-semibold mt-2 text-center">
-            + 24 pts
+          
+          {/* Max score label - responsive positioning */}
+          <div className="absolute text-[#333333] font-semibold" style={{ 
+            bottom: `${size * 0.25}px`, 
+            right: `${size * 0.05}px`,
+            fontSize: labelFontSize
+          }}>
+            {maxScore}
           </div>
-        </div>
-        
-        {/* Min score label - fixed position */}
-        <div className="absolute text-[#333333] text-sm font-semibold" style={{ 
-          bottom: size * 0.35 + 'px', 
-          left: size * 0.00 + 'px'
-        }}>
-          400
-        </div>
-        
-        {/* Max score label - fixed position */}
-        <div className="absolute text-[#333333] text-sm font-semibold" style={{ 
-          bottom: size * 0.35 + 'px', 
-          right: size * 0.00 + 'px'
-        }}>
-          800
-        </div>
-        
-        {/* Last updated text - fixed position and centered */}
-        <div className="absolute  text-[#8C8C8C] text-xs font-semibold text-center" style={{ 
-           bottom: size * 0.35 + 'px', 
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 'auto'
-        }}>
-          Last updated 21st June 2022
+          
+          {/* Last updated text - responsive positioning */}
+          <div className="absolute text-[#8C8C8C] font-semibold text-center" style={{ 
+            bottom: `${size * 0.25}px`, 
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: `${size * 0.8}px`,
+            fontSize: labelFontSize
+          }}>
+            Last updated {lastUpdated}
+          </div>
         </div>
       </div>
     </div>
