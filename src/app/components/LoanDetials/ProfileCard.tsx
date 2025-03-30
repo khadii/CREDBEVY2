@@ -2,22 +2,28 @@
 
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
-import ApproveRequest from "../Modals/Approve Request";
+import ApproveRequest from "../Modals/ApproveRequest";
 import DeclineRequest from "../Modals/DeclineRequest";
 import Modal from "../Modals/indicateInterest";
+import Modal2 from "../Modals/acceeptInterest";
+import Modal3 from "../Modals/DeclineInterest";
 import { useEffect, useState } from "react";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { CSSProperties } from "react";
 import { RootState } from "@/app/Redux/store";
 import { useSelector } from "react-redux";
+import SpinningFaceExact from "../credbevyLoader";
 
 export default function ProfileCard({id}:{id:any}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] = useState(false);
   const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] = useState(false);
   const { interested, setInterested,setSelectedIds,Request_Details } = useDashboard();
 
   const {
+    loading:LoanRequest_loading,
     data: LoanRequest_Data,
   } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
 
@@ -66,13 +72,13 @@ export default function ProfileCard({id}:{id:any}) {
     pointerEvents: "none",
   };
 
-  if (!LoanRequest_Data) {
-    return <div>Loading user data...</div>;
+  if (LoanRequest_loading) {
+    return      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
   }
 
-  const user = LoanRequest_Data.loan.user;
-  const fullName = `${user.first_name} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name}`;
-  const creditScore = user.credit_score || 660;
+  const user = LoanRequest_Data?.loan.user;
+  const fullName = `${user?.first_name} ${user?.middle_name ? user?.middle_name + ' ' : ''}${user?.last_name}`;
+  const creditScore = user?.credit_score || 660;
 
   return (
     <div
@@ -91,12 +97,21 @@ export default function ProfileCard({id}:{id:any}) {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
+      
       />
-
+  <Modal2
+        isOpen={isModalOpen2}
+        onClose={() => setIsModalOpen2(false)}
+        // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
+      />
+       <Modal3
+        isOpen={isModalOpen3}
+        onClose={() => setIsModalOpen3(false)}
+        // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
+      />
       {/* Profile Image */}
       <img
-        src={user.selfie_base_image_64 || "https://bit.ly/dan-abramov"}
+        src={user?.selfie_base_image_64 || "https://bit.ly/dan-abramov"}
         alt="Avatar"
         className="w-24 h-24 mx-auto mb-4 mt-[48px] rounded-full"
       />
@@ -110,7 +125,7 @@ export default function ProfileCard({id}:{id:any}) {
             <div>
               <button
                 className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() =>{ setIsModalOpen2(true);setSelectedIds(id)}}
               >
                 <div>
                   <FaRegCheckCircle size={18} />
@@ -123,7 +138,7 @@ export default function ProfileCard({id}:{id:any}) {
             <div>
               <button
                 className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
-                onClick={() => setIsModalOpenDeclineRequest(true)}
+                onClick={() =>{ setIsModalOpen3(true);setSelectedIds(id)}}
               >
                 <div>
                   <FaRegTimesCircle size={18} />

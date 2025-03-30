@@ -1,6 +1,6 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { _single_loan_products_request, accept_interest } from "@/app/Redux/Loan_request/loan_request_thunk";
+import { _single_loan_products_request, accept_interest, approve_loan } from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
 import { ConfirmPin } from "@/app/Redux/pin/pinthunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
@@ -40,46 +40,47 @@ const [borderRed,setBorderRed]=useState(false)
   } = useSelector((state: RootState) => state.Pin.ConfirmPin);
 
   const {
-    acceptLoading,
-    acceptSuccess,
-    acceptError,
-    acceptData,
-  } = useSelector((state: RootState) => state.loanrejectaccept);
+    approveLoading,
+   approveSuccess,
+  approveError,
+ approveData,
+ rejectSuccess
+  } = useSelector((state: RootState) => state.loanCondition);
 
-  const getProductCookie = () => {
-    try {
-      const productCookie = Cookies.get("product_id");
-      if (!productCookie) return null;
+  // const getProductCookie = () => {
+  //   try {
+  //     const productCookie = Cookies.get("product_id");
+  //     if (!productCookie) return null;
       
-      // First check if it's already a parsed object (unlikely but possible)
-      if (typeof productCookie === 'object') return productCookie;
+  //     // First check if it's already a parsed object (unlikely but possible)
+  //     if (typeof productCookie === 'object') return productCookie;
       
-      // Handle cases where it might be a plain ID string
-      if (!productCookie.startsWith("{")) return productCookie;
+  //     // Handle cases where it might be a plain ID string
+  //     if (!productCookie.startsWith("{")) return productCookie;
       
-      return JSON.parse(productCookie);
-    } catch (error) {
-      console.error("Failed to parse product cookie:", error);
-      Cookies.remove("product_id"); // Clean up invalid cookie
-      return null;
-    }
-  };
+  //     return JSON.parse(productCookie);
+  //   } catch (error) {
+  //     console.error("Failed to parse product cookie:", error);
+  //     Cookies.remove("product_id"); // Clean up invalid cookie
+  //     return null;
+  //   }
+  // };
   
   
 
 
   useEffect(() => {
-    if (acceptSuccess) {
-      toast.success('you have successfully indicated interest');
-      const productData = getProductCookie();
-      dispatch(_single_loan_products_request(productData));
+    if (approveSuccess) {
+      toast.success(approveData.message);
+      // const productData = getProductCookie();
+      // dispatch(_single_loan_products_request(productData));
     }
-    if (acceptError) {
-      toast.error(acceptError);
+    if (approveError) {
+      toast.error(approveError);
     }
-  }, [acceptSuccess, acceptError,dispatch]);
+  }, [approveSuccess, approveError, approveData,dispatch]);
 
-  // Handle PIN confirmation results
+  // // Handle PIN confirmation results
   useEffect(() => {
     if (pinSuccess) {
       toast.success(pinMessage);
@@ -122,6 +123,17 @@ const [borderRed,setBorderRed]=useState(false)
     return Object.keys(newErrors).length === 0;
   };
 
+
+
+
+
+
+
+
+
+
+
+
   const handleSubmit = async () => {
     if (!validate()) return;
   
@@ -137,21 +149,19 @@ const [borderRed,setBorderRed]=useState(false)
         // Update authPin in context
         setAuhPin(pinPayload.pin);
         
-        // Create new request params with the confirmed pin
-        const currentRequestParams = {
-          product_id: [selectedIds],
-          pin: pinPayload.pin
-        };
-        
-       
+      // request params with the confirmed pin
+      const currentRequestParams = {
+        product_id: [selectedIds],
+        pin: pinPayload.pin
+      };
+      
 
         // Dispatch accept_interest with the current pin
-        const interestResult = await dispatch(accept_interest(currentRequestParams));
+        const interestResult = await dispatch(approve_loan(currentRequestParams));
         
         if (interestResult.meta.requestStatus === 'fulfilled') {
-          toast.success('Request accepted successfully');
+          toast.success('Loan accepted successfully');
           refreshData();
-          // refreshSingle()
           setInterested(true)
           // setIsModalOpenApproveRequest(true);
          
@@ -163,6 +173,8 @@ const [borderRed,setBorderRed]=useState(false)
       toast.error('Failed to process request');
     }
   };
+
+
   if (!isOpen) return null;
 
   return (
@@ -170,7 +182,7 @@ const [borderRed,setBorderRed]=useState(false)
       <div className="relative bg-white rounded-lg">
         <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
           <h2 className="text-[24px] font-bold text-[#333333]">
-            Indicate Interest
+          Accept Request
           </h2>
           <button 
             onClick={onClose} 
@@ -224,9 +236,9 @@ const [borderRed,setBorderRed]=useState(false)
             <button 
               className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
               onClick={handleSubmit}
-              disabled={pinLoading || acceptLoading}
+              disabled={pinLoading || approveLoading}
             >
-              {pinLoading || acceptLoading ? "Processing..." : "Done"}
+              {pinLoading || approveLoading ? "Processing..." : "Done"}
             </button>
           </div>
         </div>

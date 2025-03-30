@@ -14,7 +14,10 @@ interface ModalProps {
 const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { selectedIds, refreshData, setInterested } = useDashboard();
   const dispatch = useDispatch<AppDispatch>();
-  const { rejectLoading } = useSelector((state: RootState) => state.loanCondition);
+  const {   declineLoading,
+    declineSuccess,
+    declineError,
+    declineData, } = useSelector((state: RootState) => state.loanrejectaccept);
   
   if (!isOpen) return null;
   
@@ -81,10 +84,10 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             </button>
             <button 
               onClick={handleSubmit}
-              disabled={rejectLoading}
+              disabled={declineLoading}
               className="px-[81px] py-[10px] border border-[#FA4D56] bg-[#FA4D56] rounded-[4px] text-[12px] font-bold text-white disabled:opacity-50"
             >
-              {rejectLoading ? 'Processing...' : 'Decline'}
+              {declineLoading ? 'Processing...' : 'Decline'}
             </button>
           </div>
         </div>

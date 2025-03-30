@@ -5,7 +5,7 @@ import { FaCircle } from "react-icons/fa";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import TableWithPagination from "../table/tablewWthPagination";
-import ApproveRequest from "../Modals/Approve Request";
+import ApproveRequest from "../Modals/ApproveRequest";
 import DeclineRequest from "../Modals/DeclineRequest";
 import Modal from "../Modals/indicateInterest";
 import TableWithOutPagination from "../table/tableWithOutPagination";

@@ -8,8 +8,10 @@ import FinancialInfo from "./FinancialInfo";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
+import SpinningFaceExact from "../credbevyLoader";
 
 export default function Loandetails({id}:{id:any}) {
+
 
   return (
     <Layout>

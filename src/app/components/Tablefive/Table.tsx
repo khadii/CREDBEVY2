@@ -8,7 +8,7 @@ import { FaCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Modal from "../Modals/indicateInterest";
 import DeclineRequest from "../Modals/DeclineRequest";
-import ApproveRequest from "../Modals/Approve Request";
+import ApproveRequest from "../Modals/ApproveRequest";
 import Pagination from "../TableTwo/Pagination";
 
 interface TableProps {

@@ -3,7 +3,7 @@ import React from 'react';
 
 const SpinningFaceExact = () => {
   return (
-    <div className="flex justify-center items-start max-h-screen h-screen bg-[#FAFAFA] min-h-screen">
+    <div className="flex justify-center items-center max-h-screen h-screen bg-[#FAFAFA] min-h-screen">
       <div className="w-32 h-32 relative animate-spin">
         {/* Dotted circle */}
         <div className="absolute inset-0 w-full h-full ">

@@ -11,6 +11,7 @@ import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 import Cookies from "js-cookie";
+import SpinningFaceExact from "../credbevyLoader";
 
 
 export default function FinancialInfo({id}:{id:any}) {
@@ -41,10 +42,7 @@ export default function FinancialInfo({id}:{id:any}) {
     
     }, [dispatch, id,user_info_status]);
 
-    const INTERESTED = useMemo(() => 
-      user_info_status === "INTERESTED", 
-      [user_info_status]
-    );
+  
     
     useEffect(() => {
       dispatch(_single_loan_products_request(product_id));
@@ -169,7 +167,7 @@ export default function FinancialInfo({id}:{id:any}) {
     };
 
     if (LoanRequest_loading) {
-      return <div>Loading...</div>;
+      return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
     }
 
     if (LoanRequest_SuccessError) {

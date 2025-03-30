@@ -165,6 +165,17 @@ export const _loan_request_trend = createAsyncThunk(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
     interface RequestParams {
       product_id: string []| number[]; 
       pin: any[]; 
@@ -254,14 +265,64 @@ export const _loan_request_trend = createAsyncThunk(
 
 
 
-            interface ProductId {
-              product_id: string;
-            }
-            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    interface RequestParams {
+      product_id: string []| number[]; 
+      pin: any[]; 
+    }
             
             export const approve_loan = createAsyncThunk(
               "approve_loan",
-              async ({ product_id }: ProductId, { rejectWithValue }) => {
+              async ({ product_id, pin }: RequestParams, { rejectWithValue }: { rejectWithValue: Function }) => {
                 try {
                   const token = Cookies.get("authToken");
                   if (!token) {
@@ -270,7 +331,9 @@ export const _loan_request_trend = createAsyncThunk(
             
                   const response = await axios.post(
                     `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/approve-loan/${product_id}`,
-                    null,
+                    { pin: pin.join(''),
+                    
+                    },
                     {
                       headers: {
                         Authorization: `Bearer ${token}`,
@@ -289,7 +352,7 @@ export const _loan_request_trend = createAsyncThunk(
             
             export const reject_loan = createAsyncThunk(
               "reject_loan",
-              async ({ product_id }: ProductId, { rejectWithValue }) => {
+              async ({ product_id, pin }: RequestParams, { rejectWithValue }: { rejectWithValue: Function }) => {
                 try {
                   const token = Cookies.get("authToken");
                   if (!token) {
@@ -298,7 +361,9 @@ export const _loan_request_trend = createAsyncThunk(
             
                   const response = await axios.post(
                     `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/disapprove-loan/${product_id}`,
-                    null, 
+                    { pin: pin.join(''),
+                    
+                    },
                     {
                       headers: {
                         Authorization: `Bearer ${token}`,

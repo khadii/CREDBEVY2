@@ -9,6 +9,7 @@ import loanRequestReducer from'../Redux/Loan_request/loan_request_slice.';
 import pinReducer from'../Redux/pin/pinkslice';
 import loanInterestReducer from'../Redux/Loan_request/loanInterestSlice';
 import loanConditionReducer from'../Redux/Loan_request/loanConditon';
+import loanrejectacceptReducer from'../Redux/Loan_request/loanInterestSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -19,7 +20,8 @@ export const store = configureStore({
     loanRequest: loanRequestReducer,
     Pin:pinReducer,
     loanInterest:loanInterestReducer,
-    loanCondition:loanConditionReducer
+    loanCondition:loanConditionReducer,
+    loanrejectaccept:loanrejectacceptReducer
   },
 });
 
