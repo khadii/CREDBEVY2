@@ -59,7 +59,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps, href }) => {
     <div className="rounded-lg mt-3 w-full bg-white">
       <ApproveRequest isOpen={isModalOpenApproveRequest} onClose={() => setIsModalOpenApproveRequest(false)} />
       <DeclineRequest isOpen={isModalOpenDeclineRequest} onClose={() => setIsModalOpenDeclineRequest(false)} />
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)} />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}  />
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
         <div>
           <div className="grid grid-cols-3 w-full gap-3 bg-white">

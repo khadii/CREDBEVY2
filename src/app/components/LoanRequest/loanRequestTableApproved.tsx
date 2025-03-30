@@ -200,7 +200,7 @@ export const LoanRequestWithPagination = ({ bulkAction, laon_table_data_all, set
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
+      
       />
     </>
   );

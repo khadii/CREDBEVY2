@@ -94,7 +94,7 @@ const Table: React.FC<TableProps> = ({ headers, data, titleProps, href }) => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
+        // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
       />
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none bg-white">
         <div>

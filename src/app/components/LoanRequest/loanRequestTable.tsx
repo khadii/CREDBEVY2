@@ -206,6 +206,6 @@ export const LoanRequest= ({    bulkAction,  laon_table_data_all,  total_count }
         onClose={() => setIsModalOpenDeclineRequest(false)} /><Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)} /></>
+     /></>
   );
 };
