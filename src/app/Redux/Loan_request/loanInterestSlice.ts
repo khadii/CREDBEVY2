@@ -63,7 +63,7 @@ export const loanrejectaccept = createSlice({
         state.declineError = action.payload as string || 'Failed to decline interest';
       })
       
-      // Accept Interest Cases
+      // Accept Interest Caseswww
       .addCase(accept_interest.pending, (state) => {
         state.acceptLoading = true;
         state.acceptSuccess = false;

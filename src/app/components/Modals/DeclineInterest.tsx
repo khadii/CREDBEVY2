@@ -30,7 +30,7 @@ const PinModal: React.FC<ModalProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
-
+  const [refreshid, setrefreshid] = useState<ErrorsState>();
   const {
     loading: pinLoading,
     success: pinSuccess,
@@ -45,6 +45,23 @@ const PinModal: React.FC<ModalProps> = ({
   rejectData,
   } = useSelector((state: RootState) => state.loanCondition);
 
+  const getProductCookie = () => {
+    try {
+      const productCookie = Cookies.get("product_id");
+      if (!productCookie) return null;
+      if (typeof productCookie === 'object') return productCookie;
+      if (!productCookie.startsWith("{")) return productCookie;
+      return JSON.parse(productCookie);
+    } catch (error) {
+      console.error("Failed to parse product cookie:", error);
+      Cookies.remove("product_id");
+      return null;
+    }
+  };
+
+
+
+
   const resetAll = () => {
     setPin(["", "", "", ""]);
     setErrors({});
@@ -57,19 +74,18 @@ const PinModal: React.FC<ModalProps> = ({
     onClose();
   };
 
-  useEffect(() => {
-    if (rejectSuccess) {
-      toast.success(rejectData.message);
-      onClose();
-      resetAll();
- 
-    }
-    if (rejectError) {
-      toast.error(rejectError);
-      resetAll();
-      onClose();
-    }
-  }, [rejectSuccess, rejectError, rejectData, dispatch]);
+  // useEffect(() => {
+  //   if (rejectSuccess) {
+  //     toast.success(rejectData.message);
+  //     onClose();
+  //     resetAll();
+  //   }
+  //   if (rejectError) {
+  //     toast.error(rejectError);
+  //     resetAll();
+  //     onClose();
+  //   }
+  // }, [rejectSuccess, rejectError, rejectData, dispatch]);
 
   useEffect(() => {
     if (pinSuccess) {
@@ -128,18 +144,52 @@ const PinModal: React.FC<ModalProps> = ({
           product_id: [selectedIds],
           pin: pinPayload.pin
         };
-
+  
         const interestResult = await dispatch(reject_loan(currentRequestParams));
         
+        // Check the response structure
         if (interestResult.meta.requestStatus === 'fulfilled') {
-          // toast.success('Loan accepted successfully');
+          const response = interestResult.payload as {
+            error: boolean;
+            message: string;
+            data: any;
+          };
+  
+          const productData = getProductCookie();
+          dispatch(_single_loan_products_request({ id: productData }));
+          
+          if (response.error) {
+            toast.error(response.message);
+          } else {
+            toast.success(response.message || "Operation completed successfully");
+          }
+          
           onClose();
           setInterested(true);
+        }
+        
+        if (interestResult.meta.requestStatus === 'rejected') {
+          const response = interestResult.payload as {
+            error: boolean;
+            message: string;
+            data: any;
+          } || {
+            error: true,
+            message: "Request failed"
+          };
+  
+          const productData = getProductCookie();
+          toast.error(response.message);
+          dispatch(_single_loan_products_request({ id: productData }));
+          setInterested(true);
+          onClose();
         }
       }
     } catch (error) {
       console.error('Error processing request:', error);
-      toast.error('Failed to process request');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to process request'
+      );
     }
   };
 

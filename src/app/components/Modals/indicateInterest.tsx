@@ -71,19 +71,20 @@ const PinModal: React.FC<ModalProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (acceptSuccess) {
-      toast.success('You have successfully indicated interest');
-      const productData = getProductCookie();
-      dispatch(_single_loan_products_request(productData));
-      resetAll();
-      handleClose();
-    }
-    if (acceptError) {
-      toast.error(acceptError);
-      resetAll();
-    }
-  }, [acceptSuccess, acceptError, dispatch]);
+  // useEffect(() => {
+  //   if (acceptSuccess) {
+  //     toast.success('You have successfully indicated interest');
+  //     const productData = getProductCookie();
+  //     dispatch(_single_loan_products_request(productData));
+  //     resetAll();
+  //     handleClose();
+  //   }
+  //   if (acceptError) {
+  //     toast.error(acceptError);
+  //     resetAll();
+  //     handleClose();
+  //   }
+  // }, [acceptSuccess, acceptError, dispatch]);
 
   useEffect(() => {
     if (pinSuccess) {
@@ -144,10 +145,41 @@ const PinModal: React.FC<ModalProps> = ({
         };
 
         const interestResult = await dispatch(accept_interest(currentRequestParams));
-        
         if (interestResult.meta.requestStatus === 'fulfilled') {
-          refreshData();
+          const response = interestResult.payload as {
+            error?: boolean;
+            message?: string;
+            data?: any;
+          };
+  
+          const productData = getProductCookie();
+          dispatch(_single_loan_products_request({ id: productData }));
+          refreshData()
+          
+          // Show appropriate toast based on response
+          if (response.error) {
+            toast.error(response.message || "Loan approval failed");
+          } else {
+            toast.success(response.message || "Loan approved successfully");
+          }
+          
+          onClose();
           setInterested(true);
+        }
+        
+        // Handle rejection (failed API call)
+        if (interestResult.meta.requestStatus === 'rejected') {
+          const errorResponse = (interestResult as any).payload || {
+            error: true,
+            message: "Failed to process approval request"
+          };
+  
+          const productData = getProductCookie();
+          toast.error(errorResponse.message);
+          refreshData()
+          dispatch(_single_loan_products_request({ id: productData }));
+          setInterested(true);
+          onClose();
         }
       }
     } catch (error) {

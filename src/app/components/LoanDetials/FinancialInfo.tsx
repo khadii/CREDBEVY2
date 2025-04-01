@@ -24,11 +24,12 @@ export default function FinancialInfo({ id }: { id: any }) {
   } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
   
   const { approveSuccess } = useSelector((state: RootState) => state.loanCondition);
-  const { interested, setInterested } = useDashboard();
+  const { interested, setInterested,setSelectedIds } = useDashboard();
 
   // Main data fetch effect - runs only when id changes
   useEffect(() => {
     dispatch(_single_loan_products_request(product_id));
+    setSelectedIds(product_id)
   }, [dispatch, product_id]);
 
   // Set cookies only when data is available
@@ -44,6 +45,7 @@ export default function FinancialInfo({ id }: { id: any }) {
   useEffect(() => {
     if (LoanRequest_Data?.loan?.request_details) {
       setInterested(user_info_status === "INTERESTED");
+      setSelectedIds(id)
     }
   }, [user_info_status, LoanRequest_Data, setInterested]);
 

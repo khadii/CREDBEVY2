@@ -56,21 +56,35 @@ const PinModal: React.FC<ModalProps> = ({
     resetAll();
     onClose();
   };
+  const getProductCookie = () => {
+    try {
+      const productCookie = Cookies.get("product_id");
+      if (!productCookie) return null;
+      if (typeof productCookie === 'object') return productCookie;
+      if (!productCookie.startsWith("{")) return productCookie;
+      return JSON.parse(productCookie);
+    } catch (error) {
+      console.error("Failed to parse product cookie:", error);
+      Cookies.remove("product_id");
+      return null;
+    }
+  };
 
-  useEffect(() => {
-    if (approveSuccess) {
-      toast.success(approveData?.message || 'Loan accepted successfully');
-      refreshData();
-      setInterested(true);
-      resetAll();
-      handleClose();
-    }
-    if (approveError) {
-      toast.error(approveError);
-      resetAll();
-      handleClose();
-    }
-  }, [approveSuccess, approveError, approveData, dispatch]);
+
+  // useEffect(() => {
+  //   if (approveSuccess) {
+  //     toast.success(approveData?.message || 'Loan accepted successfully');
+  //     refreshData();
+  //     setInterested(true);
+  //     resetAll();
+  //     handleClose();
+  //   }
+  //   if (approveError) {
+  //     toast.error(approveError);
+  //     resetAll();
+  //     handleClose();
+  //   }
+  // }, [approveSuccess, approveError, approveData, dispatch]);
 
   useEffect(() => {
     if (pinSuccess) {
@@ -129,19 +143,52 @@ const PinModal: React.FC<ModalProps> = ({
           product_id: [selectedIds],
           pin: pinPayload.pin
         };
-
+  
         const interestResult = await dispatch(approve_loan(currentRequestParams));
         
+        // Handle API response
         if (interestResult.meta.requestStatus === 'fulfilled') {
-          // Success handling moved to useEffect
+          const response = interestResult.payload as {
+            error?: boolean;
+            message?: string;
+            data?: any;
+          };
+  
+          const productData = getProductCookie();
+          dispatch(_single_loan_products_request({ id: productData }));
+          
+          // Show appropriate toast based on response
+          if (response.error) {
+            toast.error(response.message || "Loan approval failed");
+          } else {
+            toast.success(response.message || "Loan approved successfully");
+          }
+          
+          onClose();
+          setInterested(true);
+        }
+        
+        // Handle rejection (failed API call)
+        if (interestResult.meta.requestStatus === 'rejected') {
+          const errorResponse = (interestResult as any).payload || {
+            error: true,
+            message: "Failed to process approval request"
+          };
+  
+          const productData = getProductCookie();
+          toast.error(errorResponse.message);
+          dispatch(_single_loan_products_request({ id: productData }));
+          setInterested(true);
+          onClose();
         }
       }
     } catch (error) {
       console.error('Error processing request:', error);
-      toast.error('Failed to process request');
+      toast.error(
+        error instanceof Error ? error.message : 'An unexpected error occurred'
+      );
     }
   };
-
   if (!isOpen) return null;
 
   return (
