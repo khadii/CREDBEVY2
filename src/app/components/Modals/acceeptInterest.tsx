@@ -43,7 +43,6 @@ const PinModal: React.FC<ModalProps> = ({
     approveSuccess,
     approveError,
     approveData,
-    rejectSuccess
   } = useSelector((state: RootState) => state.loanCondition);
 
   const resetAll = () => {

@@ -222,7 +222,7 @@ export default function Dashboard() {
 
   return (
     <section className="w-full  bg-[#FAFAFA] ">
-      <div className="max-w-7xl">
+      <div className="">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">

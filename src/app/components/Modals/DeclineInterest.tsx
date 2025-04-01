@@ -1,6 +1,6 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { _single_loan_products_request, accept_interest, approve_loan } from "@/app/Redux/Loan_request/loan_request_thunk";
+import { _single_loan_products_request, accept_interest, approve_loan, reject_loan } from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
 import { ConfirmPin } from "@/app/Redux/pin/pinthunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
@@ -40,9 +40,9 @@ const PinModal: React.FC<ModalProps> = ({
 
   const {
     rejectLoading,
-    rejectSuccess,
-    rejectError,
-    rejectData,
+  rejectSuccess,
+  rejectError,
+  rejectData,
   } = useSelector((state: RootState) => state.loanCondition);
 
   const resetAll = () => {
@@ -60,9 +60,9 @@ const PinModal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (rejectSuccess) {
       toast.success(rejectData.message);
-      refreshData();
-      resetAll();
       onClose();
+      resetAll();
+ 
     }
     if (rejectError) {
       toast.error(rejectError);
@@ -129,11 +129,11 @@ const PinModal: React.FC<ModalProps> = ({
           pin: pinPayload.pin
         };
 
-        const interestResult = await dispatch(approve_loan(currentRequestParams));
+        const interestResult = await dispatch(reject_loan(currentRequestParams));
         
         if (interestResult.meta.requestStatus === 'fulfilled') {
-          toast.success('Loan accepted successfully');
-          refreshData();
+          // toast.success('Loan accepted successfully');
+          onClose();
           setInterested(true);
         }
       }

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { reject_loan, approve_loan } from './loan_request_thunk';
 
-interface LoanInterestState {
+interface LoanConditionState {
   approveLoading: boolean;
   approveSuccess: boolean;
   approveError: string | null;
@@ -13,7 +13,7 @@ interface LoanInterestState {
   rejectData: any;
 }
 
-const initialState: LoanInterestState = {
+const initialState: LoanConditionState = {
   approveLoading: false,
   approveSuccess: false,
   approveError: null,
@@ -26,22 +26,22 @@ const initialState: LoanInterestState = {
 };
 
 export const loanConditionSlice = createSlice({
-  name: 'loanInterest',
+  name: 'loanCondition',
   initialState,
   reducers: {
-    resetDeclineState: (state) => {
+    resetApproveState: (state) => {
       state.approveLoading = false;
       state.approveSuccess = false;
       state.approveError = null;
       state.approveData = null;
     },
-    resetAcceptState: (state) => {
+    resetRejectState: (state) => {
       state.rejectLoading = false;
       state.rejectSuccess = false;
       state.rejectError = null;
       state.rejectData = null;
     },
-    resetAllLoanInterestState: () => initialState,
+    resetAllLoanConditionState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -61,11 +61,9 @@ export const loanConditionSlice = createSlice({
         state.approveLoading = false;
         state.approveSuccess = false;
         
-        // Check if the error payload has the expected structure
         if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
           state.approveError = action.payload.message as string;
         } else {
-          // Fallback to the original error handling
           state.approveError = action.payload as string || 'Failed to approve loan';
         }
       })
@@ -85,11 +83,9 @@ export const loanConditionSlice = createSlice({
         state.rejectLoading = false;
         state.rejectSuccess = false;
         
-        // Check if the error payload has the expected structure
         if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
           state.rejectError = action.payload.message as string;
         } else {
-          // Fallback to the original error handling
           state.rejectError = action.payload as string || 'Failed to reject loan';
         }
       });
@@ -97,9 +93,9 @@ export const loanConditionSlice = createSlice({
 });
 
 export const { 
-  resetDeclineState, 
-  resetAcceptState,
-  resetAllLoanInterestState 
+  resetApproveState, 
+  resetRejectState,
+  resetAllLoanConditionState 
 } = loanConditionSlice.actions;
 
 export default loanConditionSlice.reducer;
