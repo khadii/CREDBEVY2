@@ -26,14 +26,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
-   const { authPin, setAuhPin, selectedIds ,tabs,pendingRequestCount, setPendingRequestCount,activeTab, setActiveTab,refreshData,filters,filtersPending,filtersApproved} = useDashboard();
+  const {
+    authPin,
+    setAuhPin,
+    selectedIds,
+    tabs,
+    pendingRequestCount,
+    setPendingRequestCount,
+    activeTab,
+    setActiveTab,
+    refreshData,
+    filters,
+    filtersPending,
+    filtersApproved,
+    currentPage,
+    setCurrentPage
+  } = useDashboard();
   // Fetch data on component mount
   const [selectedYear, setSelectedYear] = useState("2022");
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
 
 
-  const [currentPage, setCurrentPage] = useState<number | undefined>(1);
   const Year = {
     year: "",
     month: "",
@@ -49,7 +63,7 @@ export default function Dashboard() {
   useEffect(() => {
     dispatch(_loan_request_trend(Period));
   }, [dispatch, Period.year]);
-  
+
   const {
     loading: LoanRequestAll_loading,
     success: LoanRequestAll_Success,
@@ -61,27 +75,29 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchPendingCount = async () => {
       try {
-        const result = await dispatch(all_loan_requests(filtersPending,
-        )).unwrap();
-        
+        const result = await dispatch(
+          all_loan_requests(filtersPending)
+        ).unwrap();
+
         setPendingRequestCount(result?.data?.total_count);
       } catch (error) {
         console.error("Failed to fetch pending count:", error);
       }
     };
-    
+
     fetchPendingCount();
-  }, [dispatch]);
-
-
+  }, [dispatch,]);
 
   useEffect(() => {
     refreshData();
   }, [activeTab, dispatch, filters, filtersApproved.page, filtersPending.page]);
-  
-useEffect(()=>{
-   dispatch(loan_approval_rates());
-},[dispatch])
+
+  useEffect(() => {
+    dispatch(loan_approval_rates());
+  }, [dispatch]);
+
+
+
   const {
     loading: LoanRequestStat_loading,
     success: LoanRequestStat_success,
@@ -94,6 +110,8 @@ useEffect(()=>{
     error: loan_request_trend_error,
     data: loan_request_trend_data,
   } = useSelector((state: RootState) => state.loanRequest.loan_request_trend);
+
+
 
   useEffect(() => {
     if (LoanRequestAll_SuccessError) {
@@ -231,21 +249,19 @@ useEffect(()=>{
   }
   const barChartData = transformData(loan_request_trend_data, selectedPeriod);
 
-
   const {
-    
-      total_loans,
-    
-      loan_approval_rate,
-      loan_disapproval_rate,
-      loading,
-      error,
-    } = useSelector((state: any) => state.wallet);
-    const pieChartData = [
-      { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
-      { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
-    ];
-  
+    total_loans,
+
+    loan_approval_rate,
+    loan_disapproval_rate,
+    loading,
+    error,
+  } = useSelector((state: any) => state.wallet);
+  const pieChartData = [
+    { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
+    { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
+  ];
+
   const renderContent = () => {
     switch (activeTab) {
       case "All Request":
@@ -271,7 +287,12 @@ useEffect(()=>{
             setSelectedYear={setSelectedPriod}
             selectedYear={selectedPeriod}
             total_count={total_count_all_loan_data}
-            bulkAction={undefined} barChartTotalAmount={loan_request_trend_data?.total_requested_amount} pieChartTotal={total_loans}          />
+            bulkAction={undefined}
+            barChartTotalAmount={
+              loan_request_trend_data?.total_requested_amount
+            }
+            pieChartTotal={total_loans}
+          />
         );
       case "Pending Request":
         return (
@@ -333,14 +354,20 @@ useEffect(()=>{
             setSelectedYear={setSelectedPriod}
             selectedYear={selectedPeriod}
             total_count={total_count_all_loan_data}
-            bulkAction={undefined} barChartTotalAmount={loan_request_trend_data?.total_requested_amount} pieChartTotal={total_loans}          />
+            bulkAction={undefined}
+            barChartTotalAmount={
+              loan_request_trend_data?.total_requested_amount
+            }
+            pieChartTotal={total_loans}
+          />
         );
     }
   };
   if (LoanRequestAll_loading) {
-    return <Layout> 
-     <div className="">
-     <HeaderWithTabs
+    return (
+      <Layout>
+        <div className="">
+          <HeaderWithTabs
             title="Loan Request"
             tabs={tabs}
             years={years}
@@ -348,8 +375,18 @@ useEffect(()=>{
             onYearChange={handleYearChange}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-          /><div className=""><SpinningFaceExact /></div></div></Layout>;
+          />
+          <div className="">
+            <SpinningFaceExact />
+          </div>
+        </div>
+      </Layout>
+    );
   }
 
-  return <Layout><div className="max-w-7xl">{renderContent()}</div></Layout>;
+  return (
+    <Layout>
+      <div className="">{renderContent()}</div>
+    </Layout>
+  );
 }

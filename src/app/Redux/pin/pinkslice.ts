@@ -49,5 +49,5 @@ const PinSlice = createSlice({
   },
 });
 
-export const { resetAuthState, resetPinState } = PinSlice.actions;
+export const {  resetPinState } = PinSlice.actions;
 export default PinSlice.reducer;

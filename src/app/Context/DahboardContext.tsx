@@ -86,6 +86,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         filters={filters}
         filtersPending={filtersPending}
         filtersApproved={filtersApproved}
+        currentPage = {currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </Provider>
   );

@@ -2,11 +2,8 @@
 
 import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-// import Bigcard from "./BigCard";
-
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
-// import LoanProducts from "../LoanProduct";
 import Layout from "@/app/components/Layout/Layout";
 import LoanProducts from "@/app/components/LoanProduct/LoanProduct";
 import { YearDropdown } from "../Yeardropdown";
@@ -22,15 +19,13 @@ import { useDashboard } from "@/app/Context/DahboardContext";
 import DeleteModal from "../Modals/DeleteModal";
 import toast from "react-hot-toast";
 import Deactivate from "../Modals/Deactivate";
-// import Dashboardone from "../dashboard/reuseabledashboaardone.";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
-const router =useRouter()
-  // Memoize the filters object using usememo
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const filters = {
     search: "",
@@ -45,15 +40,13 @@ const router =useRouter()
 
   const [selectedYear, setSelectedYear] = useState("2022");
   const years = ["2022", "2023", "2024", "2025", "2026"];
- const { selectedIds, setSelectedIds } = useDashboard();
- const {
-  loading: bulkActionLoading,
-  success: bulkActionSuccess,
-  error: bulkActionError,
-  data: bulkActionData,
-} = useSelector((state: RootState) => state.bulkAction);
-
-
+  const { selectedIds, setSelectedIds } = useDashboard();
+  const {
+    loading: bulkActionLoading,
+    success: bulkActionSuccess,
+    error: bulkActionError,
+    data: bulkActionData,
+  } = useSelector((state: RootState) => state.bulkAction);
 
   const Year = { year: selectedYear };
   const {
@@ -65,26 +58,26 @@ const router =useRouter()
     total_count,
     loanProductsStats,
   } = useSelector((state: any) => state.loanProductsTable);
-  
-  // const [totalPages, setTotalPages] = useState(total);
+
   useEffect(() => {
     dispatch(_loan_products_all(filters));
     console.log({ ii: tabledata });
     console.log({ total_count: total_count });
   }, [dispatch, filters.page]);
 
+
+  
   useEffect(() => {
     dispatch(_loan_products_stats(Year));
     console.log({ loanProductsStats: loanProductsStats });
   }, [dispatch, Year.year]);
 
-
   useEffect(() => {
     const prod = tabledata?.length;
-    if (prod<0) {
+    if (prod < 0) {
       router.push("loan-products/no-product");
     }
-  }, [tabledata]); 
+  }, [tabledata]);
   const handleOpenModal = () => {
     if (selectedIds.length >= 1) {
       setIsDeleteModalOpen(true);
@@ -94,7 +87,9 @@ const router =useRouter()
   };
 
   const handleSubmit = async () => {
-    dispatch(bulk_action({ loan_product_ids: selectedIds, action:"deactivate" }));
+    dispatch(
+      bulk_action({ loan_product_ids: selectedIds, action: "deactivate" })
+    );
   };
 
   useEffect(() => {
@@ -106,8 +101,9 @@ const router =useRouter()
     if (bulkActionError) {
       toast.error(bulkActionError);
     }
-  }, [bulkActionSuccess, bulkActionError,dispatch, Year.year]);``
+  }, [bulkActionSuccess, bulkActionError, dispatch, Year.year]);
   
+
   const stats = [
     {
       title: "Total Loan Product",
@@ -184,25 +180,15 @@ const router =useRouter()
       color: "#EC7910",
     },
   ];
-  //   "loanDefaultRate": {
-  //     "total_non_rejected_loans": 2,
-  //     "total_defaulted_loans": 1,
-  //     "total_non_defaulted_loans": 1,
-  //     "defaulted_percentage": 50,
-  //     "non_defaulted_percentage": 50
-  // },
-  // const progressBarData = [
-  //   { label: "Product A", value: 50000, maxValue: 100000 },
-  //   { label: "Product B", value: 75000, maxValue: 100000 },
-  //   { label: "Product C", value: 90000, maxValue: 100000 },
-  //   { label: "Product D", value: 30000, maxValue: 100000 },
-  // ];
 
-  const progressBarData = loanProductsStats?.data?.loanPerformingProducts?.top_products.map((item: any) => ({
-    label: item.product_name,
-    value: item.total_loans,
-    maxValue: item.percentage,
-  })) || [];
+  const progressBarData =
+    loanProductsStats?.data?.loanPerformingProducts?.top_products.map(
+      (item: any) => ({
+        label: item.product_name,
+        value: item.total_loans,
+        maxValue: item.percentage,
+      })
+    ) || [];
 
   const formatCurrency = (value: any) =>
     new Intl.NumberFormat("en-NG", {
@@ -213,11 +199,11 @@ const router =useRouter()
   const requests = [
     {
       name: "Oripeolye Timilehin",
-      income: `${formatCurrency(134000000.0)}`, 
-      amount: `${formatCurrency(134000000.0)}`, 
-      cs: 743, 
-      ir: `${23}%`, 
-      duration: `${3} Months`, 
+      income: `${formatCurrency(134000000.0)}`,
+      amount: `${formatCurrency(134000000.0)}`,
+      cs: 743,
+      ir: `${23}%`,
+      duration: `${3} Months`,
       status: "Interested",
     },
     {
@@ -277,7 +263,7 @@ const router =useRouter()
   ];
 
   const handleYearChange = (year: string) => {
-  setSelectedYear(year)
+    setSelectedYear(year);
   };
 
   const tableTitleProps = {
@@ -301,7 +287,7 @@ const router =useRouter()
   };
   return (
     <section className="w-full  bg-[#FAFAFA] ">
-      <div className="max-w-7xl">
+      <div className="">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
@@ -336,7 +322,9 @@ const router =useRouter()
               barChartHighlightColor="#EC7910"
               pieChartTitle="Loan Default Rate"
               pieChartDescription="Total unpaid loan metrics."
-              pieChartTotal={loanProductsStats?.data?.loanDefaultRate?.total_defaulted_loans}
+              pieChartTotal={
+                loanProductsStats?.data?.loanDefaultRate?.total_defaulted_loans
+              }
               lineChartTitle="Default Rate"
               lineChartDescription="Total unpaid loan value."
               lineChartTotalRevenue="₦ 20,000,000.00"
@@ -353,13 +341,23 @@ const router =useRouter()
               total_count={total_count}
               pieChartDataTwo={pieChartDataTwo}
               pieChartTitleTwo={"Loan Approval Rate"}
-              pieChartDescriptionTwo={"The percentage of loan requests approved."}
-              pieChartTotalTwo={loanProductsStats?.data?.loanApprovalRate
-                ?.total_loan_applications}   bulkAction={()=>handleOpenModal()}            />
+              pieChartDescriptionTwo={
+                "The percentage of loan requests approved."
+              }
+              pieChartTotalTwo={
+                loanProductsStats?.data?.loanApprovalRate
+                  ?.total_loan_applications
+              }
+              bulkAction={() => handleOpenModal()}
+            />
           </div>
         </div>
       </div>
-     < Deactivate isOpen={isDeleteModalOpen}   onClose={() => setIsDeleteModalOpen(false)} onConfirm={()=>handleSubmit()}/>
+      <Deactivate
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => handleSubmit()}
+      />
     </section>
   );
 }

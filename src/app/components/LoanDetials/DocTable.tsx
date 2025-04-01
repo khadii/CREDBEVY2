@@ -55,15 +55,7 @@ const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
       case "Actions":
         return (
           <div className="flex gap-2">
-            <button 
-              className="p-1 hover:bg-gray-100 rounded"
-              onClick={() => {
-                // You can implement preview functionality here
-                console.log("Preview document:", data.path);
-              }}
-            >
-              <Eye size={16} className="text-gray-600" />
-            </button>
+           
             <button 
               className="p-1 hover:bg-gray-100 rounded"
               onClick={() => handleDownload(data.path, data.name)}

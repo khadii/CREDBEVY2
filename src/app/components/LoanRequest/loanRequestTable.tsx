@@ -80,7 +80,7 @@ export const LoanRequest= ({    bulkAction,  laon_table_data_all,  total_count }
   }, [selectedIds, laon_table_data_all]);
 
   const handleToggle = (loan_uuid: string) => {
-    setSelectedIds((prevSelectedIds:any) => {
+    setSelectedIds((prevSelectedIds?:any) => {
       if (prevSelectedIds.includes(loan_uuid)) {
         return prevSelectedIds.filter((selectedId:any )=> selectedId !== loan_uuid);
       } else {
