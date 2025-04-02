@@ -19,6 +19,7 @@ import { useDashboard } from "@/app/Context/DahboardContext";
 import DeleteModal from "../Modals/DeleteModal";
 import toast from "react-hot-toast";
 import Deactivate from "../Modals/Deactivate";
+import { formatToNaira } from "@/app/lib/Naira";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -113,13 +114,13 @@ export default function Dashboard() {
     },
     {
       title: "Total Revenue Generated",
-      amount: loanProductsStats?.data?.totalRevenueGenerated,
+      amount: formatToNaira(loanProductsStats?.data?.totalRevenueGenerated),
       percentage: loanProductsStats?.data?.totalRevenueGeneratedPercentage,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Amount Disbursed",
-      amount: loanProductsStats?.data?.totalAmountDisbursed,
+      amount: formatToNaira(loanProductsStats?.data?.totalAmountDisbursed),
       percentage: loanProductsStats?.data?.totalAmountDisbursedPercentage,
       icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
     },

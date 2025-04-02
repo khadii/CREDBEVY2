@@ -18,7 +18,7 @@ export default function Bigcard({ balance, accountNumber, onFundClick }: WalletB
       <div>
         <h3 className="text-base font-bold">Wallet Balance</h3>
         <p className="text-4xl font-bold mt-2">
-          ₦ {isHidden ? "***********" : balance}
+           {isHidden ? "***********" : balance}
         </p>
         <p className="text-xs mt-3 text-white font-medium">
           WALLET ACCOUNT NUMBER: <span className="font-semibold">{accountNumber}</span>

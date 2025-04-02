@@ -21,7 +21,7 @@ const Card = ({ title, amount, percentage, icon }: CardProps) => {
         <div className="flex justify-between items-end w-full">
           <div className="flex-1 min-w-0 flex items-center">
             {isNaira && (
-            <p className="text-3xl font-bold text-[#333333] mr-2">₦</p>
+            <p className="text-3xl font-bold text-[#333333] mr-2"></p>
             )}
             <h2 className="text-3xl font-extrabold text-[#333333] truncate">
               {amount} 

@@ -9,7 +9,7 @@ interface TableHeaderProps {
 
 const TableHeader: React.FC<TableHeaderProps> = ({ headers, renderHeader, isHeaderChecked, handleHeaderToggle }) => {
   return (
-    <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-bold text-xs border text-left">
+    <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-bold text-xs border text-left ">
       <tr className="h-[44px]">
         {/* First header with checkbox */}
         <th className="py-3 pl-6 truncate">

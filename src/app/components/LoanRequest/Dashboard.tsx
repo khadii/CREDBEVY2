@@ -23,6 +23,7 @@ import { loan_approval_rates } from "@/app/Redux/dashboard/dashboardThunk";
 import { HeaderWithTabs } from "../HeadersTab";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { useDispatch, useSelector } from "react-redux";
+import { formatToNaira } from "@/app/lib/Naira";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -154,19 +155,19 @@ export default function Dashboard() {
   const stats = [
     {
       title: "Total Loan Request",
-      amount: LoanRequestStat_data?.totalLoanRequests,
+      amount:formatToNaira( LoanRequestStat_data?.totalLoanRequests),
       percentage: LoanRequestStat_data?.totalLoanRequestPercentage,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Amount Requested",
-      amount: LoanRequestStat_data?.totalAmountRequested,
+      amount: formatToNaira(LoanRequestStat_data?.totalAmountRequested),
       percentage: LoanRequestStat_data?.totalAmountRequestedPercentage,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Amount Requested",
-      amount: LoanRequestStat_data?.totalAmountDisbursed,
+      amount:formatToNaira( LoanRequestStat_data?.totalAmountDisbursed),
       percentage: LoanRequestStat_data?.totalAmountDisbursedPercentage,
       icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
     },

@@ -17,7 +17,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   showSeeAll = true, // Default value is true
 }) => {
   return (
-    <div className="flex justify-between items-center mt-6 mb-3 bg-[#FAFAFA]">
+    <div className=" justify-between items-center mt-6 mb-3 bg-[#FAFAFA] hidden md:flex lg:flex">
       <div className="flex gap-4">
         <button
           onClick={onSearchClick}

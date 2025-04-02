@@ -85,8 +85,8 @@ export default function FinancialInfo({ id }: { id: any }) {
     LoanRequest_Data?.loan?.employment_info ? [
       { label: "Employment Status", value: LoanRequest_Data.loan.employment_info.employment_status },
       { label: "Current Employer", value: LoanRequest_Data.loan.employment_info.business_name },
-      { label: "Job Title:", value: LoanRequest_Data.loan.employment_info.job_role },
-      { label: "Monthly Income:", value: formatCurrency(LoanRequest_Data.loan.employment_info.monthly_income) },
+      { label: "Job Title", value: LoanRequest_Data.loan.employment_info.job_role },
+      { label: "Monthly Income", value: formatCurrency(LoanRequest_Data.loan.employment_info.monthly_income) },
     ] : [], [LoanRequest_Data, formatCurrency]);
 
   const financialData = useMemo(() => 

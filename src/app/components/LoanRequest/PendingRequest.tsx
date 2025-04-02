@@ -40,6 +40,7 @@ export default function PendingRequest({
   totalPages,
   total_count
 }: PendingRequestProps) {
+
   return (
     <div className="w-full min-h-screen pb-36">
       <LoanRequestHeaderWithTabs

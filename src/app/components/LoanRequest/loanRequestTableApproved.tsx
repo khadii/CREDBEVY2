@@ -39,6 +39,35 @@ interface LoanData {
 }
 
 export const LoanRequestWithPagination = ({ bulkAction, laon_table_data_all, setCurrentPage, currentPage, totalPages, total_count }: { laon_table_data_all: any, setCurrentPage: any, currentPage: any, totalPages: any, total_count: any, bulkAction: any }) => {
+  
+  // Add this CSS to your global styles or component
+const responsiveStyles = `
+@media (max-width: 768px) {
+  .loan-request-container {
+    padding: 0.5rem;
+  }
+  .loan-request-table {
+    overflow-x: auto;
+    display: block;
+  }
+  .loan-request-table table {
+    min-width: 600px;
+  }
+  .loan-request-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .loan-request-name {
+    min-width: 120px;
+  }
+  .loan-request-quick-actions {
+    min-width: 100px;
+  }
+}
+`;
+  
+  
+  
   const loanHeaders = [
     "Name",
     "Average Income",
@@ -172,7 +201,7 @@ export const LoanRequestWithPagination = ({ bulkAction, laon_table_data_all, set
   ), [selectedIds, handleToggle]);
 
   return (
-    <>
+    <div className="loan-request-table">
       <TableWithPagination
         headers={loanHeaders}
         data={laon_table_data_all}
@@ -202,6 +231,6 @@ export const LoanRequestWithPagination = ({ bulkAction, laon_table_data_all, set
         onClose={() => setIsModalOpen(false)}
       
       />
-    </>
+    </div>
   );
 };
