@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className='w-full'>
       <div className='flex  flex-col w-full'>
         <div className=' flex flex-row'>
-          <div className=' bg-[#24262D] md:max-w-64 '>
+          <div className=' bg-[#24262D] md:max-w-64 min-h-screen '>
             <Sidebar />
           </div>
           

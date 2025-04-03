@@ -4,6 +4,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import FileUpload from '../FormInputs/Uploadinput';
 import CustomizedButton from '../CustomizedButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { CompanyInfoForm, fetchCompanyInfo } from '@/app/Redux/company_info/company_info_thunk';
+import { resetSuccess } from '@/app/Redux/company_info/company_info_form_slice';
+import toast from 'react-hot-toast';
+import { AppDispatch } from '@/app/Redux/store';
+
 
 // Yup validation schema (for form submission)
 const validationSchema = Yup.object({
@@ -46,6 +52,8 @@ const validationSchema = Yup.object({
 });
 
 export default function CompanyInfo() {
+  const dispatch = useDispatch<AppDispatch>();
+const {loading}= useSelector((state: any) => state.CompanyInfoForm);
   // Formik initialization
   const formik = useFormik({
     initialValues: {
@@ -57,15 +65,54 @@ export default function CompanyInfo() {
       Company_Logo: null,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log('Form submitted:', values);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        // Prepare form data for API
+        const formData = new FormData();
+        formData.append('partner_name', values.company_Name);
+        formData.append('partner_website', values.Company_Website);
+        formData.append('partner_contact_phone_number', values.Company_Phone);
+        formData.append('partner_contact_email', values.Company_Email);
+        if (values.Company_Logo) {
+          formData.append('partner_logo', values.Company_Logo);
+        }
+
+        // Dispatch the Redux action
+        
+        const result =await dispatch(CompanyInfoForm(formData) as any);
+
+        if (result.meta.requestStatus === 'fulfilled') {
+          const response = result.payload as {
+            error?: boolean;
+            message?: string;
+            data?: any;
+          }}
+
+          if (result.error) {
+            toast.error(result.message || "Form submission failed");
+          } else {
+            toast.success(result.message || "Form submission  successfully");
+          }
+          dispatch(fetchCompanyInfo());
+        
+        // Reset form on successful submission
+        resetForm();
+        
+        // // Reset success message after 3 seconds
+        // setTimeout(() => {
+        //   dispatch(resetSuccess());
+        // }, 3000);
+      } catch (error) {
+        console.error('Submission error:', error);
+      }
     },
   });
 
   // Handle Company Email Change
   const handleCompanyEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    formik.handleChange(e);
     const value = e.target.value;
+    formik.setFieldValue('Company_Email', value); // Ensure the value is set
+  
     if (value.includes('@')) {
       const domain = value.split('@')[1];
       const personalEmailDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com'];
@@ -76,6 +123,7 @@ export default function CompanyInfo() {
       }
     }
   };
+  
 
   // Handle Company Phone Change
   const handleCompanyPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +250,9 @@ export default function CompanyInfo() {
 
         {/* Submit Button */}
         <div className="w-full max-w-[822px] pt-[24px] flex justify-end">
-          <CustomizedButton text={'Save changes'} />
+          <CustomizedButton 
+            text={loading?"processing....":'Save changes'} 
+          />
         </div>
       </form>
     </div>

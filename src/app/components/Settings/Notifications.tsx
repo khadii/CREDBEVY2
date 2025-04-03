@@ -1,24 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import ToggleButton from "../FormInputs/ToggleButton";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/app/Redux/store";
+import { 
+  Notification as UpdateNotification,
+  GetNotification,
+} from "@/app/Redux/company_info/company_info_thunk";
+import toast from "react-hot-toast";
+import { clearNotificationError, resetNotificationSuccess } from "@/app/Redux/company_info/notificationSlice";
 
 export default function NotificationSettings() {
-  const [settings, setSettings] = useState({
-    desktopNotification: true,
-    unreadBadge: true,
-    communicationEmails: true,
-    announcements: false,
-    disableSound: false,
-  });
+  const dispatch = useDispatch<AppDispatch>();
+  
+  // Access the entire notification state first
+  const notificationState = useSelector((state: any) => state.notification);
+  
+  // Then safely destructure with fallback values
+  const notificationSettings = notificationState?.settings || null;
+  const loading = notificationState?.loading || false;
+  const error = notificationState?.error || null;
+  const success = notificationState?.success || false;
 
-  const handleToggle = (setting: keyof typeof settings) => {
-    setSettings((prev) => ({
-      ...prev,
-      [setting]: !prev[setting],
-    }));
+  // Fetch notification settings on mount
+  useEffect(() => {
+    dispatch(GetNotification());
+  }, [dispatch]);
+
+  // Handle toggle changes
+  const handleToggle = (field: keyof typeof notificationSettings) => {
+    if (!notificationSettings) return;
+    
+    const updatedSettings = {
+      ...notificationSettings,
+      [field]: !notificationSettings[field]
+    };
+    
+    dispatch(UpdateNotification(updatedSettings));
   };
+
+  // Show error/success messages
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearNotificationError());
+    }
+    if (success) {
+      toast.success("Notification settings updated successfully");
+      dispatch(resetNotificationSuccess());
+    }
+  }, [error, success, dispatch]);
+
+  if (loading && !notificationSettings) {
+    return <div className="max-w-[700px] h-screen">Loading notification settings...</div>;
+  }
 
   return (
     <div className="max-w-[700px] h-screen">
@@ -33,8 +69,8 @@ export default function NotificationSettings() {
           </div>
           
           <ToggleButton
-            isEnabled={settings.desktopNotification}
-            onToggle={() => handleToggle("desktopNotification")}
+            isEnabled={notificationSettings?.desktop_notifications || false}
+            onToggle={() => handleToggle("desktop_notifications")}
           />
         </div>
 
@@ -48,8 +84,8 @@ export default function NotificationSettings() {
           </div>
         
           <ToggleButton
-            isEnabled={settings.unreadBadge}
-            onToggle={() => handleToggle("unreadBadge")}
+            isEnabled={notificationSettings?.unread_notification_badge || false}
+            onToggle={() => handleToggle("unread_notification_badge")}
           />
         </div>
 
@@ -63,8 +99,8 @@ export default function NotificationSettings() {
           </div>
       
           <ToggleButton
-            isEnabled={settings.communicationEmails}
-            onToggle={() => handleToggle("communicationEmails")}
+            isEnabled={notificationSettings?.communication_emails || false}
+            onToggle={() => handleToggle("communication_emails")}
           />
         </div>
 
@@ -78,23 +114,23 @@ export default function NotificationSettings() {
           </div>
           
           <ToggleButton
-            isEnabled={settings.announcements}
-            onToggle={() => handleToggle("announcements")}
+            isEnabled={notificationSettings?.announcements_updates || false}
+            onToggle={() => handleToggle("announcements_updates")}
           />
         </div>
 
-        {/* Disable All Sound Notifications */}
+        {/* Sound Notifications */}
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-[14px] font-bold text-[#333333]">Disable All Sound Notifications</h3>
+            <h3 className="text-[14px] font-bold text-[#333333]">Sound Notifications</h3>
             <p className="text-[12px] font-bold text-[#8A8B9F]">
-              Mute all notifications on loan requests, repayments etc.
+              Play sound for notifications
             </p>
           </div>
           
           <ToggleButton
-            isEnabled={settings.disableSound}
-            onToggle={() => handleToggle("disableSound")}
+            isEnabled={notificationSettings?.sound_notifications || false}
+            onToggle={() => handleToggle("sound_notifications")}
           />
         </div>
       </div>

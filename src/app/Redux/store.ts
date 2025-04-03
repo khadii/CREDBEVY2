@@ -10,6 +10,9 @@ import pinReducer from'../Redux/pin/pinkslice';
 import loanInterestReducer from'../Redux/Loan_request/loanInterestSlice';
 import loanConditionReducer from'../Redux/Loan_request/loanConditon';
 import loanrejectacceptReducer from'../Redux/Loan_request/loanInterestSlice';
+import CompanyInfoReducer from'../Redux/company_info/company_info_slice';
+import CompanyInfoFormReducer from'../Redux/company_info/company_info_form_slice';
+import notificationReducer from'../Redux/company_info/notificationSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -21,7 +24,10 @@ export const store = configureStore({
     Pin:pinReducer,
     loanInterest:loanInterestReducer,
     loanCondition:loanConditionReducer,
-    loanrejectaccept:loanrejectacceptReducer
+    loanrejectaccept:loanrejectacceptReducer,
+    companyInfo: CompanyInfoReducer,
+    CompanyInfoForm: CompanyInfoFormReducer,
+    notification: notificationReducer,
   },
 });
 
