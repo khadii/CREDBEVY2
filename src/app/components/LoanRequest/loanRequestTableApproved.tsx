@@ -79,9 +79,9 @@ const responsiveStyles = `
   ];
 
   const titleProps = {
-    mainTitle: "Loan Products",
-    count: total_count + " Products",
-    subtitle: "List of loan product created"
+    mainTitle: "Approved Requests",
+    count: total_count + " approved",
+    subtitle: "List of all approved requests"
   };
 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);

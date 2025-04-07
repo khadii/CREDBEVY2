@@ -125,9 +125,8 @@ maxCreditScore: Yup.string()
       .required("Minimum Income is required"),
     employmentStatus: Yup.string().required("Employment Status is required"),
     percentage: Yup.string()
-      .max(2, "percentage should not exceed two numbers")
-      .required("Percentage is required"),
-    Discountduration: Yup.string().required("Discount Duration is required"),
+      .max(2, "percentage should not exceed two numbers"),
+    Discountduration: Yup.string(),
   });
 
   const formik = useFormik({

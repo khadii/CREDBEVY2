@@ -20,6 +20,7 @@ import DeleteModal from "../Modals/DeleteModal";
 import toast from "react-hot-toast";
 import Deactivate from "../Modals/Deactivate";
 import { formatToNaira } from "@/app/lib/Naira";
+import AnimatedLoader from "../animation";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -359,6 +360,7 @@ export default function Dashboard() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleSubmit()}
       />
+      <AnimatedLoader isLoading={loading}/>
     </section>
   );
 }

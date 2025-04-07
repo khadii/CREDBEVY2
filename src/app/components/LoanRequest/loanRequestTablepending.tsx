@@ -50,11 +50,11 @@ export const LoanRequestWithPagination = ({ bulkAction, laon_table_data_all, set
   ];
 
   const titleProps = {
-    mainTitle: "Loan Products",
-    count: total_count + " Products",
-    subtitle: "List of loan product created"
+    mainTitle: "Pending Loan request",
+    count: total_count + " request",
+    subtitle: "Loans awaiting a decision "
   };
-
+ 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
   const { selectedIds, setSelectedIds } = useDashboard();
 

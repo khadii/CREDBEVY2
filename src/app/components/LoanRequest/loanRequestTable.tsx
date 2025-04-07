@@ -77,9 +77,9 @@ export const LoanRequest= ({ bulkAction, laon_table_data_all, total_count }: { l
   ];
 
   const titleProps = {
-    mainTitle: "Pending Loan request",
+    mainTitle: "All Loan request",
     count: total_count + " request",
-    subtitle: "Loans awaiting a decision "
+    subtitle: "All loan request made "
   };
  
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);

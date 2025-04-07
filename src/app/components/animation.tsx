@@ -21,7 +21,7 @@ export default function AnimatedLoader({ isLoading }: { isLoading: any }) {
         if (prev >= 4) return 0;
         return prev + 1;
       });
-    }, 300);
+    }, 250);
 
     return () => clearInterval(interval);
   }, [isLoading]);
