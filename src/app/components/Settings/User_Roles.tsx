@@ -110,11 +110,16 @@ const User_Roles = () => {
           subtitle: "List of all user roles on the dashboard",
         }}
         href=""
-        itemsPerPage={5}
+        // itemsPerPage={5}
         setStep={(step: number) => console.log(`Step: ${step}`)}
-        renderRow={renderRow}
-        showAddUserButton={false}
-      />
+        // renderRow={renderRow}
+        showAddUserButton={false} renderRow={function (item: RoleData, index: number): React.ReactNode {
+          throw new Error("Function not implemented.");
+        } } currentPage={0} totalPages={0} setCurrentPage={function (page: number): void {
+          throw new Error("Function not implemented.");
+        } } isHeaderChecked={false} handleHeaderToggle={function (): void {
+          throw new Error("Function not implemented.");
+        } }      />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
