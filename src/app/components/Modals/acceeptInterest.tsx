@@ -1,6 +1,10 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { _single_loan_products_request, accept_interest, approve_loan } from "@/app/Redux/Loan_request/loan_request_thunk";
+import {
+  _single_loan_products_request,
+  accept_interest,
+  approve_loan,
+} from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
 import { ConfirmPin } from "@/app/Redux/pin/pinthunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
@@ -9,6 +13,7 @@ import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import AnimatedLoader from "../animation";
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,11 +24,9 @@ interface ErrorsState {
   pin?: string;
 }
 
-const PinModal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-}) => {
-  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } = useDashboard();
+const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } =
+    useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
   const [errors, setErrors] = useState<ErrorsState>({});
   const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -35,15 +38,11 @@ const PinModal: React.FC<ModalProps> = ({
     loading: pinLoading,
     success: pinSuccess,
     error: pinError,
-    message: pinMessage
+    message: pinMessage,
   } = useSelector((state: RootState) => state.Pin.ConfirmPin);
 
-  const {
-    approveLoading,
-    approveSuccess,
-    approveError,
-    approveData,
-  } = useSelector((state: RootState) => state.loanCondition);
+  const { approveLoading, approveSuccess, approveError, approveData } =
+    useSelector((state: RootState) => state.loanCondition);
 
   const resetAll = () => {
     setPin(["", "", "", ""]);
@@ -60,7 +59,7 @@ const PinModal: React.FC<ModalProps> = ({
     try {
       const productCookie = Cookies.get("product_id");
       if (!productCookie) return null;
-      if (typeof productCookie === 'object') return productCookie;
+      if (typeof productCookie === "object") return productCookie;
       if (!productCookie.startsWith("{")) return productCookie;
       return JSON.parse(productCookie);
     } catch (error) {
@@ -69,7 +68,6 @@ const PinModal: React.FC<ModalProps> = ({
       return null;
     }
   };
-
 
   // useEffect(() => {
   //   if (approveSuccess) {
@@ -103,11 +101,11 @@ const PinModal: React.FC<ModalProps> = ({
       setErrors({});
     }
     if (!/^\d?$/.test(value)) return;
-    
+
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
-    
+
     if (value && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -115,66 +113,68 @@ const PinModal: React.FC<ModalProps> = ({
 
   const validate = (): boolean => {
     const newErrors: ErrorsState = {};
-    const emptyIndex = pin.findIndex(digit => digit === "");
-    
+    const emptyIndex = pin.findIndex((digit) => digit === "");
+
     if (emptyIndex !== -1) {
       newErrors.pin = "Please complete the PIN";
       inputRefs.current[emptyIndex]?.focus();
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!validate()) return;
-  
+
     try {
       const pinPayload = {
-        pin: pin.map(digit => Number(digit))
+        pin: pin.map((digit) => Number(digit)),
       };
-      
+
       const pinResult = await dispatch(ConfirmPin(pinPayload));
-      
-      if (pinResult.meta.requestStatus === 'fulfilled') {
+
+      if (pinResult.meta.requestStatus === "fulfilled") {
         setAuhPin(pinPayload.pin);
-        
+
         const currentRequestParams = {
           product_id: [selectedIds],
-          pin: pinPayload.pin
+          pin: pinPayload.pin,
         };
-  
-        const interestResult = await dispatch(approve_loan(currentRequestParams));
-        
+
+        const interestResult = await dispatch(
+          approve_loan(currentRequestParams)
+        );
+
         // Handle API response
-        if (interestResult.meta.requestStatus === 'fulfilled') {
+        if (interestResult.meta.requestStatus === "fulfilled") {
           const response = interestResult.payload as {
             error?: boolean;
             message?: string;
             data?: any;
           };
-  
+
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
-          
+
           // Show appropriate toast based on response
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
           } else {
             toast.success(response.message || "Loan approved successfully");
           }
-          
+
           onClose();
           setInterested(true);
         }
-        
+
         // Handle rejection (failed API call)
-        if (interestResult.meta.requestStatus === 'rejected') {
+        if (interestResult.meta.requestStatus === "rejected") {
           const errorResponse = (interestResult as any).payload || {
             error: true,
-            message: "Failed to process approval request"
+            message: "Failed to process approval request",
           };
-  
+
           const productData = getProductCookie();
           toast.error(errorResponse.message);
           dispatch(_single_loan_products_request({ id: productData }));
@@ -183,9 +183,9 @@ const PinModal: React.FC<ModalProps> = ({
         }
       }
     } catch (error) {
-      console.error('Error processing request:', error);
+      console.error("Error processing request:", error);
       toast.error(
-        error instanceof Error ? error.message : 'An unexpected error occurred'
+        error instanceof Error ? error.message : "An unexpected error occurred"
       );
     }
   };
@@ -195,11 +195,7 @@ const PinModal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
         {approveLoading ? (
-          <div className="p-[24px] flex flex-col items-center justify-center">
-            <p className="text-sm font-semibold text-[#333333] mb-4">
-              Updating details...
-            </p>
-          </div>
+          <AnimatedLoader isLoading={approveLoading}></AnimatedLoader>
         ) : (
           <>
             <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
@@ -233,9 +229,11 @@ const PinModal: React.FC<ModalProps> = ({
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleChange(index, e.target.value)}
-                        className={`w-[80px] h-[80px] border-[4px] ${(errors.pin && digit === "") 
+                        className={`w-[80px] h-[80px] border-[4px] ${
+                          errors.pin && digit === ""
                             ? "border-red-500 focus:ring-red-500"
-                            : "border-[#156064] focus:ring-[#156064]"} rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
+                            : "border-[#156064] focus:ring-[#156064]"
+                        } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
                       />
                     ))}
                   </div>

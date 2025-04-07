@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 
-export default function CustomizedButton({text}:{text:any}) {
+export default function CustomizedButton({text,onClick}:{text:any,onClick?:any}) {
   return (
     <button
     type="submit"

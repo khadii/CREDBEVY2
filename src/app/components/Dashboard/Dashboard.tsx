@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import SpinningFaceExact from "../credbevyLoader";
 import Dashboardone from "./reuseabledashboaardone.";
 import { formatToNaira } from "@/app/lib/Naira";
+import AnimatedLoader from "../animation";
 
 // Helper function to format values to Naira
 
@@ -210,9 +211,9 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
 
-  if (loading) {
-    return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
-  }
+  // if (loading) {
+  //   return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
+  // }
 
   if (error) {
     return <>{error}</>;
@@ -288,6 +289,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+     <AnimatedLoader isLoading={loading}></AnimatedLoader>
     </section>
   );
 }

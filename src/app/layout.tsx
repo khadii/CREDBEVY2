@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { DashboardProvider } from "./Context/DahboardContext";
+import { DashboardProvider, useDashboard } from "./Context/DahboardContext";
+import AnimatedLoader from "./components/animation";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,12 +23,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DashboardProvider>{children}</DashboardProvider>
+        <DashboardProvider>{children}
+        
+        </DashboardProvider>
+
+
         
       </body>
     </html>

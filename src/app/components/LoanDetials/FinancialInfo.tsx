@@ -165,9 +165,9 @@ export default function FinancialInfo({ id }: { id: any }) {
     setActiveTab(tab);
   }, []);
 
-  if (LoanRequest_loading) {
-    return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
-  }
+  // if (LoanRequest_loading) {
+  //   return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
+  // }
 
   if (LoanRequest_SuccessError) {
     return <div>Error: {LoanRequest_SuccessError}</div>;

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "@/app/Redux/auth/authThunks";
 import { AppDispatch } from "@/app/Redux/store";
 import toast from "react-hot-toast";
+import AnimatedLoader from "../animation";
 
 
 export default function LoginPage() {
@@ -80,6 +81,7 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+     <AnimatedLoader isLoading={loading}></AnimatedLoader>
   </div>
   );
 }

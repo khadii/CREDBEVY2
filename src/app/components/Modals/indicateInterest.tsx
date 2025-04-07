@@ -9,6 +9,7 @@ import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import AnimatedLoader from "../animation";
 
 interface ModalProps {
   isOpen: boolean;
@@ -194,11 +195,7 @@ const PinModal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
         {acceptLoading ? (
-          <div className="p-[24px] flex flex-col items-center justify-center">
-            <p className="text-sm font-semibold text-[#333333] mb-4">
-              Updating details...
-            </p>
-          </div>
+          <AnimatedLoader isLoading={acceptLoading}></AnimatedLoader>
         ) : (
           <>
             <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">

@@ -6,6 +6,8 @@ import { AppDispatch, RootState } from '@/app/Redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { checkTokenConsistency, revalidateToken } from '@/app/Redux/auth/authSlice';
+import AnimatedLoader from '../animation';
+import { useDashboard } from '@/app/Context/DahboardContext';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 
@@ -22,7 +24,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     dispatch(revalidateToken()); 
     dispatch(checkTokenConsistency()); 
   }, [dispatch]);
-
+  // const { isLoading, setIsLoading} = useDashboard();
+  // const isLoading=true;
   return (
     <div className='w-full'>
       <div className='flex  flex-col w-full'>
@@ -35,6 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className='sticky top-0 bg-white z-50'><TopBar /></div>
             <div className='px-[27px]  pt-[48px] bg-[#FAFAFA] h-full'>
               {children}
+              
             </div>
           </div>
         </div>

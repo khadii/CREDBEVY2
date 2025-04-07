@@ -4,7 +4,8 @@ import React, { useState } from "react";
 
 interface ToggleButtonProps {
   isEnabled: boolean;
-  onToggle: () => void;
+  onToggle: any
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const ToggleButton: React.FC<ToggleButtonProps> = ({ isEnabled, onToggle }) => {

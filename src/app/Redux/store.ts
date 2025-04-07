@@ -13,6 +13,10 @@ import loanrejectacceptReducer from'../Redux/Loan_request/loanInterestSlice';
 import CompanyInfoReducer from'../Redux/company_info/company_info_slice';
 import CompanyInfoFormReducer from'../Redux/company_info/company_info_form_slice';
 import notificationReducer from'../Redux/company_info/notificationSlice';
+import securityReducer from'../Redux/company_info/security&password';
+import userManagementReducer from'../Redux/user_management/user_management_slice';
+
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -28,6 +32,8 @@ export const store = configureStore({
     companyInfo: CompanyInfoReducer,
     CompanyInfoForm: CompanyInfoFormReducer,
     notification: notificationReducer,
+    security:securityReducer,
+    userManagement:userManagementReducer
   },
 });
 

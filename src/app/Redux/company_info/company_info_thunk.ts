@@ -150,3 +150,53 @@ export const GetNotification = createAsyncThunk(
     }
   }
 );
+
+
+
+
+
+
+
+
+interface Security{
+  current_password ?: string,
+  new_password?: string,
+  new_password_confirmation?: string,
+  two_fa?: boolean,
+}
+
+
+
+//company password and security settings
+export const security = createAsyncThunk(
+"Security",
+async (Security: Security, { rejectWithValue }) => {
+  try {
+    const token = Cookies.get("authToken");
+    
+    const response = await axios.post(
+      "https://credbevy.jbenergyservices.com/public/api/partner/settings/update-password-twofa",
+      Security,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.data) {
+      return rejectWithValue(error.response.data.message || "Unauthorized");
+    } else if (error.request) {
+      return rejectWithValue(
+        "No response from the server. Please check your network connection."
+      );
+    } else {
+      return rejectWithValue(
+        "An unexpected error occurred. Please try again."
+      );
+    }
+  }
+}
+);

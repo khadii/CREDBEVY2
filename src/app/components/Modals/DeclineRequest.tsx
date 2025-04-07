@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "@/app/Redux/store";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import AnimatedLoader from "../animation";
 
 interface ModalProps {
   isOpen: boolean;
@@ -88,11 +89,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
         {LoanRequest_loading ? (
-          <div className="p-[24px] flex flex-col items-center justify-center">
-            <p className="text-sm font-semibold text-[#333333] mb-4">
-              Getting details...
-            </p>
-          </div>
+          <AnimatedLoader isLoading={LoanRequest_loading}></AnimatedLoader>
         ) : (
           <>
             <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">

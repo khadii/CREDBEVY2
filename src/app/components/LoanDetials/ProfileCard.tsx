@@ -72,9 +72,9 @@ export default function ProfileCard({id}:{id:any}) {
     pointerEvents: "none",
   };
 
-  if (LoanRequest_loading) {
-    return      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
-  }
+  // if (LoanRequest_loading) {
+  //   return      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
+  // }
 
   const user = LoanRequest_Data?.loan.user;
   const fullName = `${user?.first_name} ${user?.middle_name ? user?.middle_name + ' ' : ''}${user?.last_name}`;

@@ -9,10 +9,14 @@ import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 import SpinningFaceExact from "../credbevyLoader";
+import AnimatedLoader from "../animation";
 
 export default function Loandetails({id}:{id:any}) {
 
-
+  const {
+    loading:LoanRequest_loading,
+    data: LoanRequest_Data,
+  } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
   return (
     <Layout>
       <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col  h-full ">
@@ -26,6 +30,7 @@ export default function Loandetails({id}:{id:any}) {
           <FinancialInfo id={id} />
         </div>
       </div>
+        <AnimatedLoader isLoading={LoanRequest_loading}></AnimatedLoader>
       </div>
     </Layout>
   );

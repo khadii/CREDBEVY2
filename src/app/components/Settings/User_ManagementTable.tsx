@@ -1,147 +1,170 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import SettingsTable from "./Generaltablecomp";
-import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
+import { PencilLine, Trash2 } from "lucide-react";
 import DeleteModal from "../Modals/DeleteModal";
 import EditUserModal from "../Modals/EditUser";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { list_of_users } from "@/app/Redux/user_management/user_mananagement_thunk";
 
-// import DeleteModal from "../Modals/DeleteModal";
+interface UserData {
+  uuid: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  created_at: string;
+  roles: Array<{
+    name: string;
+  }>;
+}
 
 const User_managementTable = () => {
-  interface UserData {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    dateTime: string;
-    role: "Admin" | "Contributors" | "Viewer";
-    selected: boolean;
-  }
-
-  const [userData, setUserData] = React.useState<UserData[]>([
-    {
-      id: 1,
-      name: "Oripeloye Timilehin",
-      email: "Timilehinoripeloye@gmail.com",
-      phone: "09055380387",
-      dateTime: "9/4/2023, 09:31 AM",
-      role: "Admin",
-      selected: false
-    },
-    {
-      id: 2,
-      name: "Oripeloye Timilehin",
-      email: "Timilehinoripeloye@gmail.com",
-      phone: "09055380387",
-      dateTime: "9/4/2023, 09:31 AM",
-      role: "Contributors",
-      selected: false
-    },
-    {
-      id: 3,
-      name: "Oripeloye Timilehin",
-      email: "Timilehinoripeloye@gmail.com",
-      phone: "09055380387",
-      dateTime: "9/4/2023, 09:31 AM",
-      role: "Contributors",
-      selected: false
-    },
-    {
-      id: 4,
-      name: "Oripeloye Timilehin",
-      email: "Timilehinoripeloye@gmail.com",
-      phone: "09055380387",
-      dateTime: "9/4/2023, 09:31 AM",
-      role: "Viewer",
-      selected: false
-    },
-    {
-      id: 5,
-      name: "Oripeloye Timilehin",
-      email: "Timilehinoripeloye@gmail.com",
-      phone: "09055380387",
-      dateTime: "9/4/2023, 09:31 AM",
-      role: "Viewer",
-      selected: false
-    }
-  ]);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const { data, loading, error } = useSelector((state: any) => state.userManagement);
+  const users = data?.users?.data;
+  const pagination = data?.users || {};
+  
   const headers = ["Name", "Email Address", "Phone Number", "Date/Time", "Role", "Actions"];
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isEditModalOpen, setIEditModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const [user_management] = useState({
+    search: "",
+    role: ""
+  });
 
-  const toggleSelection = (id: number) => {
-    setUserData(userData.map(user => 
-      user.id === id ? { ...user, selected: !user.selected } : user
-    ));
+  // Debug logging
+  useEffect(() => {
+    console.log('Current users data:', users);
+    console.log('Pagination data:', pagination);
+  }, [users, pagination]);
+
+  // Fetch users on component mount and page change
+  useEffect(() => {
+    dispatch(list_of_users({ ...user_management }));
+  }, [dispatch, currentPage, user_management]);
+
+  const toggleSelection = (uuid: string) => {
+    setSelectedIds(prev => 
+      prev.includes(uuid) 
+        ? prev.filter(id => id !== uuid) 
+        : [...prev, uuid]
+    );
   };
 
-  const handleEdit = (id: number) => {
-    console.log(`Edit user with id: ${id}`);
-  };
+  useEffect(() => {
+    setIsHeaderChecked(selectedIds.length === users?.length && users.length > 0);
+  }, [selectedIds, users]);
 
-  const handleDelete = (id: any) => {
-    setUserData(userData.filter(user => user.id !== id));
+  const handleDelete = (uuid: string) => {
+    console.log("Deleting user with uuid:", uuid);
     setIsDeleteModalOpen(false);
+    // Add your actual delete logic here
   };
 
-  const renderRole = (role: "Admin" | "Contributors" | "Viewer") => {
-    let bgColor = "";
-    let textColor = "";
+  const handleHeaderToggle = () => {
+    const newHeaderState = !isHeaderChecked;
+    setIsHeaderChecked(newHeaderState);
+    setSelectedIds(newHeaderState ? users.map((user:any) => user.uuid) : []);
+  };
 
-    if (role === "Admin") {
-      bgColor = "bg-[#FEEEFF] border-[#FBCAFF]";
-      textColor = "text-[#156064]";
-    } else if (role === "Contributors") {
-      bgColor = "bg-[#FFF0F1] border-[#FFAAAE]";
-      textColor = "text-[#FA4D56]";
-    } else if (role === "Viewer") {
-        bgColor = "bg-[#EFFAF2] border-[#BFFFD1]";
-      textColor = "text-[#42BE65]";
+  const renderHeader = () => (
+    <CustomCheckbox 
+      id="header" 
+      checked={isHeaderChecked} 
+      onChange={handleHeaderToggle} 
+    />
+  );
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime()) 
+        ? 'Invalid date' 
+        : date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+    } catch {
+      return 'Invalid date';
     }
+  };
+
+  const renderRole = (roles: Array<{ name: string }>) => {
+    const roleName = roles[0]?.name || "No Role";
+    const roleStyles = {
+      "Super Admin": {
+        bg: "bg-[#FEEEFF] border-[#FBCAFF]",
+        text: "text-[#156064]"
+      },
+      "Contributor": {
+        bg: "bg-[#FFF0F1] border-[#FFAAAE]",
+        text: "text-[#FA4D56]"
+      },
+      "Viewer": {
+        bg: "bg-[#EFFAF2] border-[#BFFFD1]",
+        text: "text-[#42BE65]"
+      },
+      default: {
+        bg: "bg-gray-100 border-gray-300",
+        text: "text-gray-600"
+      }
+    };
+
+    const style = roleStyles[roleName as keyof typeof roleStyles] || roleStyles.default;
 
     return (
-      <span className={`px-[10px] py-[2px] rounded-[2px] border text-xs ${bgColor} ${textColor}`}>
-        {role}
+      <span className={`px-[10px] py-[2px] rounded-[2px] border text-xs ${style.bg} ${style.text}`}>
+        {roleName}
       </span>
     );
   };
 
-  const renderRow = (item: UserData, index: number) => (
+  const renderRow = (item: UserData) => (
     <>
       <td className="pl-[27px] py-4 px-6">
         <div className="flex items-center gap-4 h-full">
           <CustomCheckbox 
-            id={item.id} 
-            checked={item.selected} 
-            onChange={toggleSelection} 
+            id={item.uuid} 
+            checked={selectedIds.includes(item.uuid)} 
+            onChange={() => toggleSelection(item.uuid)} 
           />
           <img
-             src="https://bit.ly/dan-abramov"
-            alt={item.name}
+            src={`https://ui-avatars.com/api/?name=${item.first_name}+${item.last_name}&background=random`}
+            alt={`${item.first_name} ${item.last_name}`}
             className="w-8 h-8 rounded-full"
           />
-          <p className="truncate max-w-[120px]">{item.name}</p>
+          <p className="truncate max-w-[120px]">{`${item.first_name} ${item.last_name}`}</p>
         </div>
       </td>
       <td className="truncate max-w-[200px] py-4 px-6">{item.email}</td>
-      <td className="truncate max-w-[120px] py-4 px-6">{item.phone}</td>
-      <td className="truncate max-w-[110px] py-4 px-6">{item.dateTime}</td>
-      <td className="truncate  py-4 px-6">
-        {renderRole(item.role)}
-      </td>
+      <td className="truncate max-w-[120px] py-4 px-6">{item.phone_number}</td>
+      <td className="truncate max-w-[110px] py-4 px-6">{formatDate(item.created_at)}</td>
+      <td className="truncate py-4 px-6">{renderRole(item.roles)}</td>
       <td className="py-4 px-4">
         <div className="flex items-center gap-4">
-          <button className="text-gray-500" onClick={()=>setIEditModalOpen(true)}>
+          <button 
+            className="text-gray-500" 
+            onClick={() => setIsEditModalOpen(true)}
+          >
             <PencilLine size={20} />
           </button>
-          <button className="text-[#E33A24] hover:text-[#E33A24]" onClick={() => {
-            setUserToDelete(item.id);
-            setIsDeleteModalOpen(true);
-          }}>
+          <button 
+            className="text-[#E33A24] hover:text-[#E33A24]" 
+            onClick={() => {
+              setUserToDelete(item.uuid);
+              setIsDeleteModalOpen(true);
+            }}
+          >
             <Trash2 size={20} />
           </button>
         </div>
@@ -149,39 +172,51 @@ const User_managementTable = () => {
     </>
   );
 
+  if (loading && !users?.length) {
+    return <div className="text-center py-8">Loading users...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">{error}</div>;
+  }
+
+  if (!loading && !error && data?.length === 0) {
+    return <div className="text-center py-8">No users found</div>;
+  }
+
   return (
-    <div>
+    <div className="bg-white rounded-lg shadow">
       <SettingsTable
         headers={headers}
-        data={userData}
+        data={users}
         titleProps={{
           mainTitle: "User Management",
-          count: "200 Users",
+          count: `${pagination.total || 0} Users`,
           subtitle: "List of all users on the dashboard",
         }}
         href=""
-        itemsPerPage={5}
         setStep={(step: number) => console.log(`Step: ${step}`)}
         renderRow={renderRow}
         showAddUserButton={true}
+        isHeaderChecked={isHeaderChecked}
+        handleHeaderToggle={handleHeaderToggle}
+        renderHeader={renderHeader}
+        currentPage={currentPage}
+        totalPages={pagination.last_page}
+        setCurrentPage={setCurrentPage}
       />
-   <DeleteModal
-  isOpen={isDeleteModalOpen}
-  onClose={() => setIsDeleteModalOpen(false)}
-  onConfirm={() => {
-    if (userToDelete !== null) {
-      handleDelete(userToDelete);
-    }
-  }}
-/>
-<EditUserModal
-  isOpen={isEditModalOpen}
-  onClose={() => setIEditModalOpen(false)}
-  onConfirm={() => {
-
-    }
-  }
-/>
+      
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => userToDelete && handleDelete(userToDelete)}
+      />
+      
+      <EditUserModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={() => {}}
+      />
     </div>
   );
 };

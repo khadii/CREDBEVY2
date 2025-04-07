@@ -14,10 +14,10 @@ export default function TopBar() {
 
   useEffect(() => {
     dispatch(fetchCompanyInfo());
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
-    return <div className="flex justify-center p-4">Loading company info...</div>;
+    return <div className="flex justify-center p-4">fetching company's info.....</div>;
   }
 
   if (error) {

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LucideChevronDown, Plus } from "lucide-react";
-import TableHeader from "../TableTwo/TableHeader";
+
 import TableRow from "../TableTwo/TableRow";
-import Pagination from "../TableTwo/Pagination";
+import TableHeader from "../TableTwo/modifiedTabletwo/TableHeader";
+import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
 
 interface TableProps<T> {
   headers: string[];
@@ -14,10 +15,19 @@ interface TableProps<T> {
     subtitle: string;
   };
   href: string;
-  itemsPerPage: number;
-  setStep?: any;
+
+  setStep?: (step: number) => void;
   renderRow: (item: T, index: number) => React.ReactNode;
-  showAddUserButton?: boolean; // New prop to control visibility of the "Add User" button
+  showAddUserButton?: boolean;
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: (page: number) => void;
+  isHeaderChecked: boolean;
+  handleHeaderToggle: () => void;
+  renderHeader?: (
+    isHeaderChecked: boolean,
+    handleHeaderToggle: () => void
+  ) => React.ReactNode;
 }
 
 const SettingsTable = <T,>({
@@ -25,22 +35,22 @@ const SettingsTable = <T,>({
   data,
   titleProps,
   href,
-  itemsPerPage,
+
   setStep,
   renderRow,
-  showAddUserButton = true, // Default value is true
+  setCurrentPage,
+  currentPage,
+  totalPages,
+  isHeaderChecked,
+  handleHeaderToggle,
+  renderHeader,
+  showAddUserButton = false // Default value added
 }: TableProps<T>) => {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const handleRowClick = (index: number) => {
     router.push(`${href}`);
   };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = data.slice(startIndex, endIndex);
 
   return (
     <div className="rounded-lg mt-3 w-full bg-white">
@@ -59,11 +69,10 @@ const SettingsTable = <T,>({
           </p>
         </div>
         <div className="flex gap-[12px]">
-          {/* Conditionally render the "Add User" button */}
           {showAddUserButton && (
             <button
               className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
-              onClick={() => setStep(2)}
+              onClick={() => setStep && setStep(2)}
             >
               <Plus size={16} /> Add User
             </button>
@@ -73,10 +82,16 @@ const SettingsTable = <T,>({
           </button>
         </div>
       </div>
+     
       <table className="w-full text-left">
-        <TableHeader headers={headers} />
+        <TableHeader
+          headers={headers}
+          renderHeader={renderHeader}
+          isHeaderChecked={isHeaderChecked}
+          handleHeaderToggle={handleHeaderToggle}
+        />
         <tbody className="text-[#333333] font-semibold text-xs">
-          {currentData.map((item, index) => (
+          {data?.map((item: T, index: number) => (
             <TableRow
               key={index}
               item={item}
@@ -91,7 +106,7 @@ const SettingsTable = <T,>({
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );
