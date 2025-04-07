@@ -11,13 +11,13 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [interested, setInterested] = useState<boolean>(false);
   const [isActivated, setIsActivated] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   
   const [authPin, setAuhPin] = useState();
   const [pendingRequestCount, setPendingRequestCount] = useState<number>(0);
   
   const tabs = [
-    { name: "Request Details" },
+    { name: "All Request" },
     { name: "Pending Request", count: pendingRequestCount },
     { name: "Approved Requests" },
     { name: "Canceled Requests" },
@@ -42,7 +42,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
-  const filtersApproved = useMemo(  () => ({
+  const filtersApproved = {
     search: "",
     sort_by: "DESC",
     start_date: "",
@@ -53,9 +53,9 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     filter_by: "",
     approvalStatus: "approved",
     page: currentPage,
-  }),[]);
+  };
 
-  const filtersPending = useMemo(  () => ({
+  const filtersPending = {
     search: "",
     sort_by: "DESC",
     start_date: "",
@@ -66,7 +66,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     filter_by: "",
     approvalStatus: "pending",
     page: currentPage,
-  }),[]);
+  };
 
   return (
     <Provider store={store}>
@@ -88,8 +88,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         filtersApproved={filtersApproved}
         currentPage = {currentPage}
         setCurrentPage={setCurrentPage}
-        isLoading={isLoading}
-         setIsLoading={setIsLoading}
       />
     </Provider>
   );

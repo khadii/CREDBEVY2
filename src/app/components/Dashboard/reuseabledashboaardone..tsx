@@ -9,7 +9,8 @@ import ChartCard from "../DefaultRate";
 import BarChartCard from "../Revenuechart";
 import LoanApprovalChart from "../ChartCards/Piechart";
 import ProgressBarCard from "../Loanperformance";
-import { LoanRequest } from "../LoanRequest/loanRequestTable";
+import { LoanRequest } from "./loanRequestTable";
+
 
 interface Stat {
   title: any;

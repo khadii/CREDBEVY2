@@ -48,7 +48,7 @@ export default function Dashboard() {
   const [selectedYear, setSelectedYear] = useState("2022");
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
-  // const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
+
 
   const Year = {
     year: "",
@@ -74,24 +74,11 @@ export default function Dashboard() {
     total_count: total_count_all_loan_data,
   } = useSelector((state: RootState) => state.loanRequest.LoanRequestAll);
 
-  const filtersPendingcount = useMemo(  () => ({
-    search: "",
-    sort_by: "DESC",
-    start_date: "",
-    end_date: "",
-    single: false,
-    limit: "",
-    paginate: true,
-    filter_by: "",
-    approvalStatus: "pending",
-    page: currentPage,
-  }),[]);
-
   useEffect(() => {
     const fetchPendingCount = async () => {
       try {
         const result = await dispatch(
-          all_loan_requests(filtersPendingcount)
+          all_loan_requests(filtersPending)
         ).unwrap();
 
         setPendingRequestCount(result?.data?.total_count);
@@ -101,13 +88,11 @@ export default function Dashboard() {
     };
 
     fetchPendingCount();
-  }, [activeTab, dispatch, filters, filtersApproved.page, filtersPending.page,tabs.name]);
+  }, [dispatch,]);
 
   useEffect(() => {
-   
-  
     refreshData();
-  }, [activeTab, dispatch, filters, filtersApproved.page, filtersPending.page,tabs.name]);
+  }, [activeTab, dispatch, filters, filtersApproved.page, filtersPending.page]);
 
   useEffect(() => {
     dispatch(loan_approval_rates());
@@ -380,32 +365,32 @@ export default function Dashboard() {
         );
     }
   };
-  // if (LoanRequestAll_loading) {
-  //   return (
-  //     <Layout>
-  //       <div className="">
-  //         <HeaderWithTabs
-  //           title="Loan Request"
-  //           tabs={tabs}
-  //           years={years}
-  //           onTabChange={setActiveTab}
-  //           onYearChange={handleYearChange}
-  //           activeTab={activeTab}
-  //           setActiveTab={setActiveTab}
-  //         />
-  //         <div className="">
-  //           <SpinningFaceExact />
-  //         </div>
-  //       </div>
-  //     </Layout>
-  //   );
+  // if (LoanRequestAll_loading) {`
+    // return (
+      // <Layout>
+      //   <div className="">
+      //     <HeaderWithTabs
+      //       title="Loan Request"
+      //       tabs={tabs}
+      //       years={years}
+      //       onTabChange={setActiveTab}
+      //       onYearChange={handleYearChange}
+      //       activeTab={activeTab}
+      //       setActiveTab={setActiveTab}
+      //     />
+      //     <div className="">
+      //       <SpinningFaceExact />
+      //     </div>
+      //   </div>
+      // </Layout>
+    // );
   // }
 
   return (
     <Layout>
-      <div className="">{renderContent()}
-        <AnimatedLoader isLoading={LoanRequestAll_loading}/>
-      </div>
-    </Layout>
+    <div className="">{renderContent()}
+      <AnimatedLoader isLoading={LoanRequestAll_loading}/>
+    </div>
+  </Layout>
   );
 }
