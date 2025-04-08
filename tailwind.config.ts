@@ -11,7 +11,8 @@ export default {
         text: "var(--color-text)",
       },
       fontFamily: {
-        sans: ["'General Sans'", "sans-serif"], // Set General Sans as the default font
+        sans: ["Inter", "sans-serif"],
+
       },
       screens: {
         sm: "772px", // Custom sm breakpoint at 772px
