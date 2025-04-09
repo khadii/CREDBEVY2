@@ -6,10 +6,10 @@ export default function AnimatedLoader({ isLoading }: { isLoading: any }) {
   const [filledBars, setFilledBars] = useState(0);
 
   const bars = [
-    { width: "w-4/5", baseColor: "bg-[#EEF5F5]" }, // Top bar
-    { width: "w-full", baseColor: "bg-[#D4E6E6] opacity-[40%]" }, // Second bar
-    { width: "w-full", baseColor: "bg-[#BDD8D9] opacity-[66%]" }, // Third bar
-    { width: "w-4/5", baseColor: "bg-[#156064]" }, // Bottom bar
+    { width: "w-4/5", baseColor: "bg-[#EEF5F5]" },
+    { width: "w-full", baseColor: "bg-[#D4E6E6] opacity-[40%]" }, 
+    { width: "w-full", baseColor: "bg-[#BDD8D9] opacity-[66%]" },
+    { width: "w-4/5", baseColor: "bg-[#156064]" }, 
   ];
 
   useEffect(() => {

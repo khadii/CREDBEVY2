@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import Deactivate from "../Modals/Deactivate";
 import { formatToNaira } from "@/app/lib/Naira";
 import AnimatedLoader from "../animation";
+import { resetLoanProductState } from "@/app/Redux/Loan_Product/loan_product_slice";
+import { resetBulkAction } from "@/app/Redux/Loan_Product/Bulkslice";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +42,7 @@ export default function Dashboard() {
     page: currentPage,
   };
 
-  const [selectedYear, setSelectedYear] = useState("2022");
+  const [selectedYear, setSelectedYear] = useState("2025");
   const years = ["2022", "2023", "2024", "2025", "2026"];
   const { selectedIds, setSelectedIds } = useDashboard();
   const {
@@ -99,9 +101,11 @@ export default function Dashboard() {
       toast.success("Deactivate Successful");
       dispatch(_loan_products_all(filters));
       setIsDeleteModalOpen(false);
+      dispatch(resetBulkAction());
     }
     if (bulkActionError) {
       toast.error(bulkActionError);
+      dispatch(resetBulkAction());
     }
   }, [bulkActionSuccess, bulkActionError, dispatch, Year.year]);
   
@@ -288,8 +292,8 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
   return (
-    <section className="w-full  bg-[#FAFAFA] ">
-      <div className="">
+    <section className="w-full  bg-[#FAFAFA] flex justify-center  ">
+      <div className="max-w-7xl">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
@@ -360,7 +364,7 @@ export default function Dashboard() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleSubmit()}
       />
-      <AnimatedLoader isLoading={loading}/>
+      <AnimatedLoader isLoading={loading || bulkActionLoading}/>
     </section>
   );
 }

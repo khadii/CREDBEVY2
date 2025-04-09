@@ -200,3 +200,87 @@ export const _loan_products_stats = createAsyncThunk(
       }
     }
   );
+
+
+
+  interface LoanProductCredentialsPut {
+    credentials: {
+      product_name: any;
+      loan_type: any;
+      repayment_frequency: any;
+      minimum_amount: any;
+      maximum_amount: any;
+      duration: any;
+      interest_rate: any;
+      discount_percentage: any;
+      discount_duration: any;
+      minimum_credit_score: any;
+      maximum_credit_score: any;
+      minimum_income: any;
+      employment_status: any;
+      category: any;
+      collateral_uuids: any[];
+    };
+    product_id: string; 
+  }
+  
+  export const update_loan = createAsyncThunk(
+    "update-loan",
+    async ({ credentials, product_id }: LoanProductCredentialsPut, { rejectWithValue }) => {
+      try {
+        const token = Cookies.get("authToken");
+        if (!token) {
+          return rejectWithValue("Authentication token is missing.");
+        }
+  
+        const response = await axios.put(
+          `https://credbevy.jbenergyservices.com/public/api/partner/loan-products/update-loan-product/${product_id}`,
+          credentials,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message || "Unauthorized");
+        } else if (error.request) {
+          return rejectWithValue("No response from the server. Please check your network connection.");
+        } else {
+          return rejectWithValue("An unexpected error occurred. Please try again.");
+        }
+      }
+    }
+  );
+
+
+  interface product_id{
+    product_id?: any;
+  }
+  export const loan_products_single = createAsyncThunk(
+    "loan-products-single",
+    async (product_id: product_id, { rejectWithValue }) => {
+      try {
+        const token = Cookies.get("authToken");
+        const response = await axios.get(
+          `https://credbevy.jbenergyservices.com/public/api/partner/loan-products/single/${product_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data; 
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message || "Unauthorized");
+        } else if (error.request) {
+          return rejectWithValue("No response from the server. Please check your network connection.");
+        } else {
+          return rejectWithValue("An unexpected error occurred. Please try again.");
+        }
+      }
+    }
+  );

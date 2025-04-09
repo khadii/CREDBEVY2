@@ -45,7 +45,7 @@ export default function Dashboard() {
     setCurrentPage
   } = useDashboard();
   // Fetch data on component mount
-  const [selectedYear, setSelectedYear] = useState("2022");
+  const [selectedYear, setSelectedYear] = useState("2025");
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
 
@@ -156,7 +156,7 @@ export default function Dashboard() {
   const stats = [
     {
       title: "Total Loan Request",
-      amount:formatToNaira( LoanRequestStat_data?.totalLoanRequests),
+      amount: LoanRequestStat_data?.totalLoanRequests.toLocaleString(),
       percentage: LoanRequestStat_data?.totalLoanRequestPercentage,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
@@ -167,7 +167,7 @@ export default function Dashboard() {
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
-      title: "Total Amount Requested",
+      title: "Total Amount Disbursed",
       amount:formatToNaira( LoanRequestStat_data?.totalAmountDisbursed),
       percentage: LoanRequestStat_data?.totalAmountDisbursedPercentage,
       icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
@@ -214,22 +214,24 @@ export default function Dashboard() {
 
   function transformData(data: any, period: string) {
     let transformedData: { name: string; revenue: number }[] = [];
-
+  
     const formatAmount = (amountStr: string): number => {
       if (!amountStr || typeof amountStr !== "string") {
         return 0;
       }
-
+  
       const numericValue = parseFloat(amountStr.replace(/,/g, ""));
       if (isNaN(numericValue)) {
         return 0;
       }
-
-      return numericValue / 1_000_000;
+  
+      // Convert to millions and round to 2 decimal places
+      const valueInMillions = numericValue / 1_000_000;
+      return parseFloat(valueInMillions.toFixed(2));
     };
-
+  
     if (!data) return transformedData;
-
+  
     if (period === "This Year" && data.loan_requests_by_year) {
       transformedData = Object.keys(data.loan_requests_by_year).map((key) => ({
         name: key,
@@ -246,7 +248,7 @@ export default function Dashboard() {
         revenue: formatAmount(data.loan_requests_by_week[key].total_amount),
       }));
     }
-
+  
     return transformedData;
   }
   const barChartData = transformData(loan_request_trend_data, selectedPeriod);

@@ -15,6 +15,8 @@ import CompanyInfoFormReducer from'../Redux/company_info/company_info_form_slice
 import notificationReducer from'../Redux/company_info/notificationSlice';
 import securityReducer from'../Redux/company_info/security&password';
 import userManagementReducer from'../Redux/user_management/user_management_slice';
+import updateLoanReducer from'../Redux/Loan_Product/updateLoanProductSlice';
+import loanProductSingleReducer from'../Redux/Loan_Product/loanProductSingleSlice';
 
 
 export const store = configureStore({
@@ -33,7 +35,9 @@ export const store = configureStore({
     CompanyInfoForm: CompanyInfoFormReducer,
     notification: notificationReducer,
     security:securityReducer,
-    userManagement:userManagementReducer
+    userManagement:userManagementReducer,
+    updateLoan: updateLoanReducer,
+    loanProductSingle: loanProductSingleReducer,
   },
 });
 

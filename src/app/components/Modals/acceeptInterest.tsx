@@ -158,11 +158,12 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           dispatch(_single_loan_products_request({ id: productData }));
 
           // Show appropriate toast based on response
-          if (response.error) {
-            toast.error(response.message || "Loan approval failed");
-          } else {
+          // if (response.error) {
+          //   toast.error(response.message || "Loan approval failed");
+          // } else 
+          // {
             toast.success(response.message || "Loan approved successfully");
-          }
+          // }
 
           onClose();
           setInterested(true);

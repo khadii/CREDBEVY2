@@ -27,7 +27,7 @@ export const HeaderWithTabs = ({
   tabs,
   years,
   defaultActiveTab = tabs[0].name, // Default to the first tab
-  defaultSelectedYear = years[0], // Default to the first year
+  defaultSelectedYear ='2025', // Default to the first year
   onTabChange,
   onYearChange,
   setActiveTab

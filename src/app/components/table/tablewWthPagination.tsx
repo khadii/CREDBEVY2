@@ -50,7 +50,7 @@ const TableWithPagination = <T,>({
   };
 
   return (
-    <div className="rounded-lg mt-3 w-full bg-white">
+    <div className="rounded-lg mt-3 w-full bg-white relative">
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
         <div className="bg-white">
           <div className="flex items-center w-full gap-3 bg-white">
@@ -90,7 +90,7 @@ const TableWithPagination = <T,>({
           isHeaderChecked={isHeaderChecked}
           handleHeaderToggle={handleHeaderToggle}
         />
-        <tbody className="text-[#333333] font-semibold text-xs">
+        <tbody className="text-[#333333] font-semibold text-xs w-full">
           {data?.map((item: any, index: any) => (
             <TableRow
               key={index}

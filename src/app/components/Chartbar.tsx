@@ -53,6 +53,9 @@ const BarChartComponent = ({
       />
     );
   };
+  const formatToTwoDecimals = (value: number): string => {
+    return value.toFixed(2);
+  };
   const renderCustom = (props: any) => {
     const { x, y, width, height, name } = props;
     const fillColor = name === highlightBar ? highlightColor : barColor; // Conditional color
@@ -80,7 +83,7 @@ const BarChartComponent = ({
           tick={{ fill: "#333333", fontSize: 12 }}
         />
         <YAxis
-          tickFormatter={(tick: any) => `${tick}M`}
+          tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
           stroke="#888888"
           axisLine={false}
           tickLine={false}

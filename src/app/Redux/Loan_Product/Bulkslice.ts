@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { bulk_action } from './loan_product_thunk';
 
-
 interface BulkActionState {
   loading: boolean;
   success: boolean;
@@ -20,7 +19,12 @@ const bulkActionSlice = createSlice({
   name: 'bulkAction',
   initialState,
   reducers: {
-    
+    resetBulkAction: (state) => {
+      state.loading = false;
+      state.success = false;
+      state.error = null;
+      state.data = null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -45,4 +49,5 @@ const bulkActionSlice = createSlice({
   },
 });
 
+export const { resetBulkAction } = bulkActionSlice.actions;
 export default bulkActionSlice.reducer;
