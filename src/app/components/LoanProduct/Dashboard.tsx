@@ -98,7 +98,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (bulkActionSuccess) {
-      toast.success("Deactivate Successful");
+      toast.success(bulkActionData.message);
       dispatch(_loan_products_all(filters));
       setIsDeleteModalOpen(false);
       dispatch(resetBulkAction());
@@ -292,8 +292,8 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
   return (
-    <section className="w-full  bg-[#FAFAFA] flex justify-center  ">
-      <div className="max-w-7xl">
+    <section className="  bg-[#FAFAFA]    ">
+      <div className="">
         {/* title */}
 
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
