@@ -7,6 +7,7 @@ import EditUserModal from "../Modals/EditUser";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { list_of_users } from "@/app/Redux/user_management/user_mananagement_thunk";
+import toast from "react-hot-toast";
 
 interface UserData {
   uuid: string;
@@ -22,9 +23,9 @@ interface UserData {
 
 const User_managementTable = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { data, loading, error } = useSelector((state: any) => state.userManagement);
-  const users = data?.users?.data;
-  const pagination = data?.users || {};
+  const { data, loading, error,success } = useSelector((state: any) => state.userManagement);
+  const users = data?.data.users?.data;
+  // const pagination = data?.users || {};
   
   const headers = ["Name", "Email Address", "Phone Number", "Date/Time", "Role", "Actions"];
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -41,9 +42,13 @@ const User_managementTable = () => {
 
   // Debug logging
   useEffect(() => {
-    console.log('Current users data:', users);
-    console.log('Pagination data:', pagination);
-  }, [users, pagination]);
+  if(success){
+    toast.success(data.message)
+  }
+  if(error){
+    toast.error(error)
+  }
+  }, [success, error]);
 
   // Fetch users on component mount and page change
   useEffect(() => {
@@ -191,7 +196,7 @@ const User_managementTable = () => {
         data={users}
         titleProps={{
           mainTitle: "User Management",
-          count: `${pagination.total || 0} Users`,
+          count: `${data?.data.total_users} Users`,
           subtitle: "List of all users on the dashboard",
         }}
         href=""
@@ -202,7 +207,7 @@ const User_managementTable = () => {
         handleHeaderToggle={handleHeaderToggle}
         renderHeader={renderHeader}
         currentPage={currentPage}
-        totalPages={pagination.last_page}
+        totalPages={data?.data.last_page}
         setCurrentPage={setCurrentPage}
       />
       

@@ -13,34 +13,41 @@ import { CSSProperties } from "react";
 import { RootState } from "@/app/Redux/store";
 import { useSelector } from "react-redux";
 import SpinningFaceExact from "../credbevyLoader";
+import Image from "next/image";
 
-export default function ProfileCard({id}:{id:any}) {
+export default function ProfileCard({ id }: { id: any }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] = useState(false);
-  const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] = useState(false);
-  const { interested, setInterested,setSelectedIds,Request_Details } = useDashboard();
+  const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] =
+    useState(false);
+  const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] =
+    useState(false);
+  const { interested, setInterested, setSelectedIds, Request_Details } =
+    useDashboard();
 
-  const {
-    loading:LoanRequest_loading,
-    data: LoanRequest_Data,
-  } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
+  const { loading: LoanRequest_loading, data: LoanRequest_Data } = useSelector(
+    (state: RootState) => state.loanRequest.single_loan_products_request
+  );
 
   // Format date of birth
   const formatDateOfBirth = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("en-US", options);
   };
-//   useEffect
-// ( ()=>{ setInterested(
-//     LoanRequest_Data?.loan?.request_details.user_info_status === "INTERESTED"
-//   );
-// },[di])
+  //   useEffect
+  // ( ()=>{ setInterested(
+  //     LoanRequest_Data?.loan?.request_details.user_info_status === "INTERESTED"
+  //   );
+  // },[di])
   // Create user data from API response
   const getUserData = () => {
     if (!LoanRequest_Data?.loan?.user) return [];
-    
+
     const user = LoanRequest_Data.loan.user;
     return [
       { label: "Date of Birth", value: formatDateOfBirth(user.date_of_birth) },
@@ -54,16 +61,18 @@ export default function ProfileCard({id}:{id:any}) {
   };
 
   const userData = getUserData();
-  const data = interested ? userData : userData.map(item => {
-    // For not interested state, blur all except state and country
-    if (item.label === "State" || item.label === "Country") {
-      return item;
-    }
-    return {
-      ...item,
-      value: "Confidential" 
-    };
-  });
+  const data = interested
+    ? userData
+    : userData.map((item) => {
+        // For not interested state, blur all except state and country
+        if (item.label === "State" || item.label === "Country") {
+          return item;
+        }
+        return {
+          ...item,
+          value: "Confidential",
+        };
+      });
 
   // Define blurStyles with explicit CSSProperties type
   const blurStyles: CSSProperties = {
@@ -77,7 +86,9 @@ export default function ProfileCard({id}:{id:any}) {
   // }
 
   const user = LoanRequest_Data?.loan.user;
-  const fullName = `${user?.first_name} ${user?.middle_name ? user?.middle_name + ' ' : ''}${user?.last_name}`;
+  const fullName = `${user?.first_name} ${
+    user?.middle_name ? user?.middle_name + " " : ""
+  }${user?.last_name}`;
   const creditScore = user?.credit_score || 660;
 
   return (
@@ -94,30 +105,42 @@ export default function ProfileCard({id}:{id:any}) {
         isOpen={isModalOpenDeclineRequest}
         onClose={() => setIsModalOpenDeclineRequest(false)}
       />
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      
-      />
-  <Modal2
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <Modal2
         isOpen={isModalOpen2}
         onClose={() => setIsModalOpen2(false)}
         // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
       />
-       <Modal3
+      <Modal3
         isOpen={isModalOpen3}
         onClose={() => setIsModalOpen3(false)}
         // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
       />
       {/* Profile Image */}
-      <img
-        src={user?.selfie_base_image_64 || "https://bit.ly/dan-abramov"}
-        alt="Avatar"
+      <Image
+        src={
+          user?.selfie_base_image_64 ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            `${user?.first_name || "U"}${
+              user?.middle_name ? `+${user.middle_name}` : ""
+            }`
+          )}&background=random`
+        }
+        alt={`${user?.first_name || "User"}'s avatar`}
+        width={96}
+        height={96}
         className="w-24 h-24 mx-auto mb-4 mt-[48px] rounded-full"
+        unoptimized={true}
+        onError={(e) => {
+          e.currentTarget.src =
+            "https://ui-avatars.com/api/?name=User&background=random";
+        }}
       />
       {/* Name */}
-      <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">{fullName}</h2>
- 
+      <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">
+        {fullName}
+      </h2>
+
       {/* Buttons */}
       <div className="mt-6 grid justify-center gap-2">
         {interested ? (
@@ -125,7 +148,10 @@ export default function ProfileCard({id}:{id:any}) {
             <div>
               <button
                 className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
-                onClick={() =>{ setIsModalOpen2(true);setSelectedIds(id)}}
+                onClick={() => {
+                  setIsModalOpen2(true);
+                  setSelectedIds(id);
+                }}
               >
                 <div>
                   <FaRegCheckCircle size={18} />
@@ -138,7 +164,10 @@ export default function ProfileCard({id}:{id:any}) {
             <div>
               <button
                 className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
-                onClick={() =>{ setIsModalOpen3(true);setSelectedIds(id)}}
+                onClick={() => {
+                  setIsModalOpen3(true);
+                  setSelectedIds(id);
+                }}
               >
                 <div>
                   <FaRegTimesCircle size={18} />
@@ -154,7 +183,10 @@ export default function ProfileCard({id}:{id:any}) {
             <div>
               <button
                 className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
-                onClick={() =>{ setIsModalOpen(true);setSelectedIds(id)}}
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setSelectedIds(id);
+                }}
               >
                 <div>
                   <ThumbsUp size={18} />
@@ -163,7 +195,13 @@ export default function ProfileCard({id}:{id:any}) {
               </button>
             </div>
             <div>
-              <button className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"  onClick={() => {setIsModalOpenDeclineRequest(true);setSelectedIds(id)}}>
+              <button
+                className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
+                onClick={() => {
+                  setIsModalOpenDeclineRequest(true);
+                  setSelectedIds(id);
+                }}
+              >
                 <div>
                   <ThumbsDown size={18} />
                 </div>

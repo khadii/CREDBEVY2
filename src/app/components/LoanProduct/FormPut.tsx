@@ -11,27 +11,30 @@ import { formatNaira } from "@/app/lib/utillity/nairaFormat";
 import CustomizedButton from "../CustomizedButton";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loan_products_single, update_loan } from "@/app/Redux/Loan_Product/loan_product_thunk";
+import {
+  loan_products_single,
+  update_loan,
+} from "@/app/Redux/Loan_Product/loan_product_thunk";
 import toast from "react-hot-toast";
 import { AppDispatch } from "@/app/Redux/store";
 import { useRouter, useParams } from "next/navigation";
 import { resetLoanProductStateFormUpdate } from "@/app/Redux/Loan_Product/updateLoanProductSlice";
 import AnimatedLoader from "../animation";
 
-export default function UpdateLoanForm({product_id}:{product_id:any}) {
+export default function UpdateLoanForm({ product_id }: { product_id: any }) {
   const [unsecured, setUnsecured] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { success, error, loading, data } = useSelector(
     (state: any) => state.updateLoan
   );
-  
+
   // Add selector for the single loan product data
   const { data: loanProductData, loading: productLoading } = useSelector(
     (state: any) => state.loanProductSingle
   );
-  
+
   const router = useRouter();
-  
+
   useEffect(() => {
     if (product_id) {
       dispatch(loan_products_single(product_id));
@@ -41,10 +44,12 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
   // Set form initial values when loan product data is loaded
   useEffect(() => {
     if (loanProductData) {
-    
       formik.setValues({
-        selectedCollaterals: loanProductData?.category === "Unsecured Loan" ? [] : ["Car", "Property"],
-        amount: "80,000,000.00", // Static value from your original form
+        selectedCollaterals:
+          loanProductData?.category === "Unsecured Loan"
+            ? []
+            : ["Car", "Property"],
+        amount: "80,000,000.00",
         duration: loanProductData.duration || "",
         Product_Name: loanProductData.product_name || "",
         minAmount: loanProductData.minimum_amount?.toString() || "",
@@ -77,8 +82,9 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
   ];
   const categoryOptions = ["Secured Loan", "Unsecured Loan"];
   const DiscountdurationOptions = [
-    "A week",
-    "2 Weeks",
+    "---",
+    "1 week",
+    "2 weeks",
     "3 weeks",
     "4 weeks",
     "5 weeks",
@@ -166,8 +172,7 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
       .max(999999999, "Minimum Income should not exceed ₦999,999,999")
       .required("Minimum Income is required"),
     employmentStatus: Yup.string().required("Employment Status is required"),
-    percentage: Yup.string()
-      .max(2, "percentage should not exceed two numbers"),
+    percentage: Yup.string().max(2, "percentage should not exceed two numbers"),
     Discountduration: Yup.string(),
   });
 
@@ -202,7 +207,7 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
           duration: values.duration,
           interest_rate: values.interestRate,
           discount_percentage: values.percentage,
-          discount_duration: values.Discountduration,
+          discount_duration:values.Discountduration === "---" ? "" : values.Discountduration,
           minimum_credit_score: values.minCreditScore,
           maximum_credit_score: values.maxCreditScore,
           minimum_income: values.minimumIncome,
@@ -210,16 +215,16 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
           category: values.category,
           collateral_uuids: values.selectedCollaterals,
         },
-        product_id: product_id 
+        product_id: product_id,
       };
-      
+
       dispatch(update_loan(productData) as any);
     },
   });
 
   useEffect(() => {
     if (success) {
-      toast.success(success);
+      toast.success(data.message);
       dispatch(resetLoanProductStateFormUpdate());
       router.push("/dashboard/loan-products");
     }
@@ -228,8 +233,6 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
       dispatch(resetLoanProductStateFormUpdate());
     }
   }, [success, error, dispatch]);
-
-
 
   return (
     <>
@@ -539,7 +542,7 @@ export default function UpdateLoanForm({product_id}:{product_id:any}) {
         </div>
       </form>
       {error && <p className="text-red-500">{error}</p>}
-      <AnimatedLoader isLoading={productLoading}/>
+      <AnimatedLoader isLoading={productLoading} />
     </>
   );
 }

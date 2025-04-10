@@ -1,7 +1,7 @@
 "use client";
 
 import { CircleAlert, DollarSign, SquareActivity } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { LuSquareActivity } from "react-icons/lu";
 import Layout from "@/app/components/Layout/Layout";
@@ -23,6 +23,8 @@ import { formatToNaira } from "@/app/lib/Naira";
 import AnimatedLoader from "../animation";
 import { resetLoanProductState } from "@/app/Redux/Loan_Product/loan_product_slice";
 import { resetBulkAction } from "@/app/Redux/Loan_Product/Bulkslice";
+import { DropdownMenu } from "../Modals/activateDeActivateBulk";
+
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,7 +32,19 @@ export default function Dashboard() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setIsDeleteModalOpen(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const filters = {
     search: "",
     sort_by: "DESC",
@@ -292,7 +306,7 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
   return (
-    <section className="  bg-[#FAFAFA]    ">
+    <section className="  bg-[#FAFAFA]   ">
       <div className="">
         {/* title */}
 
@@ -307,7 +321,8 @@ export default function Dashboard() {
           setSelectedYear={setSelectedYear}
         />
         <div>
-          <div>
+          <div className=" relative ">
+          {isDeleteModalOpen && <div ref={modalRef} className=" absolute z-50 right-5 top-[820px] hidden md:flex"> <DropdownMenu onClick={(e) => e.stopPropagation()} productId={selectedIds} setActiveDropdown={setIsDeleteModalOpen} /></div>}
             <LoanProducts
               stats={stats}
               chartData={chartData}
@@ -356,14 +371,16 @@ export default function Dashboard() {
               }
               bulkAction={() => handleOpenModal()}
             />
+  
           </div>
         </div>
       </div>
-      <Deactivate
+      {/* <Deactivate
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleSubmit()}
-      />
+      /> */}
+              
       <AnimatedLoader isLoading={loading || bulkActionLoading}/>
     </section>
   );

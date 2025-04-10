@@ -125,10 +125,12 @@ export const _loan_products_stats = createAsyncThunk(
     }
   );
   
-  interface Year2{
-    year?: any;
-    product_id: any;
+
+  interface Year2 {
+    year?: string | number;
+    product_id: string | number; 
   }
+  
   
 
   

@@ -50,7 +50,7 @@ export default function FinancialInfo({ id }: { id: any }) {
   }, [user_info_status, LoanRequest_Data, setInterested]);
 
   const tabs = useMemo(() => [
-    { name: "All Request" },
+    { name: "Request Details" },
     { name: "Employment info" },
     { name: "Financial info" },
     { name: "Credit info" },
@@ -79,6 +79,7 @@ export default function FinancialInfo({ id }: { id: any }) {
       { label: "Loan Terms", value: `${LoanRequest_Data.loan.request_details.loan_duration} Months` },
       { label: "Interest Rate", value: `${LoanRequest_Data.loan.request_details.interest_rate}%` },
       { label: "Request Date", value: new Date(LoanRequest_Data.loan.request_details.created_at).toLocaleString() },
+      { label: "Loan Product", value: 'N/A'},
     ] : [], [LoanRequest_Data, formatCurrency]);
 
   const Employment_Info = useMemo(() => 
@@ -122,7 +123,7 @@ export default function FinancialInfo({ id }: { id: any }) {
     if (!LoanRequest_Data) return;
 
     switch (activeTab) {
-      case "All Request":
+      case "Request Details":
         setData(Request_Details);
         setShowDocumentsTable(false);
         setShowFinancialGrid(false);
