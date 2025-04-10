@@ -109,9 +109,17 @@ const menuItems = [
   // },
   {
     id: 1099,
+    name: "Developer",
+    href: "/dashboard/developer",
+    icon: "/icons/developer.svg",
+    activeIcon: "/icons/developeractive.svg",
+  },
+  {
+    id: 1100,
     name: "Settings",
     href: "/dashboard/settings",
     icon: "/icons/setting-2.svg",
     activeIcon: "/icons/setting-2-active.svg",
   },
+
 ];
