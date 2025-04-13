@@ -92,10 +92,23 @@ const User_managementTable = () => {
 
 
 
-  const toggleSelection = (uuid: string) => {
-    setSelectedIds((prev:any) =>
-      prev.includes(uuid) ? prev.filter((id:any) => id !== uuid) : [...prev, uuid]
-    );
+  // const toggleSelection = (uuid: string) => {
+  //   setSelectedIds((prev:any) =>
+  //     prev.includes(uuid) ? prev.filter((id:any) => id !== uuid) : [...prev, uuid]
+  //   );
+  // };
+
+  const toggleSelection = (id: string) => {
+    setSelectedIds((prevSelectedIds: any) => {
+      // Ensure prevSelectedIds is an array
+      const currentIds = Array.isArray(prevSelectedIds) ? prevSelectedIds : [];
+      
+      if (currentIds.includes(id)) {
+        return currentIds.filter(selectedId => selectedId !== id);
+      } else {
+        return [...currentIds, id];
+      }
+    });
   };
 
   useEffect(() => {

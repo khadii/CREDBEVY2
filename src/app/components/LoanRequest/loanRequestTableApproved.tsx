@@ -105,12 +105,16 @@ const responsiveStyles = `
     }
   }, [selectedIds, laon_table_data_all]);
 
-  const handleToggle = (loan_uuid: string) => {
+
+  const handleToggle = (id: string) => {
     setSelectedIds((prevSelectedIds: any) => {
-      if (prevSelectedIds.includes(loan_uuid)) {
-        return prevSelectedIds.filter((selectedId: any) => selectedId !== loan_uuid);
+      // Ensure prevSelectedIds is an array
+      const currentIds = Array.isArray(prevSelectedIds) ? prevSelectedIds : [];
+      
+      if (currentIds.includes(id)) {
+        return currentIds.filter(selectedId => selectedId !== id);
       } else {
-        return [...prevSelectedIds, loan_uuid];
+        return [...currentIds, id];
       }
     });
   };

@@ -78,12 +78,26 @@ export const LoanProduct = ({
     }
   }, [selectedIds, laon_table_data_all]);
 
-  const handleToggle = (uuid: string) => {
+  // const handleToggle = (uuid: string) => {
+  //   setSelectedIds((prevSelectedIds: any) => {
+  //     if (prevSelectedIds.includes(uuid)) {
+  //       return prevSelectedIds.filter((selectedId: any) => selectedId !== uuid);
+  //     } else {
+  //       return [...prevSelectedIds, uuid];
+  //     }
+  //   });
+  // };
+
+
+  const handleToggle = (id: string) => {
     setSelectedIds((prevSelectedIds: any) => {
-      if (prevSelectedIds.includes(uuid)) {
-        return prevSelectedIds.filter((selectedId: any) => selectedId !== uuid);
+      // Ensure prevSelectedIds is an array
+      const currentIds = Array.isArray(prevSelectedIds) ? prevSelectedIds : [];
+      
+      if (currentIds.includes(id)) {
+        return currentIds.filter(selectedId => selectedId !== id);
       } else {
-        return [...prevSelectedIds, uuid];
+        return [...currentIds, id];
       }
     });
   };

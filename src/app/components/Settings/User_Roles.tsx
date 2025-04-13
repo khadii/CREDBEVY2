@@ -94,16 +94,28 @@ useEffect(() => {
     }
   }, [selectedIds, data.roles]);
 
+  // const handleToggle = (id: number) => {
+  //   setSelectedIds((prevSelectedIds: number[]) => {
+  //     if (prevSelectedIds.includes(id)) {
+  //       return prevSelectedIds.filter(selectedId => selectedId !== id);
+  //     } else {
+  //       return [...prevSelectedIds, id];
+  //     }
+  //   });
+  // };
+
   const handleToggle = (id: number) => {
-    setSelectedIds((prevSelectedIds: number[]) => {
-      if (prevSelectedIds.includes(id)) {
-        return prevSelectedIds.filter(selectedId => selectedId !== id);
+    setSelectedIds((prevSelectedIds: any) => {
+      // Ensure prevSelectedIds is an array
+      const currentIds = Array.isArray(prevSelectedIds) ? prevSelectedIds : [];
+      
+      if (currentIds.includes(id)) {
+        return currentIds.filter(selectedId => selectedId !== id);
       } else {
-        return [...prevSelectedIds, id];
+        return [...currentIds, id];
       }
     });
   };
-
   const handleHeaderToggle = () => {
     const newHeaderState = !isHeaderChecked;
     setIsHeaderChecked(newHeaderState);
