@@ -1,32 +1,10 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Add this CSS to your global styles or component
-const paginationStyles = `
-  @media (max-width: 768px) {
-    .pagination-container {
-      padding: 0.5rem;
-    }
-    .pagination-buttons {
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      justify-content: center;
-    }
-    .page-button {
-      min-width: 32px;
-      height: 32px;
-      margin: 0 2px;
-    }
-    .pagination-nav-buttons {
-      margin: 0 4px;
-    }
-  }
-`;
-
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  setCurrentPage: any;
+  setCurrentPage: (page: number) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -39,81 +17,107 @@ const Pagination: React.FC<PaginationProps> = ({
     setCurrentPage(page);
   };
 
-  // Limit the number of visible page buttons on mobile
-  const getVisiblePages = () => {
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Function to determine which page numbers to show
+  const getPageNumbers = () => {
+    // For small number of pages, show all
     if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
     
-    let start = Math.max(1, currentPage - 1);
-    let end = Math.min(totalPages, currentPage + 1);
+    // For larger number of pages, use ellipsis
+    let pages = [];
     
-    if (currentPage <= 2) {
-      end = 3;
-    } else if (currentPage >= totalPages - 1) {
-      start = totalPages - 2;
+    // Always include first page
+    pages.push(1);
+    
+    // Logic for middle pages
+    if (currentPage <= 3) {
+      pages.push(2, 3, 4, '...');
+    } else if (currentPage >= totalPages - 2) {
+      pages.push('...', totalPages - 3, totalPages - 2, totalPages - 1);
+    } else {
+      pages.push('...', currentPage - 1, currentPage, currentPage + 1, '...');
     }
     
-    const pages = [];
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
+    // Always include last page
+    if (totalPages > 1) {
+      pages.push(totalPages);
     }
-    
-    if (start > 1) pages.unshift(1, '...');
-    if (end < totalPages) pages.push('...', totalPages);
     
     return pages;
   };
 
   return (
-    <>
-      <style>{paginationStyles}</style>
-      <div className="pagination-container flex justify-center items-center border-t-[1px] py-[20px] px-6 border rounded-lg rounded-t-none w-full ">
-        <div className="pagination-buttons flex items-center gap-2">
-          <button
-            className="pagination-nav-buttons ml-[10px]"
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft
-              size={18}
-              className={currentPage === 1 ? "text-gray-300" : "text-gray-600"}
-            />
-          </button>
+    <div className="flex justify-center items-center border-t border py-4 px-2 sm:px-6 rounded-lg rounded-t-none">
+      <div className="flex items-center gap-1 sm:gap-2">
+        <button
+          className="p-1 sm:ml-2"
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+          aria-label="Previous page"
+        >
+          <ChevronLeft
+            size={18}
+            className={currentPage === 1 ? "text-gray-300" : "text-gray-600 hover:text-gray-900"}
+          />
+        </button>
 
-          {getVisiblePages().map((page, index) => (
-            page === '...' ? (
-              <span key={`ellipsis-${index}`} className="mx-1">...</span>
-            ) : (
+        <div className="hidden sm:flex items-center">
+          {getPageNumbers().map((page, index) => (
+            typeof page === 'number' ? (
               <button
-                key={page}
-                className={`page-button ml-[10px] ${
+                key={index}
+                className={`mx-1 ${
                   currentPage === page
-                    ? "bg-[#DADADA66] text-[#333333] w-8 h-8 flex items-center justify-center rounded"
-                    : "text-[#8A8B9F]"
+                    ? "bg-gray-200 text-gray-900 w-8 h-8 flex items-center justify-center rounded"
+                    : "text-gray-500 w-8 h-8 flex items-center justify-center hover:text-gray-900"
                 }`}
-                onClick={() => handlePageChange(page as number)}
+                onClick={() => handlePageChange(page)}
+                aria-label={`Page ${page}`}
+                aria-current={currentPage === page ? 'page' : undefined}
               >
                 {page}
               </button>
+            ) : (
+              <span key={index} className="mx-1 text-gray-500">...</span>
             )
           ))}
-
-          <button
-            className="pagination-nav-buttons ml-[10px]"
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight
-              size={18}
-              className={
-                currentPage === totalPages ? "text-gray-300" : "text-gray-600"
-              }
-            />
-          </button>
         </div>
+
+        {/* Mobile view just shows current page / total */}
+        <div className="flex sm:hidden items-center">
+          <span className="text-sm text-gray-500">
+            {currentPage} / {totalPages}
+          </span>
+        </div>
+
+        <button
+          className="p-1 sm:mr-2"
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          aria-label="Next page"
+        >
+          <ChevronRight
+            size={18}
+            className={
+              currentPage === totalPages ? "text-gray-300" : "text-gray-600 hover:text-gray-900"
+            }
+          />
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

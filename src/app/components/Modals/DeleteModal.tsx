@@ -1,14 +1,21 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import React from "react";
-
-interface ModalProps {
+interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
-const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
+export const DeleteModal: React.FC<DeleteModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  isLoading = false,
+  error = null
+}) => {
   
   if (!isOpen) return null;
 
@@ -64,7 +71,7 @@ const DeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
               }}
               className="flex-1 py-2 border border-[#FA4D56] bg-[#FA4D56] rounded-[4px] text-xs font-bold text-white hover:bg-[#e53e3e] transition-colors"
             >
-              Proceed
+             {isLoading ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </div>

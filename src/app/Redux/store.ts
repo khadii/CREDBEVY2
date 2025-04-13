@@ -17,8 +17,12 @@ import securityReducer from'../Redux/company_info/security&password';
 import userManagementReducer from'../Redux/user_management/user_management_slice';
 import updateLoanReducer from'../Redux/Loan_Product/updateLoanProductSlice';
 import loanProductSingleReducer from'../Redux/Loan_Product/loanProductSingleSlice';
-
-
+import updateUsersReducer from'../Redux/user_management/Update_user_slice';
+import userSliceReducer from'../Redux/user_management/singleuser_slice';
+import delete_userReducer from '../Redux/user_management/delete_user'
+import adduserReducer from '../Redux/user_management/add_user_slice'
+import userRolesReducer from '../Redux/Userr_Role/Get_All_User_Role'
+import deleteUserroleReducer from '../Redux/Userr_Role/delete_user_role'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -38,6 +42,12 @@ export const store = configureStore({
     userManagement:userManagementReducer,
     updateLoan: updateLoanReducer,
     loanProductSingle: loanProductSingleReducer,
+    updateUsers: updateUsersReducer,
+    singleUser: userSliceReducer,
+    delete_user:delete_userReducer,
+    adduser: adduserReducer,
+    userRoles:userRolesReducer,
+    deleteUserrole:deleteUserroleReducer
   },
 });
 

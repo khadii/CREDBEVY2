@@ -42,7 +42,9 @@ export default function Dashboard() {
     filtersPending,
     filtersApproved,
     currentPage,
-    setCurrentPage
+    setCurrentPage,
+    currentPageapproved, 
+    setcurrentPageapproved
   } = useDashboard();
   // Fetch data on component mount
   const [selectedYear, setSelectedYear] = useState("2025");
@@ -326,8 +328,8 @@ export default function Dashboard() {
             handleFilterClick={handleFilterClick}
             handleSeeAllClick={handleSeeAllClick}
             laon_table_data_all={LoanRequestAll_Data.loan_requests.data}
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
+            setCurrentPage={setcurrentPageapproved}
+            currentPage={currentPageapproved}
             totalPages={LoanRequestAll_Data?.loan_requests?.last_page}
             total_count={total_count_all_loan_data}
             bulkAction={undefined}

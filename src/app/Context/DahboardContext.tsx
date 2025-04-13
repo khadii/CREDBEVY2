@@ -25,6 +25,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
 
   const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
   const [currentPage, setCurrentPage] = useState<number | undefined>(1);
+  const [currentPageapproved, setcurrentPageapproved] = useState<number | undefined>(1);
   
   const filters = useMemo(
     () => ({
@@ -52,7 +53,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
     paginate: true,
     filter_by: "",
     approvalStatus: "approved",
-    page: currentPage,
+    page: currentPageapproved,
   };
 
   const filtersPending = {
@@ -88,6 +89,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         filtersApproved={filtersApproved}
         currentPage = {currentPage}
         setCurrentPage={setCurrentPage}
+        currentPageapproved={currentPageapproved}
+         setcurrentPageapproved={setcurrentPageapproved}
       />
     </Provider>
   );

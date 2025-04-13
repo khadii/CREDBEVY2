@@ -1,59 +1,119 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import SettingsTable from "./Generaltablecomp";
-import { Edit, Trash2, Check, PencilLine, Delete } from "lucide-react";
-import DeleteModal from "../Modals/DeleteModal";
-
+import { PencilLine, Trash2 } from "lucide-react";
 import EditRoleModal from "../Modals/EditRoleModal";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { UserRoles } from "@/app/Redux/Userr_Role/user_role_thunk";
+import { setCurrentPage } from "@/app/Redux/Userr_Role/Get_All_User_Role";
+import { useDashboard } from "@/app/Context/DahboardContext";
+import { delete_user_role } from "@/app/Redux/Userr_Role/user_role_thunk";
+import { clearDeleteUserRoleState } from "@/app/Redux/Userr_Role/delete_user_role";
+import DeleteModal from "../Modals/DeleteModal";
+import { clearDeleteUserState } from "@/app/Redux/user_management/delete_user";
+import toast from "react-hot-toast";
+import AnimatedLoader from "../animation";
+// import { clearDeleteUserRoleState } from "@/app/Redux/Userr_Role/delete_user_role_slice";
+
+interface RoleData {
+  id: number;
+  name: string;
+  description: string | null;
+  users?: number;
+  lastModified?: string;
+  guard_name: string;
+  partner_id: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}
 
 const User_Roles = () => {
-  interface RoleData {
-    id: number;
-    name: string;
-    description: string;
-    users: number;
-    lastModified: string;
-    selected: boolean;
-  }
-
-  const [roleData, setRoleData] = React.useState<RoleData[]>([
-    {
-      id: 1,
-      name: "Admin",
-      description: "The super admin can add, edit anything on the dashboard",
-      users: 4,
-      lastModified: "9/17/2023, 11:28 PM",
-      selected: false
-    },
-    {
-      id: 2,
-      name: "Contributor",
-      description: "The super admin can add, edit anything on the dashboard",
-      users: 5,
-      lastModified: "9/17/2023, 11:28 PM",
-      selected: false
-    },
-    {
-      id: 3,
-      name: "Viewer",
-      description: "The super admin can add, edit anything on the dashboard",
-      users: 10,
-      lastModified: "9/17/2023, 11:28 PM",
-      selected: false
-    },
-  ]);
-
-  const headers = ["Role Name", "Description", "Users", "Last Modified"];
-
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    data,
+    loading,
+    error,
+    currentPage,
+    search,
+    roleFilter
+  } = useSelector((state: RootState) => state.userRoles);
+  
+  const {
+    loading: deleteStateloading,
+    error: deleteStateerror,
+    message: deleteStatemessage,
+    success: deleteStatesuccess,
+  } = useSelector((state: RootState) => state.deleteUserrole);
+  
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState<number | null>(null);
+  const { selectedIds, setSelectedIds } = useDashboard();
+  const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+  const headers = ["Role Name", "Description", "Guard Name", "Last Modified"];
 
+  useEffect(() => {
+    dispatch(UserRoles({ 
+      search, 
+      role: roleFilter, 
+      page: currentPage 
+    }));
+  }, [dispatch, search, roleFilter, currentPage]);
 
-  const toggleSelection = (id: number) => {
-    setRoleData(roleData.map(role => 
-      role.id === id ? { ...role, selected: !role.selected } : role
-    ));
+// Handle delete success/error
+useEffect(() => {
+  if (deleteStatesuccess && deleteStatemessage) {
+    toast.success(deleteStatemessage);
+    dispatch(UserRoles({ 
+      search, 
+      role: roleFilter, 
+      page: currentPage 
+    }));
+    setIsDeleteModalOpen(false);
+    dispatch(clearDeleteUserRoleState());
+  }
+  
+  if (deleteStateerror) {
+    toast.error(deleteStateerror);
+    dispatch(clearDeleteUserRoleState());
+  }
+}, [deleteStatesuccess, deleteStateerror, deleteStatemessage, dispatch, search, roleFilter, currentPage]);
+
+  // Reset selections when data changes
+  useEffect(() => {
+    if (data.roles && data.roles.length > 0) {
+      setSelectedIds([]);
+    }
+  }, [data.roles]);
+
+  // Update header checkbox state based on selections
+  useEffect(() => {
+    if (data.roles && data.roles.length > 0) {
+      setIsHeaderChecked(selectedIds.length === data.roles.length);
+    }
+  }, [selectedIds, data.roles]);
+
+  const handleToggle = (id: number) => {
+    setSelectedIds((prevSelectedIds: number[]) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter(selectedId => selectedId !== id);
+      } else {
+        return [...prevSelectedIds, id];
+      }
+    });
+  };
+
+  const handleHeaderToggle = () => {
+    const newHeaderState = !isHeaderChecked;
+    setIsHeaderChecked(newHeaderState);
+
+    if (newHeaderState) {
+      const allIds = data.roles.map((role: RoleData) => role.id);
+      setSelectedIds(allIds);
+    } else {
+      setSelectedIds([]);
+    }
   };
 
   const handleEdit = (id: number) => {
@@ -61,12 +121,17 @@ const User_Roles = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = (id: any) => {
-    setRoleData(roleData.filter(role => role.id !== id));
-    setIsDeleteModalOpen(false);
+  const handleDelete = (id: number) => {
+    dispatch(delete_user_role({ user_id: id.toString() }));
   };
 
-
+  const renderHeader = () => (
+    <CustomCheckbox
+      id="header"
+      checked={isHeaderChecked}
+      onChange={handleHeaderToggle}
+    />
+  );
 
   const renderRow = (item: RoleData, index: number) => (
     <>
@@ -74,24 +139,34 @@ const User_Roles = () => {
         <div className="flex items-center gap-4 h-full">
           <CustomCheckbox 
             id={item.id} 
-            checked={item.selected} 
-            onChange={toggleSelection} 
+            checked={selectedIds.includes(item.id)} 
+            onChange={() => handleToggle(item.id)} 
           />
           <p className="truncate max-w-[120px]">{item.name}</p>
         </div>
       </td>
-      <td className="truncate max-w-[300px] py-4 px-6">{item.description}</td>
-      <td className="truncate max-w-[120px] py-4 px-6">{item.users}</td>
-      <td className="truncate max-w-[180px] py-4 px-6">{item.lastModified}</td>
+      <td className="truncate max-w-[300px] py-4 px-6">
+        {item.description || "No description"}
+      </td>
+      <td className="truncate max-w-[120px] py-4 px-6">{item.guard_name}</td>
+      <td className="truncate max-w-[180px] py-4 px-6">
+        {item.updated_at || item.created_at || "N/A"}
+      </td>
       <td className="py-4 px-4">
         <div className="flex items-center gap-4">
-          <button className="text-gray-500" onClick={ () => setIsEditModalOpen(true)}>
+          <button 
+            className="text-gray-500" 
+            onClick={() => handleEdit(item.id)}
+          >
             <PencilLine size={20} />
           </button>
-          <button className="text-[#E33A24] hover:text-[#E33A24]" onClick={() => {
-            setRoleToDelete(item.id);
-            setIsDeleteModalOpen(true);
-          }}>
+          <button 
+            className="text-[#E33A24] hover:text-[#E33A24]" 
+            onClick={() => {
+              setRoleToDelete(item.id);
+              setIsDeleteModalOpen(true);
+            }}
+          >
             <Trash2 size={20} />
           </button>
         </div>
@@ -99,35 +174,41 @@ const User_Roles = () => {
     </>
   );
 
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="w-full min-h-screen">
       <SettingsTable
         headers={headers}
-        data={roleData}
+        data={data.roles}
         titleProps={{
           mainTitle: "User Roles",
-          count: "200 Users",
+          count: `${data.total_roles} Roles`,
           subtitle: "List of all user roles on the dashboard",
         }}
         href=""
-        // itemsPerPage={5}
-        setStep={(step: number) => console.log(`Step: ${step}`)}
-        // renderRow={renderRow}
-        showAddUserButton={false} renderRow={function (item: RoleData, index: number): React.ReactNode {
-          throw new Error("Function not implemented.");
-        } } currentPage={0} totalPages={0} setCurrentPage={function (page: number): void {
-          throw new Error("Function not implemented.");
-        } } isHeaderChecked={false} handleHeaderToggle={function (): void {
-          throw new Error("Function not implemented.");
-        } }      />
+        showAddUserButton={false}
+        renderRow={renderRow}
+        currentPage={currentPage}
+        totalPages={data.total_roles} 
+        setCurrentPage={(page: number) => dispatch(setCurrentPage(page))}
+        isHeaderChecked={isHeaderChecked}
+        handleHeaderToggle={handleHeaderToggle}
+        renderHeader={renderHeader}
+      />
       <DeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          dispatch(clearDeleteUserRoleState());
+        }}
         onConfirm={() => {
           if (roleToDelete !== null) {
             handleDelete(roleToDelete);
           }
         }}
+        isLoading={deleteStateloading}
+        error={deleteStateerror}
       />
       <EditRoleModal
         isOpen={isEditModalOpen}
@@ -136,6 +217,8 @@ const User_Roles = () => {
           // Add logic to handle edit confirmation
         }}
       />
+
+      <AnimatedLoader isLoading={loading ||deleteStateloading}/>
     </div>
   );
 };

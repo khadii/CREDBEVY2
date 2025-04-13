@@ -74,7 +74,7 @@ export default function FinancialInfo({ id }: { id: any }) {
   const Request_Details = useMemo(() => 
     LoanRequest_Data?.loan ? [
       { label: "Loan Amount", value: formatCurrency(LoanRequest_Data.loan.request_details.loan_amount) },
-      { label: "Monthly Repayment", value: formatCurrency(LoanRequest_Data.loan.request_details.loan_amount / LoanRequest_Data.loan.request_details.loan_duration) },
+      { label: "Monthly Repayment", value: formatCurrency(LoanRequest_Data.loan.request_details.monthly_repayment) },
       { label: "Loan Purpose", value: LoanRequest_Data.loan.request_details.loan_purpose },
       { label: "Loan Terms", value: `${LoanRequest_Data.loan.request_details.loan_duration} Months` },
       { label: "Interest Rate", value: `${LoanRequest_Data.loan.request_details.interest_rate}%` },

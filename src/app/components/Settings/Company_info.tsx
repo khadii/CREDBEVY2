@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import InputField from '../FormInputs/iputDetails';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CompanyInfoForm, fetchCompanyInfo } from '@/app/Redux/company_info/company_info_thunk';
 import { resetSuccess } from '@/app/Redux/company_info/company_info_form_slice';
 import toast from 'react-hot-toast';
-import { AppDispatch } from '@/app/Redux/store';
+import { AppDispatch, RootState } from '@/app/Redux/store';
+import AnimatedLoader from '../animation';
 
 
 // Yup validation schema (for form submission)
@@ -54,14 +55,45 @@ const validationSchema = Yup.object({
 export default function CompanyInfo() {
   const dispatch = useDispatch<AppDispatch>();
 const {loading}= useSelector((state: any) => state.CompanyInfoForm);
+  useEffect(() => {
+    dispatch(fetchCompanyInfo());
+  }, [dispatch]);
+ const { loading:comploading, error:comperror, data:compandata } = useSelector(
+    (state: RootState) => state.companyInfo
+  );
+  const companyData = compandata as {
+    company_name?: string;
+    company_logo?: File;
+    partner_contact_email?: string;
+    company_dashboard_url: string;
+    company_website: string;
+    partner_contact_phone_number: string;
+    partner_support_email: string;
+    partner_notification_email: string;
+  } | null;
   // Formik initialization
+
+
+
+    useEffect(() => {
+      if (companyData) {
+        formik.setValues({
+          company_Name: companyData?.company_name || "",
+          Company_Dashboard_URL: companyData?.company_dashboard_url || "",
+          Company_Website: companyData?.company_website || "",
+          Company_Email: companyData?.partner_contact_email || "",
+          Company_Phone: companyData?.partner_contact_phone_number || "",
+          Company_Logo: null,
+        });
+      }
+    }, [companyData]);
   const formik = useFormik({
     initialValues: {
-      company_Name: '',
-      Company_Dashboard_URL: '',
-      Company_Website: '',
-      Company_Email: '',
-      Company_Phone: '',
+      company_Name:companyData?.company_name || '',
+      Company_Dashboard_URL: companyData?.company_dashboard_url ||"",
+      Company_Website:companyData?.company_website || '',
+      Company_Email:companyData?.partner_contact_email || '',
+      Company_Phone: companyData?.partner_contact_phone_number ||'',
       Company_Logo: null,
     },
     validationSchema: validationSchema,
@@ -179,6 +211,7 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
               onChange={formik.handleChange('company_Name')}
               error={formik.touched.company_Name && formik.errors.company_Name}
               required
+              disabled
             />
           </div>
 
@@ -192,6 +225,7 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
                 onChange={handleCompanyDashboardURLChange}
                 error={formik.touched.Company_Dashboard_URL && formik.errors.Company_Dashboard_URL}
                 required
+                disabled
               />
             </div>
 
@@ -204,6 +238,7 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
                 onChange={handleCompanyWebsiteChange}
                 error={formik.touched.Company_Website && formik.errors.Company_Website}
                 required
+                disabled
               />
             </div>
           </div>
@@ -218,6 +253,7 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
                 onChange={handleCompanyEmailChange}
                 error={formik.touched.Company_Email && formik.errors.Company_Email}
                 required
+                disabled
               />
             </div>
 
@@ -230,6 +266,7 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
                 onChange={handleCompanyPhoneChange}
                 error={formik.touched.Company_Phone && formik.errors.Company_Phone}
                 required
+                disabled
               />
             </div>
           </div>
@@ -255,6 +292,8 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
           />
         </div>
       </form>
+
+      <AnimatedLoader isLoading={comploading}/>
     </div>
   );
 }

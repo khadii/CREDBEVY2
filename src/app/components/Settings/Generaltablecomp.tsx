@@ -16,7 +16,7 @@ interface TableProps<T> {
   };
   href: string;
 
-  setStep?: (step: number) => void;
+  handle_add_user?: () => void;
   renderRow: (item: T, index: number) => React.ReactNode;
   showAddUserButton?: boolean;
   currentPage: number;
@@ -36,7 +36,7 @@ const SettingsTable = <T,>({
   titleProps,
   href,
 
-  setStep,
+  handle_add_user,
   renderRow,
   setCurrentPage,
   currentPage,
@@ -72,7 +72,7 @@ const SettingsTable = <T,>({
           {showAddUserButton && (
             <button
               className="bg-[#156064] text-white px-4 py-3 rounded-lg flex items-center gap-2 text-xs font-extrabold"
-              onClick={() => setStep && setStep(2)}
+              onClick={handle_add_user}
             >
               <Plus size={16} /> Add User
             </button>
