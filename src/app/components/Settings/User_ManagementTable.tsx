@@ -13,6 +13,7 @@ import TableWithPagination from "../table/tablewWthPagination";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { clearDeleteUserState } from "@/app/Redux/user_management/delete_user";
 import Add_User from "../Modals/Add_User";
+import { formatDate } from "@/app/lib/formatdate";
 
 interface UserData {
   uuid: string;
@@ -159,23 +160,7 @@ const User_managementTable = () => {
     />
   );
 
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return isNaN(date.getTime())
-        ? "Invalid date"
-        : date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-    } catch {
-      return "Invalid date";
-    }
-  };
-
+ 
   const renderRole = (roles: Array<{ name: string }>) => {
     const roleName = roles[0]?.name || "No Role";
     const roleStyles = {

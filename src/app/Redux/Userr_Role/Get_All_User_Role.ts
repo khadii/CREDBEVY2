@@ -19,6 +19,7 @@ export interface RoleData {
 interface UserRolesState {
   data: {
     total_roles: number;
+    last_page:number
     roles: RoleData[];
   };
   loading: boolean;
@@ -26,12 +27,14 @@ interface UserRolesState {
   currentPage: number;
   search: string;
   roleFilter: string;
+  
 }
 
 const initialState: UserRolesState = {
   data: {
     total_roles: 0,
     roles: [],
+    last_page:0
   },
   loading: false,
   error: null,
@@ -75,15 +78,18 @@ const userRolesSlice = createSlice({
       })
       .addCase(UserRoles.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = {
-          total_roles: action.payload.data.total_roles,
-          roles: action.payload.data.roles.map((role: Omit<RoleData, 'selected'>) => ({
-            ...role,
-            selected: false, // Explicitly setting the required boolean
-            users: 0,       // Default value for UI
-            lastModified: role.updated_at || role.created_at || "N/A" // Derived field
-          })),
-        };
+    // Update your reducer code to handle cases where roles is not an array
+state.data = {
+  total_roles: action.payload.data.total_roles || 0,
+  last_page: action.payload.data.roles.last_page || 0,
+  roles: Array.isArray(action.payload.data.roles.data) 
+    ? action.payload.data.roles.data.map((role: Omit<RoleData, 'selected'>) => ({
+        ...role,
+        selected: false,
+        users: 0,
+      }))
+    : [],
+};
       })
       .addCase(UserRoles.rejected, (state, action) => {
         state.loading = false;

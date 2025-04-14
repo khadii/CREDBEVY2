@@ -14,6 +14,7 @@ import DeleteModal from "../Modals/DeleteModal";
 import { clearDeleteUserState } from "@/app/Redux/user_management/delete_user";
 import toast from "react-hot-toast";
 import AnimatedLoader from "../animation";
+import { formatDate } from "@/app/lib/formatdate";
 // import { clearDeleteUserRoleState } from "@/app/Redux/Userr_Role/delete_user_role_slice";
 
 interface RoleData {
@@ -162,7 +163,7 @@ useEffect(() => {
       </td>
       <td className="truncate max-w-[120px] py-4 px-6">{item.guard_name}</td>
       <td className="truncate max-w-[180px] py-4 px-6">
-        {item.updated_at || item.created_at || "N/A"}
+        {formatDate(item.updated_at )|| formatDate(item.created_at) || "N/A"}
       </td>
       <td className="py-4 px-4">
         <div className="flex items-center gap-4">
@@ -202,7 +203,7 @@ useEffect(() => {
         showAddUserButton={false}
         renderRow={renderRow}
         currentPage={currentPage}
-        totalPages={data.total_roles} 
+        totalPages={data.last_page} 
         setCurrentPage={(page: number) => dispatch(setCurrentPage(page))}
         isHeaderChecked={isHeaderChecked}
         handleHeaderToggle={handleHeaderToggle}
