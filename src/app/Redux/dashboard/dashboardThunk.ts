@@ -1,21 +1,22 @@
-import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const dashboard_wallet = createAsyncThunk(
-    "dashboard/wallet-balance",
-    async (_, { rejectWithValue }) => {
-      try {
-        const token = Cookies.get("authToken");
-        console.log("Token from cookies:", token);
-        
-        const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/wallet-balance", {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
-        return response.data;  
+  "dashboard/wallet-balance",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("authToken");
+      console.log("Token from cookies:", token);
+      
+      const response = await axios.get(`${BASE_URL}/api/partner/wallet-balance`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+      return response.data;  
     } catch (error: any) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message || "unauthorised");
@@ -28,9 +29,6 @@ export const dashboard_wallet = createAsyncThunk(
   }
 );
 
-
-
-
 export const _revenue = createAsyncThunk(
   "dashboard/total-revenue",
   async (_, { rejectWithValue }) => {
@@ -38,24 +36,23 @@ export const _revenue = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/total-revenue", {
+      const response = await axios.get(`${BASE_URL}/api/partner/total-revenue`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
 
 export const loan_approval_rates = createAsyncThunk(
   "dashboard/loan_approval_rate",
@@ -64,24 +61,23 @@ export const loan_approval_rates = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/loan-approval-rate", {
+      const response = await axios.get(`${BASE_URL}/api/partner/loan-approval-rate`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
 
 export const _Loan_Disbursed = createAsyncThunk(
   "dashboard/_Loan_Disbursed",
@@ -90,24 +86,23 @@ export const _Loan_Disbursed = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/total-loan-disbursed", {
+      const response = await axios.get(`${BASE_URL}/api/partner/total-loan-disbursed`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
 
 export const _Loan_volume = createAsyncThunk(
   "dashboard/_Loan_volume",
@@ -116,25 +111,23 @@ export const _Loan_volume = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/total-loan-volume", {
+      const response = await axios.get(`${BASE_URL}/api/partner/total-loan-volume`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
-
 
 export const _pending_loans = createAsyncThunk(
   "dashboard/pending-loans",
@@ -143,22 +136,22 @@ export const _pending_loans = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/pending-loans", {
+      const response = await axios.get(`${BASE_URL}/api/partner/pending-loans`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
 
 export const _Default_Rate = createAsyncThunk(
@@ -168,22 +161,22 @@ export const _Default_Rate = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/default-rate", {
+      const response = await axios.get(`${BASE_URL}/api/partner/default-rate`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
 
 export const total_revenue_perer_time = createAsyncThunk(
@@ -193,24 +186,23 @@ export const total_revenue_perer_time = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/total-revenue-per-time", {
+      const response = await axios.get(`${BASE_URL}/api/partner/total-revenue-per-time`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
 
 export const _loan_performance = createAsyncThunk(
   "dashboard/_loan_performance",
@@ -219,56 +211,20 @@ export const _loan_performance = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
       
-      const response = await axios.get("https://credbevy.jbenergyservices.com/public/api/partner/loan-performance", {
+      const response = await axios.get(`${BASE_URL}/api/partner/loan-performance`, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;  
-  } catch (error: any) {
-    if (error.response && error.response.data) {
-      return rejectWithValue(error.response.data.message || "unauthorised");
-    } else if (error.request) {
-      return rejectWithValue("No response from the server. Please check your network connection.");
-    } else {
-      return rejectWithValue("An unexpected error occurred. Please try again.");
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message || "unauthorised");
+      } else if (error.request) {
+        return rejectWithValue("No response from the server. Please check your network connection.");
+      } else {
+        return rejectWithValue("An unexpected error occurred. Please try again.");
+      }
     }
   }
-}
 );
-
-
-
-// export const loan_approval_rates = createAsyncThunk(
-//   "dashboard/loan_approval_rate",
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const token = '472d3be7-565e-479a-ad0d-c915205df624-6QFH8c2119ea1-c16c-418f-8908-825b0e0ae8d9_UEPR52174dee3-a8a6-48'
-//       if (!token) {
-//         return rejectWithValue("Authentication token is missing.");
-//       }
-
-//       console.log("Token from cookies:", token);
-
-//       const response = await axios.get(
-//         "https://credbevy.jbenergyservices.com/public/api/partner/loan-approval-rate",
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "X-Partner-API-Key": "472d3be7-565e-479a-ad0d-c915205df624-6QFH8c2119ea1-c16c-418f-8908-825b0e0ae8d9_UEPR52174dee3-a8a6-48", 
-//           },
-//         }
-//       );
-
-//       return response.data;
-//     } catch (error:any) {
-//       if (error.response?.data) {
-//         return rejectWithValue(error.response.data.message || "Unauthorized");
-//       } else if (error.request) {
-//         return rejectWithValue("No response from the server. Please check your network connection.");
-//       } else {
-//         return rejectWithValue("An unexpected error occurred. Please try again.");
-//       }
-//     }
-//   }
-// );

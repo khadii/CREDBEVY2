@@ -1,12 +1,12 @@
-"use client";
+'use client';
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import CollateralSelection from "../FormInputs/CollateralSelection";
+import Selection from "../FormInputs/Selection";
 import InputField from "../FormInputs/iputDetails";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "@/app/Redux/store";
+import { AppDispatch, RootState } from "@/app/Redux/store";
 import {
   get_single_user,
   list_of_users,
@@ -15,6 +15,8 @@ import {
 import AnimatedLoader from "../animation";
 import toast from "react-hot-toast";
 import { resetUserState } from "@/app/Redux/user_management/Update_user_slice";
+import { all_roles_dropdownata } from "@/app/Redux/Userr_Role/user_role_thunk";
+
 
 interface ModalProps {
   isOpen: boolean;
@@ -53,12 +55,6 @@ interface FormValues {
   user_id: string;
 }
 
-const ROLE_OPTIONS = [
-  { label: "Super Admin", id: 1 },
-  { label: "Editor", id: 2 },
-  { label: "Viewer", id: 3 },
-];
-
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
   lastName: Yup.string().required("Last Name is required"),
@@ -72,16 +68,6 @@ const validationSchema = Yup.object({
   isActive: Yup.boolean().required("Active status is required"),
 });
 
-const getDefaultSelectedRoles = (roles?: Role[]): string[] => {
-  if (!roles || !roles.length) return [];
-  return roles[0].name ? [roles[0].name] : [];
-};
-
-const getRoleIdFromName = (roleName: string): number => {
-  const role = ROLE_OPTIONS.find((r) => r.label === roleName);
-  return role ? role.id : 0;
-};
-
 const EditUserModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -90,18 +76,29 @@ const EditUserModal: React.FC<ModalProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const { selectedIds, setSelectedIds } = useDashboard();
 
+  // Get roles data from Redux store
+  const { data: rolesData, loading: rolesLoading, error: rolesError } = useSelector(
+    (state: RootState) => state.allRolesDropdown
+  );
+  
   const {
     userData: data,
     loading,
     error,
     success,
-  } = useSelector((state: any) => state.updateUsers);
+  } = useSelector((state: RootState) => state.updateUsers);
+  
   const {
     user: userData,
     loading: userloading,
     error: usererror,
     success: usersuccess,
-  } = useSelector((state: any) => state.singleUser);
+  } = useSelector((state: RootState) => state.singleUser);
+
+  // Fetch roles when component mounts
+  useEffect(() => {
+    dispatch(all_roles_dropdownata());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isOpen && selectedIds) {
@@ -118,7 +115,7 @@ const EditUserModal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (success) {
       dispatch(list_of_users({ ...user_management }));
-      toast.success(data.message);
+      // toast.success(data.message);
       dispatch(resetUserState());
       onClose();
     }
@@ -164,7 +161,10 @@ const EditUserModal: React.FC<ModalProps> = ({
   });
 
   useEffect(() => {
-    if (userData) {
+    if (userData && rolesData.length > 0) {
+      const currentRole = userData.roles?.[0];
+      const roleId = currentRole?.pivot?.role_id || currentRole?.id;
+      
       formik.setValues({
         firstName: userData.first_name || "",
         lastName: userData.last_name || "",
@@ -172,16 +172,37 @@ const EditUserModal: React.FC<ModalProps> = ({
         phoneNumber: userData.phone_number || "",
         email: userData.email || "",
         password: "",
-        roleId: userData.roles?.[0]?.pivot?.role_id,
+        roleId: roleId,
         isActive: userData.deactivated === 0,
         user_id: userData.uuid || "",
       });
     }
-  }, [userData]);
+  }, [userData, rolesData]);
 
   if (!isOpen) return null;
 
-  const availableOptions = ROLE_OPTIONS.map((role) => role.label);
+  // Get default selected role name for the Selection component
+  const getDefaultSelectedRoles = (): string[] => {
+    if (!userData?.roles?.length || !rolesData.length) return [];
+    const roleId = userData.roles[0].pivot?.role_id || userData.roles[0].id;
+    const role = rolesData.find((r: any) => r.id === roleId);
+    return role ? [role.name] : [];
+  };
+
+  // Handle role selection change
+  const handleRoleChange = (selectedOptions: string[]) => {
+    if (selectedOptions.length === 0) {
+      formik.setFieldValue("roleId", 0);
+      return;
+    }
+    const selectedRole = rolesData.find((r: any) => r.name === selectedOptions[0]);
+    if (selectedRole) {
+      formik.setFieldValue("roleId", selectedRole.id);
+    }
+  };
+
+  // Prepare role options from API data
+  const roleOptions = rolesData.map((role: any) => role.name);
 
   return (
     <div
@@ -274,28 +295,25 @@ const EditUserModal: React.FC<ModalProps> = ({
               </div>
 
               <div className="col-span-1 md:col-span-2">
-                <CollateralSelection
-                  key={userData?.uuid} // force re-render when userData changes
+                <Selection
+                    key={userData?.uuid}
                   label="User's roles"
-                  availableOptions={availableOptions}
-                  defaultSelectedOptions={getDefaultSelectedRoles(
-                    userData?.roles
-                  )}
-                  onChange={(selectedOptions) =>
-                    formik.setFieldValue(
-                      "roleId",
-                      getRoleIdFromName(selectedOptions[0])
-                    )
-                  }
+                  placeholder={rolesLoading ? "Loading roles..." : "Select role"}
+                  availableOptions={roleOptions}
+                  defaultSelectedOptions={getDefaultSelectedRoles()}
+                  onChange={handleRoleChange}
                   error={formik.touched.roleId && formik.errors.roleId}
                   required
                   visibility="block"
                 />
-
                 <p className="font-medium text-xs text-[#666687]">
                   A user can have one or several roles
                 </p>
+                {rolesError && (
+                  <p className="text-red-500 text-xs mt-1">{rolesError}</p>
+                )}
               </div>
+
 
               <div>
                 <label className="block text-xs font-bold text-[#333333] mb-1">

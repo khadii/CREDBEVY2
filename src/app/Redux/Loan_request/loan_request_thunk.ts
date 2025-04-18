@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 interface Year {
   year?: string;
 }
@@ -11,7 +12,7 @@ export const loan_request_stat = createAsyncThunk(
     try {
       const token = Cookies.get("authToken");
       const response = await axios.post(
-        `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/stats?page=${year}`,
+        `${BASE_URL}/api/partner/loan-requests/stats?page=${year}`,
         Year,
         {
           headers: {
@@ -63,7 +64,7 @@ interface FiltersProps {
       try {
         const token = Cookies.get("authToken");
         const response = await axios.post(
-          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/all-loan-requests?page=${page}`,
+          `${BASE_URL}/api/partner/loan-requests/all-loan-requests?page=${page}`,
           filters,
           {
             headers: {
@@ -97,7 +98,7 @@ export const _loan_request_trend = createAsyncThunk(
       try {
         const token = Cookies.get("authToken");
         const response = await axios.post(
-          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/loan-request-trend`,
+          `${BASE_URL}/api/partner/loan-requests/loan-request-trend`,
           Year,
           {
             headers: {
@@ -140,7 +141,7 @@ export const _loan_request_trend = createAsyncThunk(
         }
   
         const response = await axios.get(
-          `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/single-loan-request/${id}`,
+          `${BASE_URL}/api/partner/loan-requests/single-loan-request/${id}`,
           
           {
             headers: {
@@ -191,7 +192,7 @@ export const _loan_request_trend = createAsyncThunk(
           }
     
           const response = await axios.post(
-            `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/accept-interest`,
+            `${BASE_URL}/api/partner/loan-requests/accept-interest`,
             { pin: pin.join(''),
               loan_ids:product_id
             },
@@ -236,7 +237,7 @@ export const _loan_request_trend = createAsyncThunk(
           }
     
           const response = await axios.post(
-            `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/decline-interest`,
+            `${BASE_URL}/api/partner/loan-requests/decline-interest`,
             { loan_ids: product_id},
             {
               headers: {
@@ -332,7 +333,7 @@ export const _loan_request_trend = createAsyncThunk(
           }
     
           const response = await axios.post(
-            `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/approve-loan/${product_id}`,
+            `${BASE_URL}/api/partner/loan-requests/approve-loan/${product_id}`,
             { 
               loan_ids: product_id,
               pin: pin.join('') 
@@ -376,7 +377,7 @@ export const _loan_request_trend = createAsyncThunk(
                   }
             
                   const response = await axios.post(
-                    `https://credbevy.jbenergyservices.com/public/api/partner/loan-requests/disapprove-loan/${product_id}`,
+                    `${BASE_URL}/api/partner/loan-requests/disapprove-loan/${product_id}`,
                     { pin: pin.join(''),
                     
                     },

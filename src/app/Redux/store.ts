@@ -23,6 +23,11 @@ import delete_userReducer from '../Redux/user_management/delete_user'
 import adduserReducer from '../Redux/user_management/add_user_slice'
 import userRolesReducer from '../Redux/Userr_Role/Get_All_User_Role'
 import deleteUserroleReducer from '../Redux/Userr_Role/delete_user_role'
+import userReducer from   '../Redux/auth/userdata'
+import allRolesDropdownReducer from   '../Redux/Userr_Role/AllRolesDropdownState'
+import permissionsReducer from '../Redux/Userr_Role/permissionsSlice';
+import permissionsByModuleReducer from '../Redux/Userr_Role/permissionsByModuleSlice';
+import updateRoleReducer from '../Redux/Userr_Role/updateRoleSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -47,7 +52,12 @@ export const store = configureStore({
     delete_user:delete_userReducer,
     adduser: adduserReducer,
     userRoles:userRolesReducer,
-    deleteUserrole:deleteUserroleReducer
+    deleteUserrole:deleteUserroleReducer,
+    user:userReducer,
+    allRolesDropdown: allRolesDropdownReducer,
+    permissions: permissionsReducer,
+    permissionsByModule: permissionsByModuleReducer,
+    updateRole: updateRoleReducer,
   },
 });
 

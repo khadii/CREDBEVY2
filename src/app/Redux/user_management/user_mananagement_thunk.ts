@@ -9,8 +9,7 @@ import Cookies from "js-cookie";
 
  
 }
-
-
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   
   export const list_of_users = createAsyncThunk(
     "list_of_users",
@@ -22,7 +21,7 @@ import Cookies from "js-cookie";
         }
   const {page}=user_management
         const response = await axios.post(
-          `https://credbevy.jbenergyservices.com/public/api/partner/settings/user-management/all-users?page=${page}`,
+          `${BASE_URL}/api/partner/settings/user-management/all-users?page=${page}`,
           user_management,
           
           {
@@ -66,7 +65,7 @@ import Cookies from "js-cookie";
             return rejectWithValue("Authentication token is missing.");
           }
           const response = await axios.post(
-            `https://credbevy.jbenergyservices.com/public/api/partner/settings/user-management/add-user`,
+            `${BASE_URL}/api/partner/settings/user-management/add-user`,
             user_details,
 
             {
@@ -120,7 +119,7 @@ import Cookies from "js-cookie";
             }
       const {user_id}=user_details
             const response = await axios.post(
-              `https://credbevy.jbenergyservices.com/public/api/partner/settings/user-management/update-user/${user_id}`,
+              `${BASE_URL}/api/partner/settings/user-management/update-user/${user_id}`,
               user_details,
               
               {
@@ -162,7 +161,7 @@ import Cookies from "js-cookie";
             }
       const {user_id}=user_details
             const response = await axios.get(
-              `https://credbevy.jbenergyservices.com/public/api/partner/settings/user-management/single-user/${user_id}`,
+              `${BASE_URL}/api/partner/settings/user-management/single-user/${user_id}`,
    
               
               {
@@ -201,7 +200,7 @@ import Cookies from "js-cookie";
             }
       const {user_id}=user_details
             const response = await axios.delete(
-              `https://credbevy.jbenergyservices.com/public/api/partner/settings/user-management/delete-user/${user_id}`,
+              `${BASE_URL}/api/partner/settings/user-management/delete-user/${user_id}`,
    
               
               {

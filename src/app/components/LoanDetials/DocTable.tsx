@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, Download } from "lucide-react";
+import { Eye, EyeOff, Download } from "lucide-react";
 import { HeaderWithTabs } from "../HeadersTab";
 import Table from "../TableThree/GeneralreuseableTable";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
+import DocumentViewerModal from "./DocumentViewerModal"; 
 
 const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
   const tableHead = ["Document Name", "Type", "Date Uploaded", "Actions"];
-  
+  const [viewMode, setViewMode] = useState<{ [key: string]: boolean }>({});
+  const [currentDocument, setCurrentDocument] = useState<{url: string, name: string} | null>(null);
 
   const formatTableData = () => {
     if (!LoanRequest_Data?.loan?.documents) return [];
@@ -25,7 +27,6 @@ const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
   };
 
   const handleDownload = (filePath: string, fileName: string) => {
-    // Construct the full URL if the path is relative
     const fullUrl = filePath.startsWith('http') ? filePath : `${window.location.origin}/${filePath}`;
     
     fetch(fullUrl)
@@ -44,6 +45,31 @@ const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
         console.error('Error downloading file:', error);
       });
   };
+
+  const toggleViewMode = (docId: string, filePath: string, fileName: string) => {
+    const fullUrl = filePath.startsWith('http') ? filePath : `${window.location.origin}/${filePath}`;
+    
+    setViewMode(prev => ({
+      ...prev,
+      [docId]: !prev[docId]
+    }));
+
+    if (!viewMode[docId]) {
+      setCurrentDocument({
+        url: fullUrl,
+        name: fileName
+      });
+    } else {
+      setCurrentDocument(null);
+    }
+  };
+
+  const closeDocumentViewer = () => {
+    setCurrentDocument(null);
+    // Reset all view modes when closing
+    setViewMode({});
+  };
+
   const renderCell = (data: any, header: string) => {
     switch (header) {
       case "Document Name":
@@ -55,7 +81,16 @@ const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
       case "Actions":
         return (
           <div className="flex gap-2">
-           
+            <button 
+              className="p-1 hover:bg-gray-100 rounded"
+              onClick={() => toggleViewMode(data.id, data.path, data.name)}
+            >
+              {viewMode[data.id] ? (
+                <EyeOff size={16} className="text-gray-600" />
+              ) : (
+                <Eye size={16} className="text-gray-600" />
+              )}
+            </button>
             <button 
               className="p-1 hover:bg-gray-100 rounded"
               onClick={() => handleDownload(data.path, data.name)}
@@ -70,16 +105,27 @@ const DocumentsTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
   };
 
   return (
-    <Table
-      headers={tableHead}
-      data={formatTableData()}
-      titleProps={{
-        mainTitle: "User documents",
-        requestCount: `${formatTableData().length} documents`,
-        subtitle: "List of documents related to request",
-      }}
-      renderCell={renderCell}
-    />
+    <>
+      <Table
+        headers={tableHead}
+        data={formatTableData()}
+        titleProps={{
+          mainTitle: "User documents",
+          requestCount: `${formatTableData().length} documents`,
+          subtitle: "List of documents related to request",
+        }}
+        renderCell={renderCell}
+      />
+      
+      {/* Document Viewer Modal */}
+      {currentDocument && (
+        <DocumentViewerModal
+          documentUrl={currentDocument.url}
+          documentName={currentDocument.name}
+          onClose={closeDocumentViewer}
+        />
+      )}
+    </>
   );
 };
 

@@ -1,28 +1,40 @@
-"use client";
+'use client';
 import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 
-import CollateralSelection from "../FormInputs/CollateralSelection";
+import Selection from "../FormInputs/Selection";
 import InputField from "../FormInputs/iputDetails";
 import { Add_user } from "@/app/Redux/user_management/user_mananagement_thunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import toast from "react-hot-toast";
 import { resetUserState } from "@/app/Redux/user_management/add_user_slice";
-// import { resetUserState } from "@/app/Redux/user_management/Update_user_slice";
+import { all_roles_dropdownata } from "@/app/Redux/Userr_Role/user_role_thunk";
+
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm?: () => void; // Made optional since we'll handle submission ourselves
+  onConfirm?: () => void;
 }
 
 const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const dispatch = useDispatch<AppDispatch>();
+  
+  // Get roles data from Redux store
+  const { data: rolesData, loading: rolesLoading, error: rolesError } = useSelector(
+    (state: RootState) => state.allRolesDropdown
+  );
+  
   const { loading, error, success, userData } = useSelector(
     (state: RootState) => state.adduser
   );
+
+  // Fetch roles when component mounts
+  useEffect(() => {
+    dispatch(all_roles_dropdownata());
+  }, [dispatch]);
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First Name is required"),
@@ -33,20 +45,23 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       .email("Invalid email address")
       .required("Email is required"),
     password: Yup.string().required("Password is required"),
-    roles: Yup.array().min(1, "At least one role is required"),
+    roles: Yup.array()
+      .min(1, "At least one role is required")
+      .of(Yup.string().required("Role is required")),
     isActive: Yup.boolean().required("Active status is required"),
   });
 
   useEffect(() => {
     if (success) {
       toast.success(userData.message);
-      resetUserState();
+      dispatch(resetUserState());
+      onClose();
     }
     if (error) {
-      resetUserState();
+      dispatch(resetUserState());
       toast.error(error);
     }
-  }, [dispatch, success, error]);
+  }, [dispatch, success, error, userData?.message]);
 
   const formik = useFormik({
     initialValues: {
@@ -56,23 +71,27 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       address: "",
       email: "",
       password: "",
-      roles: ["Super Admin", "Editor", "Viewer"],
+      roles: [] as string[],
       isActive: true,
     },
     validationSchema,
     onSubmit: async (values) => {
+      // Find the selected role object
+      const selectedRole = rolesData.find((role: any) => role.name === values.roles[0]);
+      
+      if (!selectedRole) {
+        toast.error("Invalid role selected");
+        return;
+      }
+
       const userData = {
         first_name: values.firstName,
         last_name: values.lastName,
         user_name: values.userName,
         email: values.email,
         password: values.password,
-        role_id: values.roles.includes("Super Admin")
-          ? 1
-          : values.roles.includes("Editor")
-          ? 2
-          : 3,
-        deactivated: values.isActive ? 1 : 0,
+        role_id: selectedRole.id, // Use the role ID from the API
+        deactivated: values.isActive ? 0 : 1,
       };
 
       await dispatch(Add_user(userData)).unwrap();
@@ -80,6 +99,9 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
   });
 
   if (!isOpen) return null;
+
+  // Prepare role options from API data
+  const roleOptions = rolesData.map((role: any) => role.name);
 
   return (
     <div
@@ -89,7 +111,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       aria-labelledby="edit-user-modal-title"
     >
       <div className="relative bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-        {/* Modal Header */}
         <div className="sticky top-0 bg-white z-10 flex pl-6 pt-6 pr-4 justify-between w-full items-center border-b pb-4">
           <h2 className="text-2xl font-semibold text-[#333333]">Add User</h2>
           <button
@@ -101,7 +122,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
           </button>
         </div>
 
-        {/* Modal Body */}
         <form onSubmit={formik.handleSubmit}>
           <div className="p-6">
             {error && (
@@ -111,7 +131,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* First Name */}
               <div>
                 <InputField
                   label="First Name"
@@ -123,7 +142,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* Last Name */}
               <div>
                 <InputField
                   label="Last Name"
@@ -135,7 +153,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* User Name */}
               <div>
                 <InputField
                   label="User Name"
@@ -147,7 +164,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* Address */}
               <div>
                 <InputField
                   label="Address"
@@ -159,7 +175,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* Email */}
               <div>
                 <InputField
                   label="Email"
@@ -171,7 +186,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* Password */}
               <div>
                 <InputField
                   label="Password"
@@ -184,11 +198,11 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
 
-              {/* User's roles */}
               <div className="col-span-1 md:col-span-2">
-                <CollateralSelection
+                <Selection
                   label="User's roles"
-                  availableOptions={availableOptions}
+                  placeholder={rolesLoading ? "Loading roles..." : "Select role"}
+                  availableOptions={roleOptions}
                   defaultSelectedOptions={formik.values.roles}
                   onChange={(selectedOptions) =>
                     formik.setFieldValue("roles", selectedOptions)
@@ -200,9 +214,11 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
                 <p className="font-medium text-xs text-[#666687]">
                   A user can have one or several roles
                 </p>
+                {rolesError && (
+                  <p className="text-red-500 text-xs mt-1">{rolesError}</p>
+                )}
               </div>
 
-              {/* Active toggle */}
               <div>
                 <label className="block text-xs font-bold text-[#333333] mb-1">
                   Active
@@ -236,7 +252,6 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="flex justify-between w-full mt-8">
               <button
                 type="button"
@@ -248,7 +263,7 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
               </button>
               <button
                 type="submit"
-                className="px-[81px] py-[10px]border border-[#156064] bg-[#156064] rounded-[4px] text-xs font-bold text-white hover:bg-opacity-90 transition-colors"
+                className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-xs font-bold text-white hover:bg-opacity-90 transition-colors"
                 disabled={loading}
               >
                 {loading ? "Processing..." : "Proceed"}
@@ -262,5 +277,3 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
 };
 
 export default Add_User;
-
-const availableOptions = ["Super Admin", "Editor", "User"];

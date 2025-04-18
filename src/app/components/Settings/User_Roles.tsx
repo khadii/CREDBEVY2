@@ -167,17 +167,21 @@ useEffect(() => {
       </td>
       <td className="py-4 px-4">
         <div className="flex items-center gap-4">
-          <button 
-            className="text-gray-500" 
-            onClick={() => handleEdit(item.id)}
-          >
-            <PencilLine size={20} />
-          </button>
+        <button 
+  className="text-gray-500" 
+  onClick={() => {
+    handleEdit(item.id);
+    setSelectedIds([item.id]); // Wrap in array
+  }}
+>
+  <PencilLine size={20} />
+</button>
           <button 
             className="text-[#E33A24] hover:text-[#E33A24]" 
             onClick={() => {
               setRoleToDelete(item.id);
               setIsDeleteModalOpen(true);
+             
             }}
           >
             <Trash2 size={20} />

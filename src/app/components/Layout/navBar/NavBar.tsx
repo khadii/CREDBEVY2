@@ -1,23 +1,33 @@
 "use client";
 
-import { fetchCompanyInfo } from "@/app/Redux/company_info/company_info_thunk";
-import { AppDispatch, RootState } from "@/app/Redux/store";
-import { Bell, LucideSearch } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Bell, LucideSearch } from "lucide-react";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { fetchUserData } from "@/app/Redux/auth/userdata";
+
 
 export default function TopBar() {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, data } = useSelector(
-    (state: RootState) => state.companyInfo
-  );
+  const { loading, error, data } = useSelector((state: RootState) => state.user);
+  const user = data?.data;
 
+  // Fetch user data only once when component mounts
   useEffect(() => {
-    dispatch(fetchCompanyInfo());
-  }, [dispatch]);
+    if (!user) {
+      dispatch(fetchUserData());
+    }
+  }, [dispatch, user]);
 
-  if (loading) {
-    return <div className="flex justify-center p-4">fetching company's info.....</div>;
+  // Memoize user avatar URL to prevent unnecessary regenerations
+  const userAvatarUrl = useMemo(() => {
+    const firstName = user?.first_name || 'U';
+    const lastName = user?.last_name || 's';
+    return `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=random`;
+  }, [user]);
+
+  if (loading && !user) {
+    return <div className="flex justify-center p-4">Loading user data...</div>;
   }
 
   if (error) {
@@ -28,13 +38,6 @@ export default function TopBar() {
     );
   }
 
-  // Type guard 
-  const companyData = data as {
-    company_name?: string;
-    company_logo?: string;
-    partner_contact_email?: string;
-  } | null;
-
   return (
     <div className="flex items-center justify-between h-full min-h-[72px] w-full bg-white px-4 sm:px-6 md:pr-[76px] md:pl-[41px]">
       {/* Search Bar */}
@@ -44,46 +47,42 @@ export default function TopBar() {
           type="search"
           placeholder="What are you looking for?"
           className="ml-2 flex-1 bg-transparent outline-none text-[#A1A6B0] font-semibold text-xs"
+          aria-label="Search input"
         />
       </div>
 
       {/* Mobile Search Icon */}
       <div className="sm:hidden">
-        <LucideSearch size={20} color="#8A8B9F" />
+        <LucideSearch size={20} color="#8A8B9F" aria-label="Mobile search" />
       </div>
 
       {/* Notification & Profile */}
       <div className="flex items-center space-x-2 md:space-x-4">
         {/* Notification Icon */}
-        <div className="relative">
+        <button className="relative focus:outline-none" aria-label="Notifications">
           <Bell className="text-gray-500" size={20} />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-        </div>
+        </button>
 
         {/* Divider */}
-        <div className="hidden md:block border-l border-[#A1A6B0] h-8"></div>
+        <div className="hidden md:block border-l border-[#A1A6B0] h-8" aria-hidden="true"></div>
 
-        {/* Company Profile */}
+        {/* User Profile */}
         <div className="flex items-center space-x-2">
-          {companyData?.company_logo ? (
-            <img 
-              src={companyData.company_logo} 
-              alt="Company Logo" 
-              className="w-8 h-8 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-              <span className="text-xs text-gray-500">
-                {companyData?.company_name?.charAt(0) || 'C'}
-              </span>
-            </div>
-          )}
+          <img
+            src={userAvatarUrl}
+            alt={user ? `${user.first_name} ${user.last_name}` : "User avatar"}
+            className="w-8 h-8 rounded-full"
+            width={32}
+            height={32}
+          />
+
           <div className="hidden sm:block">
             <p className="text-[10px] font-semibold text-[#333333]">
-              {companyData?.company_name || "Company Name"}
+              {user ? `${user.first_name} ${user.last_name}` : "User Name"}
             </p>
             <p className="text-[8px] text-[#A1A6B0]">
-              {companyData?.partner_contact_email || "contact@company.com"}
+              {user?.email || "user@example.com"}
             </p>
           </div>
         </div>
