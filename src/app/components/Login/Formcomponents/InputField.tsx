@@ -52,6 +52,7 @@ export const PasswordFormField = ({
         type={type === "password" ? (showPassword ? "text" : "password") : type}
         id={name}
         name={name}
+         autoComplete="off"
         placeholder=" "
         className="w-full rounded-[4px] pt-7  border border-[#8A8B9F] px-6 h-[64px] focus:border-[#8A8B9F] focus:outline-none text-[#333333] peer "
       />

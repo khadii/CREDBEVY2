@@ -75,3 +75,45 @@ export const fetchUserData = createAsyncThunk(
 
 
   
+
+
+
+
+
+
+// const api = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+//   withCredentials: true,
+//   headers: {
+//     'Accept': 'application/json',
+//     'Content-Type': 'application/json',
+//     'X-Requested-With': 'XMLHttpRequest'
+//   }
+// });
+
+// export const loginUser = createAsyncThunk(
+//   "auth/loginUser",
+//   async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+//     try {
+//       // First get CSRF cookie
+//       await api.get('/sanctum/csrf-cookie');
+      
+//       // Then make login request
+//       const response = await api.post('/api/partner/login', credentials);
+//       return response.data;
+//     } catch (error: any) {
+//       // Enhanced error handling
+//       if (error.response?.status === 419) {
+//         // CSRF token mismatch - try again with fresh token
+//         try {
+//           await api.get('/sanctum/csrf-cookie');
+//           const retryResponse = await api.post('/api/partner/login', credentials);
+//           return retryResponse.data;
+//         } catch (retryError) {
+//           return rejectWithValue("Session expired. Please refresh the page.");
+//         }
+//       }
+//       return rejectWithValue(error.response?.data?.message || "Login failed");
+//     }
+//   }
+// );
