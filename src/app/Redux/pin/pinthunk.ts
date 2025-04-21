@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; 
 
 export const ConfirmPin = createAsyncThunk(
   "confirm-pin",
@@ -12,7 +13,7 @@ export const ConfirmPin = createAsyncThunk(
       }
       
       const response = await axios.post(
-        "https://credbevy.jbenergyservices.com/public/api/partner/settings/confirm-pin",
+        `${BASE_URL}/api/partner/settings/confirm-pin`,
         { pin: credentials.pin.join('') }, 
         {
           headers: {
