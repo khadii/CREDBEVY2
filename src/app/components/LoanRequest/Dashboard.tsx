@@ -32,7 +32,7 @@ export default function Dashboard() {
     authPin,
     setAuhPin,
     selectedIds,
-    tabs,
+    // tabs,
     pendingRequestCount,
     setPendingRequestCount,
     activeTab,
@@ -51,18 +51,17 @@ export default function Dashboard() {
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
 
-
-  const Year = {
-    year: "",
-    month: "",
-    week: "",
-  };
+  // const Year = {
+  //   year: "",
+  //   month: "",
+  //   week: "",
+  // };
   const Period = {
     year: selectedPeriod,
   };
   useEffect(() => {
-    dispatch(loan_request_stat(Year));
-  }, [dispatch, Year.year]);
+    dispatch(loan_request_stat({year:selectedYear}));
+  }, [dispatch, selectedYear]);
 
   useEffect(() => {
     dispatch(_loan_request_trend(Period));
@@ -76,21 +75,21 @@ export default function Dashboard() {
     total_count: total_count_all_loan_data,
   } = useSelector((state: RootState) => state.loanRequest.LoanRequestAll);
 
-  useEffect(() => {
-    const fetchPendingCount = async () => {
-      try {
-        const result = await dispatch(
-          all_loan_requests(filtersPending)
-        ).unwrap();
+  // useEffect(() => {
+  //   const fetchPendingCount = async () => {
+  //     try {
+  //       const result = await dispatch(
+  //         all_loan_requests(filtersPending)
+  //       ).unwrap();
 
-        setPendingRequestCount(result?.data?.total_count);
-      } catch (error) {
-        console.error("Failed to fetch pending count:", error);
-      }
-    };
+  //       setPendingRequestCount(result?.data?.total_count);
+  //     } catch (error) {
+  //       console.error("Failed to fetch pending count:", error);
+  //     }
+  //   };
 
-    fetchPendingCount();
-  }, [dispatch,]);
+  //   fetchPendingCount();
+  // }, [dispatch,]);
 
   useEffect(() => {
     refreshData();
@@ -115,6 +114,12 @@ export default function Dashboard() {
     data: loan_request_trend_data,
   } = useSelector((state: RootState) => state.loanRequest.loan_request_trend);
 
+  const tabs = [
+    { name: "All Request" },
+    { name: "Pending Request", count: LoanRequestStat_data?.loanApprovalRate.total_pending_loans },
+    { name: "Approved Requests" },
+    { name: "Canceled Requests" },
+  ];
 
 
   useEffect(() => {
@@ -257,7 +262,6 @@ export default function Dashboard() {
 
   const {
     total_loans,
-
     loan_approval_rate,
     loan_disapproval_rate,
     loading,

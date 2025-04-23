@@ -287,7 +287,7 @@ const User_managementTable = () => {
       />
       <Add_User
         isOpen={Add_UserModal}
-        onClose={() => setAdd_UserModal(false)} onConfirm={()=>{}}  />
+        onClose={() => setAdd_UserModal(false)} onConfirm={() => { } } currentPage={currentPage}  />
       <AnimatedLoader isLoading={loading || deleteloading} />
     </div>
   );

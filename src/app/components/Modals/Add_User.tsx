@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Selection from "../FormInputs/Selection";
 import InputField from "../FormInputs/iputDetails";
-import { Add_user } from "@/app/Redux/user_management/user_mananagement_thunk";
+import { Add_user, list_of_users } from "@/app/Redux/user_management/user_mananagement_thunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import toast from "react-hot-toast";
 import { resetUserState } from "@/app/Redux/user_management/add_user_slice";
@@ -17,9 +17,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm?: () => void;
+  currentPage: number;
 }
 
-const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, currentPage, }) => {
   const dispatch = useDispatch<AppDispatch>();
   
   // Get roles data from Redux store
@@ -50,10 +51,15 @@ const Add_User: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm }) => {
       .of(Yup.string().required("Role is required")),
     isActive: Yup.boolean().required("Active status is required"),
   });
-
+  const user_management = {
+    search: "",
+    role: "",
+    page: currentPage,
+  };
   useEffect(() => {
     if (success) {
       toast.success(userData.message);
+       dispatch(list_of_users({ ...user_management }));
       dispatch(resetUserState());
       onClose();
     }

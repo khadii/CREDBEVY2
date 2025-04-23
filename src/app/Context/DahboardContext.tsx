@@ -118,6 +118,7 @@ const DashboardContextContent = ({
   const refreshData = () => {
     if (props.activeTab === "Pending Request") {
       dispatch(all_loan_requests(props.filtersPending));
+  
     } else if (props.activeTab === "Approved Requests") {
       dispatch(all_loan_requests(props.filtersApproved));
     } else {
