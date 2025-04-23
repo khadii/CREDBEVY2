@@ -169,8 +169,8 @@ export default function Dashboard() {
         }));
 
   const pieChartData = [
-    { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
-    { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
+    { name: "Approved", value: loan_approval_rate , color: "#156064" },
+    { name: "Unapproved", value: loan_disapproval_rate, color: "#EC7910" },
   ];
 
   const progressBarData = loan_performance?.map((item: any) => ({

@@ -28,6 +28,7 @@ import allRolesDropdownReducer from   '../Redux/Userr_Role/AllRolesDropdownState
 import permissionsReducer from '../Redux/Userr_Role/permissionsSlice';
 import permissionsByModuleReducer from '../Redux/Userr_Role/permissionsByModuleSlice';
 import updateRoleReducer from '../Redux/Userr_Role/updateRoleSlice';
+import singleRoleReducer from '../Redux/Userr_Role/single_role';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -58,6 +59,7 @@ export const store = configureStore({
     permissions: permissionsReducer,
     permissionsByModule: permissionsByModuleReducer,
     updateRole: updateRoleReducer,
+    singleRole: singleRoleReducer,
   },
 });
 

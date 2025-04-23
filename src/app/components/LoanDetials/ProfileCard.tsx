@@ -19,12 +19,17 @@ export default function ProfileCard({ id }: { id: any }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] =
-    useState(false);
-  const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] =
-    useState(false);
-  const { interested, setInterested, setSelectedIds, Request_Details } =
-    useDashboard();
+  const [isModalOpenApproveRequest, setIsModalOpenApproveRequest] = useState(false);
+  const [isModalOpenDeclineRequest, setIsModalOpenDeclineRequest] = useState(false);
+  
+  const {
+    interested,
+    setInterested,
+    setSelectedIds,
+    Request_Details,
+    LoanApproved,
+    setLoanApproved,
+  } = useDashboard();
 
   const { loading: LoanRequest_loading, data: LoanRequest_Data } = useSelector(
     (state: RootState) => state.loanRequest.single_loan_products_request
@@ -39,11 +44,7 @@ export default function ProfileCard({ id }: { id: any }) {
     };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
-  //   useEffect
-  // ( ()=>{ setInterested(
-  //     LoanRequest_Data?.loan?.request_details.user_info_status === "INTERESTED"
-  //   );
-  // },[di])
+
   // Create user data from API response
   const getUserData = () => {
     if (!LoanRequest_Data?.loan?.user) return [];
@@ -81,15 +82,25 @@ export default function ProfileCard({ id }: { id: any }) {
     pointerEvents: "none",
   };
 
-  // if (LoanRequest_loading) {
-  //   return      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
-  // }
-
-  const user = LoanRequest_Data?.loan.user;
+  const user = LoanRequest_Data?.loan?.user;
   const fullName = `${user?.first_name} ${
     user?.middle_name ? user?.middle_name + " " : ""
   }${user?.last_name}`;
   const creditScore = user?.credit_score || 660;
+
+  useEffect(() => {
+    if (LoanRequest_Data?.loan?.request_details) {
+      setLoanApproved(LoanRequest_Data?.loan?.request_details.status === "APPROVED");
+    }
+  }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved]);
+
+  if (LoanRequest_loading) {
+    return (
+      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen">
+        <SpinningFaceExact />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -109,13 +120,12 @@ export default function ProfileCard({ id }: { id: any }) {
       <Modal2
         isOpen={isModalOpen2}
         onClose={() => setIsModalOpen2(false)}
-        // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
       />
       <Modal3
         isOpen={isModalOpen3}
         onClose={() => setIsModalOpen3(false)}
-        // setIsModalOpenApproveRequest={() => setIsModalOpenApproveRequest(true)}
       />
+      
       {/* Profile Image */}
       <Image
         src={
@@ -136,6 +146,7 @@ export default function ProfileCard({ id }: { id: any }) {
             "https://ui-avatars.com/api/?name=User&background=random";
         }}
       />
+      
       {/* Name */}
       <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">
         {fullName}
@@ -143,72 +154,81 @@ export default function ProfileCard({ id }: { id: any }) {
 
       {/* Buttons */}
       <div className="mt-6 grid justify-center gap-2">
-        {interested ? (
-          <>
-            <div>
-              <button
-                className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
-                onClick={() => {
-                  setIsModalOpen2(true);
-                  setSelectedIds(id);
-                }}
-              >
-                <div>
-                  <FaRegCheckCircle size={18} />
-                </div>
-                <p className="text-[12px] font-semibold flex-1">
-                  Accept Request
-                </p>
-              </button>
-            </div>
-            <div>
-              <button
-                className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
-                onClick={() => {
-                  setIsModalOpen3(true);
-                  setSelectedIds(id);
-                }}
-              >
-                <div>
-                  <FaRegTimesCircle size={18} />
-                </div>
-                <p className="text-[12px] font-semibold flex-1">
-                  Decline Request
-                </p>
-              </button>
-            </div>
-          </>
+        {LoanApproved ? (
+          <div className="w-[83px] h-[23px] rounded-[16px] border border-solid pt-[2px] pr-[8px] pb-[2px] pl-[6px] flex justify-center items-center text-xs font-semibold text-[#42BE65] border-[#BFFFD1]">
+  <Image src="/Image/appproveddot.svg"
+   alt="Approved icon" height={8} width={8} className="mr-1" />
+  Approved
+</div>
+
         ) : (
-          <>
-            <div>
-              <button
-                className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
-                onClick={() => {
-                  setIsModalOpen(true);
-                  setSelectedIds(id);
-                }}
-              >
-                <div>
-                  <ThumbsUp size={18} />
-                </div>
-                <p className="text-[12px] font-semibold flex-1">Interested</p>
-              </button>
-            </div>
-            <div>
-              <button
-                className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
-                onClick={() => {
-                  setIsModalOpenDeclineRequest(true);
-                  setSelectedIds(id);
-                }}
-              >
-                <div>
-                  <ThumbsDown size={18} />
-                </div>
-                <p className="text-[12px] font-semibold flex-1">Not Interest</p>
-              </button>
-            </div>
-          </>
+          interested ? (
+            <>
+              <div>
+                <button
+                  className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
+                  onClick={() => {
+                    setIsModalOpen2(true);
+                    setSelectedIds(id);
+                  }}
+                >
+                  <div>
+                    <FaRegCheckCircle size={18} />
+                  </div>
+                  <p className="text-[12px] font-semibold flex-1">
+                    Accept Request
+                  </p>
+                </button>
+              </div>
+              <div>
+                <button
+                  className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
+                  onClick={() => {
+                    setIsModalOpen3(true);
+                    setSelectedIds(id);
+                  }}
+                >
+                  <div>
+                    <FaRegTimesCircle size={18} />
+                  </div>
+                  <p className="text-[12px] font-semibold flex-1">
+                    Decline Request
+                  </p>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <button
+                  className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#42BE65] text-white rounded-[4px]"
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setSelectedIds(id);
+                  }}
+                >
+                  <div>
+                    <ThumbsUp size={18} />
+                  </div>
+                  <p className="text-[12px] font-semibold flex-1">Interested</p>
+                </button>
+              </div>
+              <div>
+                <button
+                  className="flex items-center px-[41px] w-full gap-2 h-[36px] bg-[#FA4D56] text-white rounded-[4px]"
+                  onClick={() => {
+                    setIsModalOpenDeclineRequest(true);
+                    setSelectedIds(id);
+                  }}
+                >
+                  <div>
+                    <ThumbsDown size={18} />
+                  </div>
+                  <p className="text-[12px] font-semibold flex-1">Not Interested</p>
+                </button>
+              </div>
+            </>
+          )
         )}
       </div>
 

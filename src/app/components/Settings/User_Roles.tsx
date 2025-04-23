@@ -230,9 +230,7 @@ useEffect(() => {
       <EditRoleModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onConfirm={() => {
-          // Add logic to handle edit confirmation
-        }}
+        
       />
 
       <AnimatedLoader isLoading={loading ||deleteStateloading}/>

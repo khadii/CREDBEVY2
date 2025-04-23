@@ -205,7 +205,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
                     }
                     const { id } = user_details;
                     const response = await axios.put(
-                      `${BASE_URL}/api/partner/settings/user-management/add-user${id}`,
+                      `${BASE_URL}/api/partner/settings/roles-management/update-role/${id}`,
                       user_details,
 
                       {
@@ -233,5 +233,53 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
                 }
               );
             
+
+
+
+              interface single_role {
+                id: any;
+              }
+
+              export const single_role = createAsyncThunk(
+                "single_role",
+                async (
+                  user_details: single_role,
+                  { rejectWithValue }: { rejectWithValue: Function }
+                ) => {
+                  try {
+                    const token = Cookies.get("authToken");
+
+                    if (!token) {
+                      return rejectWithValue(
+                        "Authentication token is missing."
+                      );
+                    }
+                    const { id } = user_details;
+                    const response = await axios.get(
+                      `${BASE_URL}/api/partner/settings/roles-management/role/${id}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                        },
+                      }
+                    );
+                    return response.data;
+                  } catch (error: any) {
+                    if (error.response && error.response.data) {
+                      return rejectWithValue(
+                        error.response.data.message || "Unauthorized"
+                      );
+                    } else if (error.request) {
+                      return rejectWithValue(
+                        "No response from the server. Please check your network connection."
+                      );
+                    } else {
+                      return rejectWithValue(
+                        "An unexpected error occurred. Please try again."
+                      );
+                    }
+                  }
+                }
+              );
             
             

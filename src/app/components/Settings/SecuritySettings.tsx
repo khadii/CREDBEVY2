@@ -8,22 +8,23 @@ import CustomizedButton from '../CustomizedButton';
 import ToggleButton from '../FormInputs/ToggleButton';
 import { resetSecurityState } from '@/app/Redux/company_info/security&password';
 import { fetchCompanyInfo, security } from '@/app/Redux/company_info/company_info_thunk';
-import { AppDispatch } from '@/app/Redux/store';
+import { AppDispatch, RootState } from '@/app/Redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 
 const SecuritySettings = () => {
   const dispatch = useDispatch<AppDispatch>();
   const securityState = useSelector((state: any) => state.security);
-  const data = useSelector((state: any) =>  state.companyInfo);
+ const { loading:comploading, error:comperror, data:compandata } = useSelector(
+    (state: RootState) => state.companyInfo
+  );
 
-
-    // useEffect(() => {
-    //   dispatch(fetchCompanyInfo());
-    // }, [dispatch]);
-  const companyData = data as {
-    user_two_fa:any
-    loading:any
+    useEffect(() => {
+      dispatch(fetchCompanyInfo());
+    }, [dispatch]);
+  const companyData = compandata as {
+    user_two_fa?:any
+    // loading?:any
   }
   const [twoFactorEnabled, setTwoFactorEnabled] = useState<boolean>(companyData?.user_two_fa);
   
@@ -33,10 +34,12 @@ const SecuritySettings = () => {
       toast.success(securityState.message);
       dispatch(resetSecurityState());
       console.log({user_two_fa:companyData?.user_two_fa })
+      dispatch(fetchCompanyInfo());
     }
     if (securityState.error) {
       toast.error(securityState.error);
       dispatch(resetSecurityState());
+      dispatch(fetchCompanyInfo());
       console.log({user_two_fa:companyData?.user_two_fa })
     }
   }, [securityState.success, securityState.error, dispatch]);
@@ -141,7 +144,6 @@ const SecuritySettings = () => {
       {/* Security Section */}
       <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
         <h2 className="text-[20px] font-bold text-[#333333] mb-6">Security</h2>
-        
         <div className="flex justify-between items-center mb-2">
           <div>
             <h3 className="text-[14px] font-bold text-[#333333] mb-1">2-Step Verification</h3>
@@ -150,7 +152,7 @@ const SecuritySettings = () => {
             </p>
           </div>
           
-        {companyData.user_two_fa? 'llll' : <ToggleButton isEnabled={twoFactorEnabled} onToggle={handleToggleTwoFactor}  type='button'/>}
+        <ToggleButton isEnabled={twoFactorEnabled} onToggle={handleToggleTwoFactor}  type='button'/>
         </div>
         
         <div className="space-y-6 pb-[62px]">
