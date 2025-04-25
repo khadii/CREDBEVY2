@@ -79,6 +79,14 @@ const menuItems = [
     icon: "/icons/shopping-cart.svg",
     activeIcon: "/icons/shopping-cart-active.svg",
   },
+  {
+    id: 1095,
+    name: "Repayment",
+    href: "/dashboard/repayment",
+    icon: "/icons/repeat.svg",
+    activeIcon: "/icons/repeatactive.svg",
+  },
+
   // {
   //   id: 1095,
   //   name: "Loan History",

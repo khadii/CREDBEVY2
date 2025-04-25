@@ -14,6 +14,8 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import AnimatedLoader from "../animation";
+import LoanModal from "./indicateInteresteDetails";
+import IndicateSuccessModal from "./indicateSuccessModal";
 
 interface ModalProps {
   isOpen: boolean;
@@ -33,6 +35,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
+  const [state, setState] = useState(1); // Added state management
 
   const {
     loading: pinLoading,
@@ -53,8 +56,10 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const handleClose = () => {
     resetAll();
+    setState(1); // Reset to initial state when closing
     onClose();
   };
+
   const getProductCookie = () => {
     try {
       const productCookie = Cookies.get("product_id");
@@ -69,21 +74,6 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (approveSuccess) {
-  //     toast.success(approveData?.message || 'Loan accepted successfully');
-  //     refreshData();
-  //     setInterested(true);
-  //     resetAll();
-  //     handleClose();
-  //   }
-  //   if (approveError) {
-  //     toast.error(approveError);
-  //     resetAll();
-  //     handleClose();
-  //   }
-  // }, [approveSuccess, approveError, approveData, dispatch]);
-
   useEffect(() => {
     if (pinSuccess) {
       toast.success(pinMessage);
@@ -95,6 +85,12 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       dispatch(resetPinState());
     }
   }, [pinSuccess, pinError, pinMessage, dispatch]);
+
+  useEffect(() => {
+    if (approveSuccess) {
+      setState(3); // Move to success state when approval is successful
+    }
+  }, [approveSuccess]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
@@ -142,13 +138,12 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           pin: pinPayload.pin,
         };
 
-        const interestResult = await dispatch(
+        const approvalResult = await dispatch(
           approve_loan(currentRequestParams)
         );
-
-        // Handle API response
-        if (interestResult.meta.requestStatus === "fulfilled") {
-          const response = interestResult.payload as {
+        
+        if (approvalResult.meta.requestStatus === "fulfilled") {
+          const response = approvalResult.payload as {
             error?: boolean;
             message?: string;
             data?: any;
@@ -156,110 +151,134 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
-
-          // Show appropriate toast based on response
-          // if (response.error) {
-          //   toast.error(response.message || "Loan approval failed");
-          // } else 
-          // {
+          refreshData();
+       
+          if (response.error) {
+            toast.error(response.message || "Loan approval failed");
+            handleClose(); // Close on error
+          } else {
             toast.success(response.message || "Loan approved successfully");
-          // }
-
-          onClose();
-          setInterested(true);
+            setInterested(true);
+            // State will be updated to 3 via the useEffect watching approveSuccess
+          }
         }
 
-        // Handle rejection (failed API call)
-        if (interestResult.meta.requestStatus === "rejected") {
-          const errorResponse = (interestResult as any).payload || {
+        if (approvalResult.meta.requestStatus === "rejected") {
+          const errorResponse = (approvalResult as any).payload || {
             error: true,
             message: "Failed to process approval request",
           };
 
           const productData = getProductCookie();
           toast.error(errorResponse.message);
+          refreshData();
           dispatch(_single_loan_products_request({ id: productData }));
           setInterested(true);
-          onClose();
+          handleClose();
         }
       }
     } catch (error) {
       console.error("Error processing request:", error);
-      toast.error(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
+      toast.error("Failed to process request");
+      handleClose();
     }
   };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
-        {approveLoading ? (
-          <AnimatedLoader isLoading={approveLoading}></AnimatedLoader>
+        {approveLoading || pinLoading ? (
+          <AnimatedLoader isLoading={approveLoading || pinLoading} />
         ) : (
           <>
-            <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
-              <h2 className="text-[24px] font-bold text-[#333333]">
-                Accept Request
-              </h2>
-              <button
-                onClick={handleClose}
-                className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="p-[24px] mt-[127px]">
-              <div className="w-full justify-center items-center flex">
-                <div className="w-full">
-                  <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
-                    Input your transaction PIN to process request
-                  </p>
+            {state === 1 && (
+              <LoanModal
+                open={isOpen}
+                setOpen={onClose}
+                setState={setState}
+                // title="Accept Request" // Custom title for this action
+                // description="Are you sure you want to accept this loan request?"
+              />
+            )}
+            {state === 2 && (
+              <>
+                <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
+                  <h2 className="text-[24px] font-bold text-[#333333]">
+                    Accept Request
+                  </h2>
+                  <button
+                    onClick={handleClose}
+                    className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="p-[24px] mt-[127px]">
+                  <div className="w-full justify-center items-center flex">
+                    <div className="w-full">
+                      <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
+                        Input your transaction PIN to process request
+                      </p>
 
-                  <div className="flex justify-center space-x-6">
-                    {pin.map((digit, index) => (
-                      <input
-                        key={index}
-                        ref={(el) => {
-                          if (el) {
-                            inputRefs.current[index] = el;
-                          }
-                        }}
-                        type="password"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleChange(index, e.target.value)}
-                        className={`w-[80px] h-[80px] border-[4px] ${
-                          errors.pin && digit === ""
-                            ? "border-red-500 focus:ring-red-500"
-                            : "border-[#156064] focus:ring-[#156064]"
-                        } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
-                      />
-                    ))}
+                      <div className="flex justify-center space-x-6">
+                        {pin.map((digit, index) => (
+                          <input
+                            key={index}
+                            ref={(el) => {
+                              if (el) {
+                                inputRefs.current[index] = el;
+                              }
+                            }}
+                            type="password"
+                            maxLength={1}
+                            value={digit}
+                            onChange={(e) =>
+                              handleChange(index, e.target.value)
+                            }
+                            className={`w-[80px] h-[80px] border-[4px] ${
+                              errors.pin && digit === ""
+                                ? "border-red-500 focus:ring-red-500"
+                                : "border-[#156064] focus:ring-[#156064]"
+                            } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {errors.pin && (
+                    <p className="text-red-500 mb-4 text-center">
+                      {errors.pin}
+                    </p>
+                  )}
+
+                  <div className="flex space-x-[96px] justify-center">
+                    <button
+                      onClick={handleClose}
+                      className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+                      onClick={handleSubmit}
+                      disabled={pinLoading || approveLoading}
+                    >
+                      {pinLoading || approveLoading ? "Processing..." : "Done"}
+                    </button>
                   </div>
                 </div>
-              </div>
-              {errors.pin && (
-                <p className="text-red-500 mb-4 text-center">{errors.pin}</p>
-              )}
-
-              <div className="flex space-x-[96px] justify-center">
-                <button
-                  onClick={handleClose}
-                  className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
-                  onClick={handleSubmit}
-                  disabled={pinLoading || approveLoading}
-                >
-                  {pinLoading || approveLoading ? "Processing..." : "Done"}
-                </button>
-              </div>
-            </div>
+              </>
+            )}
+            {state === 3 && (
+              <IndicateSuccessModal
+                open={isOpen}
+                setOpen={handleClose}
+                setState={setState}
+                // successMessage="Loan successfully approved!" // Custom success message
+              />
+            )}
           </>
         )}
       </div>

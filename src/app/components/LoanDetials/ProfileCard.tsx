@@ -94,13 +94,13 @@ export default function ProfileCard({ id }: { id: any }) {
     }
   }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved]);
 
-  if (LoanRequest_loading) {
-    return (
-      <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen">
-        <SpinningFaceExact />
-      </div>
-    );
-  }
+  // if (LoanRequest_loading) {
+  //   return (
+  //     <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen">
+  //       <SpinningFaceExact />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div

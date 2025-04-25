@@ -1,6 +1,9 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { _single_loan_products_request, accept_interest } from "@/app/Redux/Loan_request/loan_request_thunk";
+import {
+  _single_loan_products_request,
+  accept_interest,
+} from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
 import { ConfirmPin } from "@/app/Redux/pin/pinthunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
@@ -11,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import AnimatedLoader from "../animation";
 import LoanModal from "./indicateInteresteDetails";
+import IndicateSuccessModal from "./indicateSuccessModal";
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,11 +25,9 @@ interface ErrorsState {
   pin?: string;
 }
 
-const PinModal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-}) => {
-  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } = useDashboard();
+const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } =
+    useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
   const [errors, setErrors] = useState<ErrorsState>({});
   const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -33,19 +35,17 @@ const PinModal: React.FC<ModalProps> = ({
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
   const [state, setState] = useState(1);
+  
   const {
     loading: pinLoading,
     success: pinSuccess,
     error: pinError,
-    message: pinMessage
+    message: pinMessage,
   } = useSelector((state: RootState) => state.Pin.ConfirmPin);
 
-  const {
-    acceptLoading,
-    acceptSuccess,
-    acceptError,
-    acceptData,
-  } = useSelector((state: RootState) => state.loanrejectaccept);
+  const { acceptLoading, acceptSuccess, acceptError, acceptData } = useSelector(
+    (state: RootState) => state.loanrejectaccept
+  );
 
   const resetAll = () => {
     setPin(["", "", "", ""]);
@@ -56,6 +56,7 @@ const PinModal: React.FC<ModalProps> = ({
 
   const handleClose = () => {
     resetAll();
+    setState(1); 
     onClose();
   };
 
@@ -63,7 +64,7 @@ const PinModal: React.FC<ModalProps> = ({
     try {
       const productCookie = Cookies.get("product_id");
       if (!productCookie) return null;
-      if (typeof productCookie === 'object') return productCookie;
+      if (typeof productCookie === "object") return productCookie;
       if (!productCookie.startsWith("{")) return productCookie;
       return JSON.parse(productCookie);
     } catch (error) {
@@ -72,21 +73,6 @@ const PinModal: React.FC<ModalProps> = ({
       return null;
     }
   };
-
-  // useEffect(() => {
-  //   if (acceptSuccess) {
-  //     toast.success('You have successfully indicated interest');
-  //     const productData = getProductCookie();
-  //     dispatch(_single_loan_products_request(productData));
-  //     resetAll();
-  //     handleClose();
-  //   }
-  //   if (acceptError) {
-  //     toast.error(acceptError);
-  //     resetAll();
-  //     handleClose();
-  //   }
-  // }, [acceptSuccess, acceptError, dispatch]);
 
   useEffect(() => {
     if (pinSuccess) {
@@ -100,16 +86,22 @@ const PinModal: React.FC<ModalProps> = ({
     }
   }, [pinSuccess, pinError, pinMessage, dispatch]);
 
+  useEffect(() => {
+    if (acceptSuccess) {
+      setState(3); 
+    }
+  }, [acceptSuccess]);
+
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
       setErrors({});
     }
     if (!/^\d?$/.test(value)) return;
-    
+
     const newPin = [...pin];
     newPin[index] = value;
     setPin(newPin);
-    
+
     if (value && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -117,100 +109,111 @@ const PinModal: React.FC<ModalProps> = ({
 
   const validate = (): boolean => {
     const newErrors: ErrorsState = {};
-    const emptyIndex = pin.findIndex(digit => digit === "");
-    
+    const emptyIndex = pin.findIndex((digit) => digit === "");
+
     if (emptyIndex !== -1) {
       newErrors.pin = "Please complete the PIN";
       inputRefs.current[emptyIndex]?.focus();
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!validate()) return;
-  
+
     try {
       const pinPayload = {
-        pin: pin.map(digit => Number(digit))
+        pin: pin.map((digit) => Number(digit)),
       };
-      
+
       const pinResult = await dispatch(ConfirmPin(pinPayload));
-      
-      if (pinResult.meta.requestStatus === 'fulfilled') {
+
+      if (pinResult.meta.requestStatus === "fulfilled") {
         setAuhPin(pinPayload.pin);
-        
+
         const currentRequestParams = {
           product_id: [selectedIds],
-          pin: pinPayload.pin
+          pin: pinPayload.pin,
         };
 
-        const interestResult = await dispatch(accept_interest(currentRequestParams));
-        if (interestResult.meta.requestStatus === 'fulfilled') {
+        const interestResult = await dispatch(
+          accept_interest(currentRequestParams)
+        );
+        
+        if (interestResult.meta.requestStatus === "fulfilled") {
           const response = interestResult.payload as {
             error?: boolean;
             message?: string;
             data?: any;
           };
-  
+
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
-          refreshData()
-          
-          // Show appropriate toast based on response
+          refreshData();
+       
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
+            handleClose(); // Close on error
           } else {
             toast.success(response.message || "Loan approved successfully");
+            setInterested(true);
+            // State will be updated to 3 via the useEffect watching acceptSuccess
           }
-          
-          onClose();
-          setInterested(true);
         }
-        
-        // Handle rejection (failed API call)
-        if (interestResult.meta.requestStatus === 'rejected') {
+
+        if (interestResult.meta.requestStatus === "rejected") {
           const errorResponse = (interestResult as any).payload || {
             error: true,
-            message: "Failed to process approval request"
+            message: "Failed to process approval request",
           };
-  
+
           const productData = getProductCookie();
           toast.error(errorResponse.message);
-          refreshData()
+          refreshData();
           dispatch(_single_loan_products_request({ id: productData }));
           setInterested(true);
-          onClose();
+          handleClose();
         }
       }
     } catch (error) {
-      console.error('Error processing request:', error);
-      toast.error('Failed to process request');
+      console.error("Error processing request:", error);
+      toast.error("Failed to process request");
+      handleClose();
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <><div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
-        {acceptLoading ? (
-          <AnimatedLoader isLoading={acceptLoading}></AnimatedLoader>
+        {acceptLoading || pinLoading ? (
+          <AnimatedLoader isLoading={acceptLoading || pinLoading} />
         ) : (
           <>
-             {state ===1 && ( <LoanModal open={isOpen} setOpen={onClose} setState={setState} />)}
-            {(state ===2 && <><div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
-                <h2 className="text-[24px] font-bold text-[#333333]">
-                  Indicate Interest
-                </h2>
-                <button
-                  onClick={handleClose}
-                  className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
-                >
-                  ✕
-                </button>
-              </div><div className="p-[24px] mt-[127px]">
+            {state === 1 && (
+              <LoanModal
+                open={isOpen}
+                setOpen={onClose}
+                setState={setState}
+              />
+            )}
+            {state === 2 && (
+              <>
+                <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
+                  <h2 className="text-[24px] font-bold text-[#333333]">
+                    Indicate Interest
+                  </h2>
+                  <button
+                    onClick={handleClose}
+                    className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="p-[24px] mt-[127px]">
                   <div className="w-full justify-center items-center flex">
                     <div className="w-full">
                       <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
@@ -225,20 +228,27 @@ const PinModal: React.FC<ModalProps> = ({
                               if (el) {
                                 inputRefs.current[index] = el;
                               }
-                            } }
+                            }}
                             type="password"
                             maxLength={1}
                             value={digit}
-                            onChange={(e) => handleChange(index, e.target.value)}
-                            className={`w-[80px] h-[80px] border-[4px] ${errors.pin && digit === ""
-                              ? "border-red-500 focus:ring-red-500"
-                              : "border-[#156064] focus:ring-[#156064]"} rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`} />
+                            onChange={(e) =>
+                              handleChange(index, e.target.value)
+                            }
+                            className={`w-[80px] h-[80px] border-[4px] ${
+                              errors.pin && digit === ""
+                                ? "border-red-500 focus:ring-red-500"
+                                : "border-[#156064] focus:ring-[#156064]"
+                            } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
+                          />
                         ))}
                       </div>
                     </div>
                   </div>
                   {errors.pin && (
-                    <p className="text-red-500 mb-4 text-center">{errors.pin}</p>
+                    <p className="text-red-500 mb-4 text-center">
+                      {errors.pin}
+                    </p>
                   )}
 
                   <div className="flex space-x-[96px] justify-center">
@@ -256,12 +266,20 @@ const PinModal: React.FC<ModalProps> = ({
                       {pinLoading || acceptLoading ? "Processing..." : "Done"}
                     </button>
                   </div>
-                </div></>)}
+                </div>
+              </>
+            )}
+            {state === 3 && (
+              <IndicateSuccessModal
+                open={isOpen}
+                setOpen={handleClose} // Use handleClose to properly reset state
+                setState={setState}
+              />
+            )}
           </>
         )}
       </div>
     </div>
-</>
   );
 };
 

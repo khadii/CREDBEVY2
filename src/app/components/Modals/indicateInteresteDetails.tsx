@@ -37,7 +37,7 @@ export default function LoanModal({open, setOpen,setState}:{open:any, setOpen:an
             ['Fees (40%):', <span className="text-[#156064] font-semibold text-base">₦1,000.00</span>],
           ].map(([label, value], idx) => (
             <div key={idx} className="grid grid-cols-2 gap-[186px]">
-              <div className="text-[#8A8B9F] text-base">{label}</div>
+              <div className="text-[#8A8B9F] text-base text-left">{label}</div>
               <div className="text-base text-[#8A8B9F] text-right">{value}</div>
             </div>
           ))}

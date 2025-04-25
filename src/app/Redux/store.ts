@@ -29,6 +29,10 @@ import permissionsReducer from '../Redux/Userr_Role/permissionsSlice';
 import permissionsByModuleReducer from '../Redux/Userr_Role/permissionsByModuleSlice';
 import updateRoleReducer from '../Redux/Userr_Role/updateRoleSlice';
 import singleRoleReducer from '../Redux/Userr_Role/single_role';
+import loanRepaymentReducer from '../Redux/Repayment/loanRepaymentSlice';
+import singleloanRepaymentReducer from './Repayment/single_loanRepayments_Slice';
+import loanRepaymentsStatsReducer from '../Redux/Repayment/loanRepaymentsStatsSlice';
+import loanRepaymentsTrendReducer from '../Redux/Repayment/loanRepaymentsTrendSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -60,6 +64,10 @@ export const store = configureStore({
     permissionsByModule: permissionsByModuleReducer,
     updateRole: updateRoleReducer,
     singleRole: singleRoleReducer,
+    loanRepayment: loanRepaymentReducer,
+    sinleloanRepayment: singleloanRepaymentReducer,
+    loanRepaymentsStats: loanRepaymentsStatsReducer,
+    loanRepaymentsTrend: loanRepaymentsTrendReducer,
   },
 });
 
