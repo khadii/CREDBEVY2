@@ -27,7 +27,6 @@ import AnimatedLoader from "../animation";
 
 // Helper function to format values to Naira
 
-
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -104,14 +103,14 @@ export default function Dashboard() {
   const [linechartselectedYear, setlinechartSelectedYear] = useState(
     lineChartDefaultSelectedYear
   );
-  
+
   const total_sum_defaults =
     linechartselectedYear === "This Year"
       ? total_sum_defaults_by_year
       : linechartselectedYear === "This Month"
       ? total_sum_defaults_by_month
       : total_sum_defaults_by_week;
-      
+
   const chartData =
     linechartselectedYear === "This Year"
       ? total_defaults_by_year?.map((item: any) => ({
@@ -152,34 +151,50 @@ export default function Dashboard() {
       ? Object.entries(total_revenue_by_year || {}).map(([month, value]) => ({
           name: month,
           revenue: value
-            ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+            ? Number(
+                (
+                  (parseFloat((value as string).replace(/,/g, "")) || 0) /
+                  1_000_000
+                ).toFixed(2)
+              )
             : 0,
         }))
       : barchartselectedYear === "This Month"
       ? Object.entries(total_revenue_by_month || {}).map(([day, value]) => ({
           name: `${day}`,
           revenue: value
-            ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+            ? Number(
+                (
+                  (parseFloat((value as string).replace(/,/g, "")) || 0) /
+                  1_000_000
+                ).toFixed(2)
+              )
             : 0,
         }))
       : Object.entries(total_revenue_by_week || {}).map(([day, value]) => ({
           name: day,
           revenue: value
-            ? Number(((parseFloat((value as string).replace(/,/g, "")) || 0) / 1_000_000).toFixed(2))
+            ? Number(
+                (
+                  (parseFloat((value as string).replace(/,/g, "")) || 0) /
+                  1_000_000
+                ).toFixed(2)
+              )
             : 0,
         }));
 
   const pieChartData = [
-    { name: "Approved", value: loan_approval_rate , color: "#156064" },
+    { name: "Approved", value: loan_approval_rate, color: "#156064" },
     { name: "Pending", value: loan_pending_rate, color: "#EC7910" },
     { name: "declined", value: loan_disapproval_rate, color: "#FA4D56" },
   ];
 
-  const progressBarData = loan_performance?.map((item: any) => ({
-    label: item.product_name,
-    value: item.approved_loans_count,
-    maxValue: item.total_count,
-  })) || [];
+  const progressBarData =
+    loan_performance?.map((item: any) => ({
+      label: item.product_name,
+      value: item.approved_loans_count,
+      maxValue: item.total_count,
+    })) || [];
 
   const tableHeaders = [
     "Name",
@@ -213,9 +228,6 @@ export default function Dashboard() {
     alert("Redirecting to funding page...");
   };
 
-  // if (loading) {
-  //   return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
-  // }
 
   if (error) {
     return <>{error}</>;
@@ -236,8 +248,8 @@ export default function Dashboard() {
           <div>
             <p className="text-sm font-normal text-[#8A8B9F]  ">
               You can top up your wallet by doing a transfer from your
-              mobile/internet banking app or USSD to the account
-              number: 4161312574 (Anchor Micro Finance Bank)
+              mobile/internet banking app or USSD to the account number:
+              4161312574 (Anchor Micro Finance Bank)
             </p>
           </div>
         </div>
@@ -270,7 +282,7 @@ export default function Dashboard() {
               barChartHighlightColor="#EC7910"
               pieChartTitle="Loan Approval Rate"
               pieChartDescription="The percentage of loan requests approved."
-              pieChartTotal={total_loans ?? "N/A"}    
+              pieChartTotal={total_loans ?? "N/A"}
               lineChartTitle="Default Rate"
               lineChartDescription="Total unpaid loan value."
               lineChartTotalRevenue={formattedTotalSumDefaults}
@@ -291,7 +303,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-     <AnimatedLoader isLoading={loading}></AnimatedLoader>
+      <AnimatedLoader isLoading={loading}></AnimatedLoader>
     </section>
   );
 }

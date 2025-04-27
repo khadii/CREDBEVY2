@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import React from 'react'
 
-export default function IndicateSuccessModal({open, setOpen,setState}:{open:any, setOpen:any,setState:any}) {
+export default function IndicateSuccessModal({open, setOpen,setState,title,disc,header}:{open:any, setOpen:any,setState:any, disc:string, title:string,header:string}) {
   return (
     <><div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-[450px] items-center">
     <h2 className="text-[24px] font-bold text-[#333333]">
-      Indicate Interest
+      {}
     </h2>
     <button
       onClick={() => setOpen(false)}
@@ -18,10 +18,10 @@ export default function IndicateSuccessModal({open, setOpen,setState}:{open:any,
         <div className="w-full flex flex-col items-center">
         <Image src={'/Image/tick-circle.svg'} alt={'cred'} height={73} width={73} className='mb-[24px]'/>
           <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
-          Indication of Interest Successful
+            {title}
           </p>
           <p className="text-[14px] font-medium text-[#8A8B9F] mb-[24px] text-center">
-          You now have full access to the borrower info
+       {disc}
           </p>
         </div>
       </div>

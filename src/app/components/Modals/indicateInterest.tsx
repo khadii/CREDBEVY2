@@ -35,7 +35,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
   const [state, setState] = useState(1);
-  
+
   const {
     loading: pinLoading,
     success: pinSuccess,
@@ -56,7 +56,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const handleClose = () => {
     resetAll();
-    setState(1); 
+    setState(1);
     onClose();
   };
 
@@ -88,7 +88,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (acceptSuccess) {
-      setState(3); 
+      setState(3);
     }
   }, [acceptSuccess]);
 
@@ -141,7 +141,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         const interestResult = await dispatch(
           accept_interest(currentRequestParams)
         );
-        
+
         if (interestResult.meta.requestStatus === "fulfilled") {
           const response = interestResult.payload as {
             error?: boolean;
@@ -152,7 +152,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
           refreshData();
-       
+
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
             handleClose(); // Close on error
@@ -198,6 +198,8 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 open={isOpen}
                 setOpen={onClose}
                 setState={setState}
+                titleName={"Indicate Interest"}
+                buttonName={"Indicate Interest"}
               />
             )}
             {state === 2 && (
@@ -272,8 +274,11 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             {state === 3 && (
               <IndicateSuccessModal
                 open={isOpen}
-                setOpen={handleClose} // Use handleClose to properly reset state
+                setOpen={handleClose}
                 setState={setState}
+                disc={"You now have full access to the borrower info"}
+                title={"Indication of Interest Successful"}
+                header={"Indicate Interest"}
               />
             )}
           </>

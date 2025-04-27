@@ -141,7 +141,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         const approvalResult = await dispatch(
           approve_loan(currentRequestParams)
         );
-        
+
         if (approvalResult.meta.requestStatus === "fulfilled") {
           const response = approvalResult.payload as {
             error?: boolean;
@@ -152,7 +152,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
           refreshData();
-       
+
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
             handleClose(); // Close on error
@@ -198,8 +198,9 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 open={isOpen}
                 setOpen={onClose}
                 setState={setState}
-                // title="Accept Request" // Custom title for this action
-                // description="Are you sure you want to accept this loan request?"
+                titleName={"Accept Request"}
+                buttonName={"Accept Request"} 
+               
               />
             )}
             {state === 2 && (
@@ -276,7 +277,9 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 open={isOpen}
                 setOpen={handleClose}
                 setState={setState}
-                // successMessage="Loan successfully approved!" // Custom success message
+                disc={"You have successfully disbursed loan"}
+                title={"acceptance of Request Successful"}
+                header={"Accept Request"}
               />
             )}
           </>
