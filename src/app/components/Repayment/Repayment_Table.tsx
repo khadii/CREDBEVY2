@@ -3,8 +3,7 @@ import { useRouter } from "next/navigation";
 import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import TableWithPagination from "../table/tablewWthPagination";
-import { StatusWithOptions } from "../LoanProduct/StatusWithOptions";
-// import { StatusWithOptions } from "./StatusWithOptions";
+import { StatusWithOptions } from "./StatusWithOptions";
 
 interface LoanData {
   id: string;

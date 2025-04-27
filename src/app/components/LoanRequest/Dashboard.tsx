@@ -264,12 +264,14 @@ export default function Dashboard() {
     total_loans,
     loan_approval_rate,
     loan_disapproval_rate,
+    loan_pending_rate,
     loading,
     error,
   } = useSelector((state: any) => state.wallet);
   const pieChartData = [
     { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
-    { name: "Unapproved", value: loan_disapproval_rate ?? 0, color: "#EC7910" },
+    { name: "Unapproved", value: loan_pending_rate ?? 0, color: "#EC7910" },
+    { name: "declined", value: loan_disapproval_rate, color: "#FA4D56" },
   ];
 
   const renderContent = () => {

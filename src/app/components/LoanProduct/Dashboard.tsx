@@ -196,8 +196,13 @@ export default function Dashboard() {
     },
     {
       name: "Unapproved",
-      value: loanProductsStats?.data?.loanApprovalRate?.declined_percentage,
+      value: loanProductsStats?.data?.loanApprovalRate?.pending_percentage,
       color: "#EC7910",
+    },
+    {
+      name: "declined",
+      value: loanProductsStats?.data?.loanApprovalRate?.declined_percentage,
+      color: "#FA4D56" 
     },
   ];
 
@@ -322,7 +327,19 @@ export default function Dashboard() {
         />
         <div>
           <div className=" relative ">
-          {isDeleteModalOpen && <div ref={modalRef} className=" absolute z-50 right-5 top-[820px] hidden md:flex"> <DropdownMenu onClick={(e) => e.stopPropagation()} productId={selectedIds} setActiveDropdown={setIsDeleteModalOpen} /></div>}
+            {isDeleteModalOpen && (
+              <div
+                ref={modalRef}
+                className=" absolute z-50 right-5 top-[820px] hidden md:flex"
+              >
+                {" "}
+                <DropdownMenu
+                  onClick={(e) => e.stopPropagation()}
+                  productId={selectedIds}
+                  setActiveDropdown={setIsDeleteModalOpen}
+                />
+              </div>
+            )}
             <LoanProducts
               stats={stats}
               chartData={chartData}
@@ -371,7 +388,6 @@ export default function Dashboard() {
               }
               bulkAction={() => handleOpenModal()}
             />
-  
           </div>
         </div>
       </div>
@@ -380,8 +396,8 @@ export default function Dashboard() {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleSubmit()}
       /> */}
-              
-      <AnimatedLoader isLoading={loading || bulkActionLoading}/>
+
+      <AnimatedLoader isLoading={loading || bulkActionLoading} />
     </section>
   );
 }

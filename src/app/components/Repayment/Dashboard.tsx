@@ -1,21 +1,38 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Repayment from "./Repayment";
 import { CircleAlert } from "lucide-react";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { YearDropdown } from "../Yeardropdown";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { loan_repayment, loan_repayments_stats, loan_repayments_trend } from "@/app/Redux/Repayment/repayment_thunk";
+import {
+  loan_repayment,
+  loan_repayments_stats,
+  loan_repayments_trend,
+} from "@/app/Redux/Repayment/repayment_thunk";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
+import toast from "react-hot-toast";
+import { useDashboard } from "@/app/Context/DahboardContext";
+import { DropdownMenu } from "./activateDeActivateBulk";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, loading, error } = useSelector((state: any) => state.loanRepayment);
-  const { data:datastat, loading:statloading, error:staterror } = useSelector((state: RootState) => state.loanRepaymentsStats);
-  const { data:datatrend, loading:trendloading, error:trenderror } = useSelector((state: RootState) => state.loanRepaymentsTrend);
+  const { data, loading, error } = useSelector(
+    (state: any) => state.loanRepayment
+  );
+  const {
+    data: datastat,
+    loading: statloading,
+    error: staterror,
+  } = useSelector((state: RootState) => state.loanRepaymentsStats);
+  const {
+    data: datatrend,
+    loading: trendloading,
+    error: trenderror,
+  } = useSelector((state: RootState) => state.loanRepaymentsTrend);
   const [selectedYear, setSelectedYear] = useState("2025");
   const years = ["2022", "2023", "2024", "2025", "2026"];
 
@@ -33,7 +50,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    dispatch(loan_repayments_stats({ year:selectedYear }));
+    dispatch(loan_repayments_stats({ year: selectedYear }));
   }, [dispatch, selectedYear]);
   const lineChartDefaultSelectedYear = "This Year";
   const [linechartselectedYear, setlinechartSelectedYear] = React.useState(
@@ -41,7 +58,7 @@ export default function Dashboard() {
   );
 
   useEffect(() => {
-    dispatch(loan_repayments_trend({ year:linechartselectedYear }));
+    dispatch(loan_repayments_trend({ year: linechartselectedYear }));
   }, [dispatch, linechartselectedYear]);
 
   useEffect(() => {
@@ -51,21 +68,27 @@ export default function Dashboard() {
   const stats = [
     {
       title: "Total Loan Repaid",
-      amount: datastat?.repaid?.amount ? formatCurrency(datastat.repaid.amount) : "N/A",
+      amount: datastat?.repaid?.amount
+        ? formatCurrency(datastat.repaid.amount)
+        : "N/A",
       change: datastat?.repaid?.amount_percentage ?? 0,
       percentage: datastat?.repaid?.amount_percentage ?? 0,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Upcoming Payment",
-      amount: datastat?.upcoming?.amount ? formatCurrency(datastat.upcoming.amount) : "N/A",
+      amount: datastat?.upcoming?.amount
+        ? formatCurrency(datastat.upcoming.amount)
+        : "N/A",
       change: datastat?.upcoming?.amount_percentage ?? 0,
       percentage: datastat?.upcoming?.amount_percentage ?? 0,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Overdue Payment",
-      amount: datastat?.overdue?.amount ? formatCurrency(datastat.overdue.amount) : "N/A",
+      amount: datastat?.overdue?.amount
+        ? formatCurrency(datastat.overdue.amount)
+        : "N/A",
       change: datastat?.overdue?.amount_percentage ?? 0,
       percentage: datastat?.overdue?.amount_percentage ?? 0,
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
@@ -75,19 +98,25 @@ export default function Dashboard() {
 
   const chartData =
     linechartselectedYear === "This Year"
-      ? Object.entries(datatrend?.total_repayment_by_year || {}).map(([month, value]) => ({
-          month,
-          value: parseFloat(value as string) || 0,
-        }))
+      ? Object.entries(datatrend?.total_repayment_by_year || {}).map(
+          ([month, value]) => ({
+            month,
+            value: parseFloat(value as string) || 0,
+          })
+        )
       : linechartselectedYear === "This Month"
-      ? Object.entries(datatrend?.total_repayment_by_month || {}).map(([day, value]) => ({
-          month: day,
-          value: parseFloat(value as string) || 0,
-        }))
-      : Object.entries(datatrend?.total_repayment_by_week || {}).map(([day, value]) => ({
-          month: day,
-          value: parseFloat(value as string) || 0,
-        }));
+      ? Object.entries(datatrend?.total_repayment_by_month || {}).map(
+          ([day, value]) => ({
+            month: day,
+            value: parseFloat(value as string) || 0,
+          })
+        )
+      : Object.entries(datatrend?.total_repayment_by_week || {}).map(
+          ([day, value]) => ({
+            month: day,
+            value: parseFloat(value as string) || 0,
+          })
+        );
   // const chartData = monthlyChartData
 
   const barChartData = [
@@ -105,11 +134,24 @@ export default function Dashboard() {
     { name: "Dec", revenue: 400000 },
   ];
 
-  const pieChartData = [
-    { name: "Approved", value: 75, color: "#4CAF50" },
-    { name: "Pending", value: 15, color: "#FFC107" },
-    { name: "Rejected", value: 10, color: "#FFC0CB" },
-  ];
+ // Assuming you have access to the loanRepaymentsStats state
+const pieChartData = [
+  { 
+    name: "Active", 
+    value: datastat?.repayment_rate.active_percentage|| 0, 
+    color: "#156064" 
+  },
+  { 
+    name: "Rejected", 
+    value: datastat?.repayment_rate.rejected_percentage || 0, 
+    color: "#FA4D56" 
+  },
+  { 
+    name: "Overdue", 
+    value: datastat?.repayment_rate.overdue_percentage || 0, 
+    color: "#EC7910" 
+  },
+];
 
   const progressBarData = [
     {
@@ -187,24 +229,43 @@ export default function Dashboard() {
   const formattedTotalSumRevenue = "₦3,450,000";
   const getTotalDefaults = () => {
     if (!datatrend) return "₦0";
-  
+
     if (linechartselectedYear === "This Year") {
-      return formatCurrency(datatrend.total_sum_repayment_by_year );
+      return formatCurrency(datatrend.total_sum_repayment_by_year);
     } else if (linechartselectedYear === "This Month") {
       return formatCurrency(datatrend.total_sum_repayment_by_month);
     } else {
       return formatCurrency(datatrend.total_sum_repayment_by_week);
     }
   };
-  
+
   const formattedTotalSumDefaults = getTotalDefaults();
   const total_loans = "125";
   const total_count = pending_loans.length;
- 
+
   const [barchartselectedYear, setbarchartSelectedYear] = React.useState(
     lineChartDefaultSelectedYear
   );
- 
+  const { selectedIds, setSelectedIds } = useDashboard();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setIsDeleteModalOpen(false);
+      }
+    };
+  });
+  const handleOpenModal = () => {
+    if (selectedIds.length >= 1) {
+      setIsDeleteModalOpen(true);
+    } else {
+      toast.error("Please select more than one item to perform this action.");
+    }
+  };
 
   return (
     <div>
@@ -217,38 +278,53 @@ export default function Dashboard() {
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
       />
-      <Repayment
-        stats={stats}
-        chartData={chartData}
-        barChartData={barChartData}
-        pieChartData={pieChartData}
-        onSearchClick={handleSearchClick}
-        onFilterClick={handleFilterClick}
-        onSeeAllClick={handleSeeAllClick}
-        onFundWallet={handleFundWallet}
-        pieChartTitle="Loan Repayment Rate"
-        pieChartDescription="Total loan repayment metrics"
-        pieChartTotal={total_loans ?? "N/A"}
-        lineChartTitle="Repayment Trend"
-        lineChartDescription="Repayment Overtime"
-        lineChartTotalRevenue={formattedTotalSumDefaults}
-        lineChartRevenueChange="(30,00)"
-        lineChartLineColor="#0F4C5C"
-        lineChartDefaultSelectedYear={lineChartDefaultSelectedYear}
-        selectedYear={linechartselectedYear}
-        setSelectedYear={setlinechartSelectedYear}
-        barselectedYear={barchartselectedYear}
-        barsetSelectedYear={setbarchartSelectedYear}
-        progressBarTitle="Sales Performance"
-        progressBarDescription="Total sales performance of different products"
-        href={"#"}
-        total_count={data?.data.total}
-        laon_table_data_all={data?.data.data || []}  
-        bulkAction={undefined}
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        totalPages={data?.last_page}
-      />
+      <div className=" relative ">
+        {isDeleteModalOpen && (
+          <div
+            ref={modalRef}
+            className=" absolute z-50 right-5 top-[820px] hidden md:flex"
+          >
+            {" "}
+            <DropdownMenu
+              onClick={(e) => e.stopPropagation()}
+              productId={selectedIds}
+              setActiveDropdown={setIsDeleteModalOpen}
+            />
+          </div>
+        )}
+        <Repayment
+          stats={stats}
+          chartData={chartData}
+          barChartData={barChartData}
+          pieChartData={pieChartData}
+          onSearchClick={handleSearchClick}
+          onFilterClick={handleFilterClick}
+          onSeeAllClick={handleSeeAllClick}
+          onFundWallet={handleFundWallet}
+          pieChartTitle="Loan Repayment Rate"
+          pieChartDescription="Total loan repayment metrics"
+          pieChartTotal={total_loans ?? "N/A"}
+          lineChartTitle="Repayment Trend"
+          lineChartDescription="Repayment Overtime"
+          lineChartTotalRevenue={formattedTotalSumDefaults}
+          lineChartRevenueChange="(30,00)"
+          lineChartLineColor="#0F4C5C"
+          lineChartDefaultSelectedYear={lineChartDefaultSelectedYear}
+          selectedYear={linechartselectedYear}
+          setSelectedYear={setlinechartSelectedYear}
+          barselectedYear={barchartselectedYear}
+          barsetSelectedYear={setbarchartSelectedYear}
+          progressBarTitle="Sales Performance"
+          progressBarDescription="Total sales performance of different products"
+          href={"#"}
+          total_count={data?.data.total}
+          laon_table_data_all={data?.data.data || []}
+          bulkAction={() => handleOpenModal()}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          totalPages={data?.last_page}
+        />
+      </div>
     </div>
   );
 }

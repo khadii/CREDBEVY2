@@ -99,15 +99,15 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
 
       {activeTab === "Repayment Schedule" && (
         <div className="w-full px-[24px]">
-          <RepaymentScheduleTable LoanRequest_Data={data?.repayment_schedule} />
+          <RepaymentScheduleTable LoanRequest_Data={data?.repayment_schedule_history.repayment_schedule} totalRepaymentschedule={data?.repayment_schedule_history.total_repaymentSchedule} />
         </div>
       )}
 
       {activeTab === "Transaction History" && (
         <div className="w-full px-[24px]">
           <Transaction_HistoryTable 
-            LoanRequest_Data={data?.repayment_transaction_history.transactions} 
-            totaltransaction={data?.repayment_transaction_history.total_transactions} 
+            LoanRequest_Data={data?.repayment_transaction_history.transactions!} 
+            totaltransaction={data?.repayment_transaction_history.total_transactions!} 
           />
         </div>
       )}

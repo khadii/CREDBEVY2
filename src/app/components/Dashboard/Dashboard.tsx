@@ -37,6 +37,7 @@ export default function Dashboard() {
     percentage_difference,
     total_loans,
     approved_loans,
+    loan_pending_rate,
     loan_approval_rate,
     loan_disapproval_rate,
     Total_Loan_Disbursed,
@@ -170,7 +171,8 @@ export default function Dashboard() {
 
   const pieChartData = [
     { name: "Approved", value: loan_approval_rate , color: "#156064" },
-    { name: "Unapproved", value: loan_disapproval_rate, color: "#EC7910" },
+    { name: "Pending", value: loan_pending_rate, color: "#EC7910" },
+    { name: "declined", value: loan_disapproval_rate, color: "#FA4D56" },
   ];
 
   const progressBarData = loan_performance?.map((item: any) => ({

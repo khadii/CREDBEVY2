@@ -7,28 +7,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 import Table from "../../TableThree/GeneralreuseableTable";
 
-const RepaymentScheduleTable = ({ LoanRequest_Data }: { LoanRequest_Data: any }) => {
+const RepaymentScheduleTable = ({ 
+  LoanRequest_Data, 
+  totalRepaymentschedule 
+}: { 
+  LoanRequest_Data: any, 
+  totalRepaymentschedule: any 
+}) => {
   const tableHead = ["Installment", "Payment", "Balance", "Due date", "Status"];
   const [viewMode, setViewMode] = useState<{ [key: string]: boolean }>({});
   const [currentDocument, setCurrentDocument] = useState<{ url: string; name: string } | null>(null);
 
   const formatTableData = () => {
-    if (!LoanRequest_Data?.loan?.repayment_schedule) return [];
-    return LoanRequest_Data.loan.repayment_schedule.map((item: any) => ({
-      installment: item.installment_number,
-      amount_paid: item.amount.toString(),
-      balance: item.remaining_balance.toString(),
-      due_date: item.due_date,
-      status: item.status
+    if (!LoanRequest_Data || !Array.isArray(LoanRequest_Data)) {
+      return [];
+    }
+    return LoanRequest_Data.map((item: any) => ({
+      installment: item.installment || 'N/A',
+      amount_paid: item.amount_paid ? String(item.amount_paid).replace(/_/g, ' ') : 'N/A',
+      balance: item.balance || 'N/A',
+      due_date: item.due_date || 'N/A',
+      status: item.status || 'N/A'
     }));
   };
 
   const renderCell = (data: any, header: string) => {
+    if (!data) return null;
+
     switch (header) {
       case "Installment":
         return <div className="truncate max-w-48">{data.installment}</div>;
       case "Payment":
-        return <div className="truncate max-w-28 capitalize">{data.amount_paid.replace(/_/g, ' ')}</div>;
+        return <div className="truncate max-w-28 capitalize">{data.amount_paid}</div>;
       case "Balance":
         return <span className="truncate">{data.balance}</span>;
       case "Due date":
@@ -40,14 +50,17 @@ const RepaymentScheduleTable = ({ LoanRequest_Data }: { LoanRequest_Data: any })
     }
   };
 
+  const formattedData = formatTableData();
+  const displayCount = totalRepaymentschedule ;
+
   return (
     <>
       <Table
         headers={tableHead}
-        data={formatTableData()}
+        data={formattedData}
         titleProps={{
           mainTitle: "Repayment schedule",
-          requestCount: `${formatTableData().length} installments`,
+          requestCount: `${displayCount} installments`,
           subtitle: "Repayment schedule of loan taken",
         }}
         renderCell={renderCell}

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { loan_repayments_stats } from './repayment_thunk';
 
-
 interface Year {
   year?: string;
 }
@@ -20,11 +19,21 @@ interface UpcomingStats extends RepaidStats {}
 
 interface OverdueStats extends RepaidStats {}
 
+interface RepaymentRate {
+  active_count: number;
+  rejected_count: number;
+  overdue_count: number;
+  active_percentage: number;
+  rejected_percentage: number;
+  overdue_percentage: number;
+}
+
 interface LoanRepaymentsStatsData {
   total_loans: LoanStats;
   repaid: RepaidStats;
   upcoming: UpcomingStats;
   overdue: OverdueStats;
+  repayment_rate: RepaymentRate;
 }
 
 interface LoanRepaymentsStatsResponse {
@@ -44,7 +53,6 @@ const initialState: LoanRepaymentsStatsState = {
   loading: false,
   error: null,
 };
-
 
 const loanRepaymentsStatsSlice = createSlice({
   name: 'loanRepaymentsStats',

@@ -30,7 +30,7 @@ const LoanPerformance: React.FC<LoanPerformanceProps> = ({ loanData, title, desc
   const visibleLoanData = loanData.slice(currentIndex, currentIndex + 5);
 
   return (
-    <div className={`bg-white border rounded-lg pl-[16px] pr-[24px] pb-[38px] pt-[22px] w-full h-[500px] relative`}>
+    <div className={`bg-white border rounded-lg pl-[16px] pr-[24px] pb-[38px] pt-[22px] w-full h-[475px] relative`}>
       {/* Header */}
       <div className={`${loanData.length > 5?"mb-9":"mb-16"}`}>
         <h2 className="text-lg font-semibold text-[#333333] mb-1">{title}</h2>

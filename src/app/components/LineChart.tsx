@@ -22,7 +22,7 @@ const LineChartComponent = ({
   showGrid = true,
 }: LineChartComponentProps) => {
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height={260}>
       <RechartsLineChart
         data={data}
         // margin={{ top: 20, right: 20, left: 0, bottom: 0 }}

@@ -10,6 +10,7 @@ import {
   total_revenue_perer_time,
   _loan_performance,
 } from "./dashboardThunk";
+import { Satellite } from "lucide-react";
 
 interface WalletState {
   balance?: string | null;
@@ -45,6 +46,7 @@ total_sum_revenue_by_year?:any
   //  approved_count?:any
   //  percentage?:any
   loan_performance?:any
+  loan_pending_rate?:any
 }
 
 // Initial state
@@ -70,7 +72,8 @@ const initialState: WalletState = {
   total_revenue_by_year:null,
   total_revenue_by_month:null,
   total_revenue_by_week:null,
-  loan_performance:null
+  loan_performance:null,
+  loan_pending_rate:null
   // product_name:null,
   // approved_loans_count:null,
   //    approved_count:null,
@@ -166,6 +169,7 @@ const walletSlice = createSlice({
           state.approved_loans = data.approved_loans;
           state.loan_approval_rate = data.loan_approval_rate;
           state.loan_disapproval_rate = data.loan_disapproval_rate;
+          state.loan_pending_rate=data.loan_pending_rate
         } else {
           state.error = message;
         }

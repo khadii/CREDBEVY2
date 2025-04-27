@@ -28,7 +28,10 @@ interface RepaymentTransactionHistory {
   transactions: Transaction[];
   total_transactions: number;
 }
-
+interface RepaymentScheduleItems {
+  repayment_schedule: RepaymentScheduleItem[];
+  total_repaymentSchedule: number;
+}
 interface LoanSummary {
   loan_amount : number;
   monthly_repayment: number;
@@ -62,7 +65,7 @@ selfie:string
 
 interface LoanRepaymentsData {
   user_information: UserInformation;
-  repayment_schedule: RepaymentScheduleItem[];
+  repayment_schedule_history: RepaymentScheduleItems
   repayment_transaction_history: RepaymentTransactionHistory;
   loan_summary: LoanSummary;
 }

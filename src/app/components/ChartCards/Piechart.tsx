@@ -39,7 +39,7 @@ const LoanApprovalChart = ({ title, description, total, data }:{ title:any, desc
                   className="w-3 h-3 rounded-full mr-2 flex-shrink-0"
                   style={{ backgroundColor: item.color }}
                 ></div>
-                <span className="text-sm text-[#333333] font-light whitespace-nowrap">
+                <span className="text-[9px] text-[#333333] font-light whitespace-nowrap">
                   {item.name}
                 </span>
               </div>
