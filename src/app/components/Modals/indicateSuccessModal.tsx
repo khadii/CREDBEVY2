@@ -5,7 +5,7 @@ export default function IndicateSuccessModal({open, setOpen,setState,title,disc,
   return (
     <><div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-[450px] items-center">
     <h2 className="text-[24px] font-bold text-[#333333]">
-      {}
+      {header}
     </h2>
     <button
       onClick={() => setOpen(false)}

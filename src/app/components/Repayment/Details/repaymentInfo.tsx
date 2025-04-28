@@ -11,18 +11,18 @@ import { formatDate } from "@/app/lib/formatdate";
 import { single_loan_repayments } from "@/app/Redux/Repayment/repayment_thunk";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
 
-
 interface RepaymentDetailsProps {
   id: string;
 }
 
 export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
-  const { data, loading, error } = useSelector((state: RootState) => state.sinleloanRepayment);
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.sinleloanRepayment
+  );
   const dispatch = useDispatch<AppDispatch>();
 
-  
   useEffect(() => {
-    dispatch(single_loan_repayments({user_id:id}));
+    dispatch(single_loan_repayments({ user_id: id }));
   }, [dispatch, id]);
 
   const summary = data?.loan_summary || {
@@ -36,7 +36,7 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
     approval_status: "",
     total_repayment_count: 0,
     total_upcoming_count: 0,
-    total_overdue_count: 0
+    total_overdue_count: 0,
   };
 
   const tabs = useMemo(
@@ -56,12 +56,21 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
 
   const loanSummaryData = useMemo(
     () => [
-      { label: "Loan Amount", value: formatCurrency(summary.loan_amount) ?? "N/A" },
-      { label: "Monthly Payment", value: formatCurrency(summary.monthly_repayment) ?? "N/A" },
+      {
+        label: "Loan Amount",
+        value: formatCurrency(summary.loan_amount) ?? "N/A",
+      },
+      {
+        label: "Monthly Payment",
+        value: formatCurrency(summary.monthly_repayment) ?? "N/A",
+      },
       { label: "Loan Purpose", value: summary.loan_purpose ?? "N/A" },
-      { label: "Loan Terms", value: summary.loan_terms ?? 'N/A' },
-      { label: "Interest Rate", value: summary.interest_rate ?? 'N/A' },
-      { label: "Request Date", value: formatDate(summary.request_date) ?? 'N/A' },
+      { label: "Loan Terms", value: summary.loan_terms ?? "N/A" },
+      { label: "Interest Rate", value: summary.interest_rate ?? "N/A" },
+      {
+        label: "Request Date",
+        value: formatDate(summary.request_date) ?? "N/A",
+      },
     ],
     [summary]
   );
@@ -92,22 +101,37 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
   }
 
   return (
-    <div className={`pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px]`}>
+    <div
+      className={`pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px]`}
+    >
       <div className="flex mb-[42px] pl-[24px]">
-        <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleTabChange} />
+        <Tabs
+          tabs={tabs}
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+        />
       </div>
 
       {activeTab === "Repayment Schedule" && (
         <div className="w-full px-[24px]">
-          <RepaymentScheduleTable LoanRequest_Data={data?.repayment_schedule_history.repayment_schedule} totalRepaymentschedule={data?.repayment_schedule_history.total_repaymentSchedule} />
+          <RepaymentScheduleTable
+            LoanRequest_Data={
+              data?.repayment_schedule_history.repayment_schedule
+            }
+            totalRepaymentschedule={
+              data?.repayment_schedule_history.total_repaymentSchedule
+            }
+          />
         </div>
       )}
 
       {activeTab === "Transaction History" && (
         <div className="w-full px-[24px]">
-          <Transaction_HistoryTable 
-            LoanRequest_Data={data?.repayment_transaction_history.transactions!} 
-            totaltransaction={data?.repayment_transaction_history.total_transactions!} 
+          <Transaction_HistoryTable
+            LoanRequest_Data={data?.repayment_transaction_history.transactions!}
+            totaltransaction={
+              data?.repayment_transaction_history.total_transactions!
+            }
           />
         </div>
       )}

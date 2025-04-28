@@ -25,7 +25,7 @@ const LineChartComponent = ({
     <ResponsiveContainer width="100%" height={260}>
       <RechartsLineChart
         data={data}
-        // margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+        margin={{ top: 20, right: 20, left: 20, bottom: 0 }}
       >
         {showGrid && <CartesianGrid vertical={false} stroke="#E5E7EB" />}
         <XAxis

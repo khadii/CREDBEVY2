@@ -90,7 +90,7 @@ export default function ProfileCard({ id }: { id: any }) {
 
   useEffect(() => {
     if (LoanRequest_Data?.loan?.request_details) {
-      setLoanApproved(LoanRequest_Data?.loan?.request_details.status === "APPROVED");
+      setLoanApproved(LoanRequest_Data?.loan?.request_details.approval_status === "APPROVED");
     }
   }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved]);
 

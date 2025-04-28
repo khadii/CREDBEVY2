@@ -95,7 +95,6 @@ interface DashboardProps {
   setCurrentPage: any;
   currentPage: any;
   totalPages: any;
-
 }
 
 export default function Repayment({

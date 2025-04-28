@@ -134,8 +134,8 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
         <div className="xl:space-y-4 space-y-2">
           {dataRows.map((row, idx) => (
             <div key={idx} className="grid grid-cols-2 gap-[186px]">
-              <div className="text-[#8A8B9F] text-base text-left">{row.label}</div>
-              <div className="text-base text-[#8A8B9F] text-right">{row.value}</div>
+              <div className="text-[#8A8B9F] text-sm text-left">{row.label}</div>
+              <div className="text-sm text-[#8A8B9F] text-right">{row.value}</div>
             </div>
           ))}
         </div>

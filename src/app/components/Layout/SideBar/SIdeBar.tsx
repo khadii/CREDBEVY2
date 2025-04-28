@@ -58,13 +58,13 @@ const menuItems = [
     icon: "/icons/category.svg",
     activeIcon: "/icons/category-active.svg",
   },
-  // {
-  //   id: 1092,
-  //   name: "Financials",
-  //   href: "/dashboard/financials",
-  //   icon: "/icons/empty-wallet.svg",
-  //   activeIcon: "/icons/empty-wallet-active.svg",
-  // },
+  {
+    id: 1092,
+    name: "Financials",
+    href: "/dashboard/financials",
+    icon: "/icons/empty-wallet.svg",
+    activeIcon: "/icons/empty-wallet-active.svg",
+  },
   {
     id: 1093,
     name: "Loan Products",

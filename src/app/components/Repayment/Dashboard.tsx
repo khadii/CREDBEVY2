@@ -249,6 +249,8 @@ const pieChartData = [
   const { selectedIds, setSelectedIds } = useDashboard();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -258,7 +260,14 @@ const pieChartData = [
         setIsDeleteModalOpen(false);
       }
     };
-  });
+    document.addEventListener('mousedown', handleClickOutside);
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []); 
+  
+  
   const handleOpenModal = () => {
     if (selectedIds.length >= 1) {
       setIsDeleteModalOpen(true);
