@@ -141,7 +141,7 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
         </div>
       )}
 
-      <div className="flex space-x-[px] justify-between mt-[44px]">
+      <div className="flex space-x-[px] justify-between gap-12 mt-[44px]">
         <button
           onClick={() => setOpen(false)}
           className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
@@ -150,7 +150,7 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
         </button>
         <button
           onClick={() => setState(2)}
-          className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+          className="px-[50px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
         >
        {buttonName}
         </button>
