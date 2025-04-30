@@ -120,10 +120,10 @@ const LogsTable = () => {
           subtitle: "List of all activities on the dashboard"
         }}      
       />
-      <Pagination
+      {/* <Pagination
               currentPage={currentPage}
               totalPages={totalPages} setCurrentPage={ setCurrentPage}      
-      />
+      /> */}
     </>
   );
 };
