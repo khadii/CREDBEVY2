@@ -57,7 +57,7 @@ export default function Dashboard() {
   return (
     <div>
       <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
-        Repayment
+        Financials
       </p>
       <div className="mb-[26px]">
         <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
