@@ -4,7 +4,7 @@ import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 
-const COLORS = ['#EC7910', '#156064','#FA4D56'];
+const COLORS = [ '#156064','#EC7910','#FA4D56'];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
