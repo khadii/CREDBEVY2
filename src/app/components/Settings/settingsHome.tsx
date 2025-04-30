@@ -9,15 +9,16 @@ import User_management from './user_management';
 import User_Roles from './User_Roles';
 import SecuritySettings from './SecuritySettings';
 import PaymentMethodSelection from './PaymentMethodSelection';
+import Logs from './Logs';
 
 export default function SettingsHome() {
     const navItems = [
         { name: "Company Info" },
         { name: "Notifications" },
-        { name: "Payments" },
-        { name: "Integrations" },
+        // { name: "Payments" },
+        // { name: "Integrations" },
         { name: "User management" },
-        { name: "Group Management" },
+        // { name: "Group Management" },
         { name: "User Roles" },
         { name: "Security & Password" },
         { name: "Logs" }
@@ -44,7 +45,7 @@ export default function SettingsHome() {
             case "Security & Password":
                 return <div><SecuritySettings/></div>; 
             case "Logs":
-                return <div>Logs Content</div>;
+                return <div><Logs/></div>;
             default:
                 return null;
         }

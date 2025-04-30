@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 import Cookies from "js-cookie";
 import SpinningFaceExact from "../credbevyLoader";
+import Prediction from "./prediction";
 
 export default function FinancialInfo({ id }: { id: any }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -71,6 +72,7 @@ export default function FinancialInfo({ id }: { id: any }) {
   const [activeTab, setActiveTab] = useState(tabs[0].name);
   const [showDocumentsTable, setShowDocumentsTable] = useState(false);
   const [showFinancialGrid, setShowFinancialGrid] = useState(false);
+  const [showPrediction, setShowPrediction] = useState(false);
 
   const formatCurrency = useCallback((value: number) => {
     return new Intl.NumberFormat("en-NG", {
@@ -244,31 +246,44 @@ export default function FinancialInfo({ id }: { id: any }) {
         setData(Request_Details);
         setShowDocumentsTable(false);
         setShowFinancialGrid(false);
+        setShowPrediction(false)
         break;
       case "Employment info":
         setData(Employment_Info);
         setShowDocumentsTable(false);
         setShowFinancialGrid(false);
+        setShowPrediction(false)
         break;
       case "Financial info":
         setData(financialdata);
         setShowDocumentsTable(false);
         setShowFinancialGrid(false);
+        setShowPrediction(false)
         break;
       case "Documents":
         setData([]);
         setShowDocumentsTable(true);
         setShowFinancialGrid(false);
+        setShowPrediction(false)
         break;
       case "Credit info":
         setData([]);
         setShowDocumentsTable(false);
         setShowFinancialGrid(true);
+        setShowPrediction(false)
         break;
+        case "Prediction":
+          setData([]);
+          setData([]);
+        setShowDocumentsTable(false);
+        setShowFinancialGrid(false);
+        setShowPrediction(true)
+          break;
       default:
         setData([]);
         setShowDocumentsTable(false);
         setShowFinancialGrid(false);
+        setShowPrediction(false)
         break;
     }
   }, [
@@ -319,7 +334,13 @@ export default function FinancialInfo({ id }: { id: any }) {
         <div className="w-full px-[24px]">
           <FinancialGrid LoanRequest_Data={LoanRequest_Data} />
         </div>
-      ) : (
+      ) 
+      
+      :  showPrediction ?
+     ( <div className="w-full px-[24px]">
+      <Prediction  />
+    </div>
+  ): (
         <div className="w-full space-y-5 mt-[38px] flex flex-col items-center justify-center">
           {data.map((item, index) => (
             <div

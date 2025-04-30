@@ -104,7 +104,7 @@ export const PerformanceLoanProduct: React.FC<LoanPerformanceProps> = ({ loanDat
             label={loan.label}
             value={loan.value}
             maxValue={loan.maxValue}
-            color={index === 0 ? "#FFB200" : index === 1 ? "#4339F2" : "#02A0FC"} // Custom colors for each bar
+            color={index === 0 ? "#FFB200" : index === 1 ? "#4339F2" : "#02A0FC"} 
           />
         ))}
       </div>

@@ -26,16 +26,21 @@ export default function IndicateSuccessModal({open, setOpen,setState,title,disc,
         </div>
       </div>
      
-      <div className="flex space-x-[96px] justify-center">
-        <button
-           onClick={() => setOpen(false)}
-          className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
-        >
-          Cancel
-        </button>
-       
-       
-      </div>
+      <div className="flex justify-between gap-4 mt-[44px]">
+                          <button
+                        onClick={() => setOpen(false)}
+                            className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+                            onClick={() => setOpen(false)}
+                            
+                          >
+                            { "Done"}
+                          </button>
+                        </div>
     </div></>
   )
 }

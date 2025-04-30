@@ -35,7 +35,7 @@ type DoubleBarChartComponentProps = {
 const DoubleBarChartComponent = ({
   comparisonData,
   firstDatasetColor = "#0F4C5C",
-  secondDatasetColor = "#5C0F4C",
+  secondDatasetColor = "#EC7910",
   highlightFirst,
   highlightSecond,
   highlightColor = "#EC7910",

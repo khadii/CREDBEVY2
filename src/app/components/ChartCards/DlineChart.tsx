@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import YearModal from "../Yearmodal";
 import { ChevronDown } from "lucide-react";
 import DoubleBarChartComponent from "../DoubleBarchart";
+import TwoLineChart from "../doubleLinechart";
 
 type ComparisonDataItem = {
   name: string;
@@ -15,7 +16,7 @@ type CardChartProps = {
   title: string;
   description: string;
   totalAmount: string;
-  comparisonData: ComparisonDataItem[];
+  comparisonData:any
   firstDatasetName?: string;
   secondDatasetName?: string;
   highlightFirst?: string;
@@ -30,7 +31,7 @@ type CardChartProps = {
   data:any
 };
 
-const CardChart = ({
+const lineChartTwo = ({
   title,
   description,
   totalAmount,
@@ -95,7 +96,7 @@ const CardChart = ({
               
               {/* Year Selection Modal */}
               {isModalOpen && (
-                <div className="absolute right-0 left-0 top-12 z-10" ref={modalRef}>
+                <div className="absolute right-0 left-0 top-12" ref={modalRef}>
                   <YearModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
@@ -130,21 +131,11 @@ const CardChart = ({
 
       {/* Chart */}
       <div className="w-full">
-        <DoubleBarChartComponent
-          comparisonData={comparisonData}
-          firstDatasetName={firstDatasetName}
-          secondDatasetName={secondDatasetName}
-          highlightFirst={highlightFirst}
-          highlightSecond={highlightSecond}
-          highlightColor={highlightColor}
-          barSize={barSize}
-          showValues={showValues}
-          tooltip={tooltip}
-          yAxisFormatter={yAxisFormatter}
+        <TwoLineChart data={comparisonData}         
         />
       </div>
     </div>
   );
 };
 
-export default CardChart;
+export default lineChartTwo;
