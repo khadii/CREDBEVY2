@@ -45,28 +45,23 @@ export const loanConditionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Approve Loan Cases
-      .addCase(approve_loan.pending, (state) => {
-        state.approveLoading = true;
-        state.approveSuccess = false;
-        state.approveError = null;
-        state.approveData = null;
-      })
-      .addCase(approve_loan.fulfilled, (state, action) => {
-        state.approveLoading = false;
-        state.approveSuccess = true;
-        state.approveData = action.payload;
-      })
-      .addCase(approve_loan.rejected, (state, action) => {
-        state.approveLoading = false;
-        state.approveSuccess = false;
-        
-        if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
-          state.approveError = action.payload.message as string;
-        } else {
-          state.approveError = action.payload as string || 'Failed to approve loan';
-        }
-      })
+  // Approve Loan Cases
+.addCase(approve_loan.pending, (state) => {
+  state.approveLoading = true;
+  state.approveSuccess = false;
+  state.approveError = null;
+})
+.addCase(approve_loan.fulfilled, (state, action) => {
+  state.approveLoading = false;
+  state.approveSuccess = true;
+  state.approveError = null;
+  state.approveData = action.payload;
+})
+.addCase(approve_loan.rejected, (state, action) => {
+  state.approveLoading = false;
+  state.approveSuccess = false;
+  state.approveError = action.error.message || "Something went wrong";
+})
       // Reject Loan Cases
       .addCase(reject_loan.pending, (state) => {
         state.rejectLoading = true;

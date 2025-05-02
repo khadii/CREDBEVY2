@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
+import AnimatedLoader from "../animation";
 
 interface DocumentViewerModalProps {
   documentUrl: string;
@@ -11,14 +12,32 @@ interface DocumentViewerModalProps {
 
 const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentViewerModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   const getFileType = (url: string) => {
     const extension = url.split('.').pop()?.toLowerCase();
     return extension;
   };
 
+  // In case the URL doesn't have a file extension, try to infer from the MIME type
+  const getFileTypeFromUrl = (url: string) => {
+    // First try extension
+    const fileType = getFileType(url);
+    if (fileType && ['pdf', 'jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
+      return fileType;
+    }
+    
+    // For URLs like Cloudinary/other CDNs that might not have extensions
+    if (url.includes('ucarecdn.com') || !fileType) {
+      // Safe fallback to image if URL looks like an image CDN
+      return 'image';
+    }
+    
+    return 'unknown';
+  };
+
   const renderDocument = () => {
-    const fileType = getFileType(documentUrl);
+    const fileType = getFileTypeFromUrl(documentUrl);
 
     switch(fileType) {
       case 'pdf':
@@ -27,18 +46,27 @@ const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentVie
             src={documentUrl} 
             className="w-full h-full" 
             onLoad={() => setIsLoading(false)}
+            onError={() => {
+              setIsLoading(false);
+              setImageError(true);
+            }}
           />
         );
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
+      case 'image': // Added generic image type
         return (
           <img 
             src={documentUrl} 
             alt={documentName}
-            className="max-w-full max-h-full"
+            className="max-w-full max-h-full object-contain"
             onLoad={() => setIsLoading(false)}
+            onError={() => {
+              setIsLoading(false);
+              setImageError(true);
+            }}
           />
         );
       default:
@@ -61,12 +89,18 @@ const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentVie
         </div>
         <div className="flex-1 p-4 overflow-auto relative">
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p>Loading document...</p>
-            </div>
+            <AnimatedLoader isLoading={isLoading}/>
           )}
-          {renderDocument()}
+          {imageError ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <p>Error loading document. Please try downloading instead.</p>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full w-full">{ renderDocument()}</div>
+           
+          )}
         </div>
+       
       </div>
     </div>
   );

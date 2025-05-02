@@ -14,6 +14,20 @@ import { RootState } from "@/app/Redux/store";
 import { useSelector } from "react-redux";
 import SpinningFaceExact from "../credbevyLoader";
 import Image from "next/image";
+import { GoDotFill } from "react-icons/go";
+
+type CreditRating = {
+  text: string;
+  color: string;
+};
+
+const getCreditRating = (score: number): CreditRating => {
+  if (score >= 800) return { text: "Excellent", color: "text-emerald-500" };
+  if (score >= 740) return { text: "Very Good", color: "text-emerald-500" };
+  if (score >= 670) return { text: "Good", color: "text-emerald-500" };
+  if (score >= 580) return { text: "Fair", color: "text-yellow-500" };
+  return { text: "Poor", color: "text-red-500" };
+};
 
 export default function ProfileCard({ id }: { id: any }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,6 +43,8 @@ export default function ProfileCard({ id }: { id: any }) {
     Request_Details,
     LoanApproved,
     setLoanApproved,
+    LoanDeclined,
+    setLoanDeclined
   } = useDashboard();
 
   const { loading: LoanRequest_loading, data: LoanRequest_Data } = useSelector(
@@ -92,15 +108,10 @@ export default function ProfileCard({ id }: { id: any }) {
     if (LoanRequest_Data?.loan?.request_details) {
       setLoanApproved(LoanRequest_Data?.loan?.request_details.approval_status === "APPROVED");
     }
-  }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved]);
-
-  // if (LoanRequest_loading) {
-  //   return (
-  //     <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen">
-  //       <SpinningFaceExact />
-  //     </div>
-  //   );
-  // }
+    if (LoanRequest_Data?.loan?.request_details) {
+      setLoanDeclined(LoanRequest_Data?.loan?.request_details.approval_status === "DECLINED");
+    }
+  }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved, setLoanDeclined]);
 
   return (
     <div
@@ -154,14 +165,18 @@ export default function ProfileCard({ id }: { id: any }) {
 
       {/* Buttons */}
       <div className="mt-6 grid justify-center gap-2">
-        {LoanApproved ? (
+         {LoanApproved ? (
           <div className="w-[83px] h-[23px] rounded-[16px] border border-solid pt-[2px] pr-[8px] pb-[2px] pl-[6px] flex justify-center items-center text-xs font-semibold text-[#42BE65] border-[#BFFFD1]">
-  <Image src="/Image/appproveddot.svg"
-   alt="Approved icon" height={8} width={8} className="mr-1" />
-  Approved
-</div>
-
-        ) : (
+            <Image src="/Image/appproveddot.svg"
+              alt="Approved icon" height={8} width={8} className="mr-1" />
+            Approved
+          </div>
+        ): 
+        LoanDeclined?( <div className="w-[83px] h-[23px] rounded-[16px] border border-solid pt-[2px] pr-[8px] pb-[2px] pl-[6px] flex justify-center items-center text-xs font-semibold text-[#E33A24] border-[#FFBAB1]">
+          <GoDotFill size={24} className="mr-1" />
+          Declined
+        </div>) :
+         (
           interested ? (
             <>
               <div>
@@ -236,7 +251,14 @@ export default function ProfileCard({ id }: { id: any }) {
       <p className="mt-[32px] text-[12px] font-bold text-[#8A8B9F]">
         Credit Score
       </p>
-      <p className="text-[32px] font-bold text-[#42BE65]">{creditScore}</p>
+      <div className="flex flex-col items-center">
+        <p className={`text-[32px] font-bold ${getCreditRating(creditScore).color}`}>
+          {creditScore}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          {getCreditRating(creditScore).text}
+        </p>
+      </div>
 
       {/* User Details */}
       <div className="w-full space-y-5 mt-[38px] flex flex-col items-center justify-center px-[23px]">

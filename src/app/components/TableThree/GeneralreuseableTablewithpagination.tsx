@@ -1,12 +1,8 @@
 "use client";
 
 import React from "react";
-import {
-  LucideThumbsUp,
-  LucideThumbsDown,
-  LucideChevronDown,
-} from "lucide-react";
-import { FaCircle } from "react-icons/fa";
+import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
+
 
 interface TableProps<T> {
   headers: string[];
@@ -17,6 +13,9 @@ interface TableProps<T> {
     subtitle: string;
   };
   renderCell: (data: T, header: string) => React.ReactNode;
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: (page: number) => void;
 }
 
 const Table = <T,>({
@@ -24,6 +23,9 @@ const Table = <T,>({
   data,
   titleProps,
   renderCell,
+  currentPage,
+  totalPages,
+  setCurrentPage,
 }: TableProps<T>) => {
   return (
     <div className="bg-white rounded-lg mt-3 w-full">
@@ -68,7 +70,13 @@ const Table = <T,>({
           ))}
         </tbody>
       </table>
-      <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg border-t-0 rounded-t-none"></div>
+      {/* <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg border-t-0 rounded-t-none"></div>
+       */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };

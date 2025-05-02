@@ -112,6 +112,13 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
       label: 'Status:', 
       value: LoanRequest_Data?.loan?.request_details?.status || 'N/A' 
     },
+    {
+      label: 'Fees:',
+      value: titleName === 'Indicate Interest'
+        ? ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.indication_of_interest_expense_fee || 0))
+        : ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.approval_expense_fee || 0))
+    }
+    
   ];
 
   return (

@@ -2,6 +2,8 @@
 
 import React from "react";
 import { LucideSearch, ListFilter } from "lucide-react";
+import FilterModal from "./Modals/Filter";
+import { useDashboard } from "../Context/DahboardContext";
 
 interface LoanRequestActionsProps {
   onSearchClick?: () => void;
@@ -10,12 +12,14 @@ interface LoanRequestActionsProps {
   showSeeAll?: boolean; // Optional prop to control visibility of the "See All" link
 }
 
+
 const Search: React.FC<LoanRequestActionsProps> = ({
   onSearchClick,
   onFilterClick,
   onSeeAllClick,
   showSeeAll = true, // Default value is true
 }) => {
+  const { filter, setFilter} = useDashboard();
   return (
     <div className=" justify-between items-center mt-6 mb-3 bg-[#FAFAFA] hidden md:flex lg:flex">
       <div className="flex gap-4">
@@ -27,7 +31,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
           Search Request
         </button>
         <button
-          onClick={onFilterClick}
+          onClick={()=>setFilter(true)}
           className="flex items-center gap-2 pr-[49px]  pl-[17px]  py-2 border rounded-lg bg-white text-[#8A8B9F] font-bold text-xs"
         >
           <ListFilter size={16} color="#8A8B9F" />
@@ -45,6 +49,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
           See All
         </a>
       )}
+     {filter&&( <FilterModal/>)}
     </div>
   );
 };

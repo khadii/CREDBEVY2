@@ -88,7 +88,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (approveSuccess) {
-      setState(3); // Move to success state when approval is successful
+      setState(3); 
     }
   }, [approveSuccess]);
 
@@ -143,21 +143,17 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         );
 
         if (approvalResult.meta.requestStatus === "fulfilled") {
-          const response = approvalResult.payload as {
-            error?: boolean;
-            message?: string;
-            data?: any;
-          };
+     
 
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
           refreshData();
 
-          if (response.error) {
-            toast.error(response.message || "Loan approval failed");
+          if (approveError) {
+            toast.error(approveError || "Loan approval failed");
             handleClose(); // Close on error
           } else {
-            toast.success(response.message || "Loan approved successfully");
+            toast.success(approveData.message || "Loan approved successfully");
             setInterested(true);
             // State will be updated to 3 via the useEffect watching approveSuccess
           }
