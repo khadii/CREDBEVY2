@@ -78,6 +78,21 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     if (pinSuccess) {
       toast.success(pinMessage);
       resetAll();
+      const pinPayload = {
+        pin: pin.map((digit) => Number(digit)),
+      };
+      setAuhPin(pinPayload.pin);
+
+      const currentRequestParams = {
+        product_id: [selectedIds],
+        pin: pinPayload.pin,
+      };
+
+       dispatch(
+        approve_loan(currentRequestParams)
+      );
+
+     
     }
     if (pinError) {
       toast.error(pinError);
@@ -88,9 +103,31 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (approveSuccess) {
-      setState(3); 
+     
+        
+      const productData = getProductCookie();
+      dispatch(_single_loan_products_request({ id: productData }));
+      refreshData();
+      toast.success(approveData.message|| "Loan approved successfully");
+      setState(3)
+     }
+
+
+
+    if (approveError) {
+      // const errorResponse = (approvalResult as any).payload || {
+      //   error: true,
+      //   message: "Failed to process approval request",
+      // };
+
+      const productData = getProductCookie();
+      toast.error(approveError || "Loan approval failed");
+      refreshData();
+      dispatch(_single_loan_products_request({ id: productData }));
+      setInterested(true);
+      handleClose();
     }
-  }, [approveSuccess]);
+  }, [approveSuccess,approveError,dispatch]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
@@ -128,51 +165,9 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         pin: pin.map((digit) => Number(digit)),
       };
 
-      const pinResult = await dispatch(ConfirmPin(pinPayload));
+     await dispatch(ConfirmPin(pinPayload));
 
-      if (pinResult.meta.requestStatus === "fulfilled") {
-        setAuhPin(pinPayload.pin);
 
-        const currentRequestParams = {
-          product_id: [selectedIds],
-          pin: pinPayload.pin,
-        };
-
-        const approvalResult = await dispatch(
-          approve_loan(currentRequestParams)
-        );
-
-        if (approvalResult.meta.requestStatus === "fulfilled") {
-     
-
-          const productData = getProductCookie();
-          dispatch(_single_loan_products_request({ id: productData }));
-          refreshData();
-
-          if (approveError) {
-            toast.error(approveError || "Loan approval failed");
-            handleClose(); // Close on error
-          } else {
-            toast.success(approveData.message || "Loan approved successfully");
-            setInterested(true);
-            // State will be updated to 3 via the useEffect watching approveSuccess
-          }
-        }
-
-        if (approvalResult.meta.requestStatus === "rejected") {
-          const errorResponse = (approvalResult as any).payload || {
-            error: true,
-            message: "Failed to process approval request",
-          };
-
-          const productData = getProductCookie();
-          toast.error(errorResponse.message);
-          refreshData();
-          dispatch(_single_loan_products_request({ id: productData }));
-          setInterested(true);
-          handleClose();
-        }
-      }
     } catch (error) {
       console.error("Error processing request:", error);
       toast.error("Failed to process request");

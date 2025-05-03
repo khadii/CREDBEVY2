@@ -320,53 +320,45 @@ export const _loan_request_trend = createAsyncThunk(
       pin: any[];
     }
     
+  
+
     export const approve_loan = createAsyncThunk(
       "loanCondition/approve_loan",
-      async ({ product_id, pin }: RequestParams, { rejectWithValue }) => {
+      async ({ product_id, pin }: RequestParams, { rejectWithValue }: { rejectWithValue: Function }) => {
         try {
           const token = Cookies.get("authToken");
           if (!token) {
-            return rejectWithValue({ 
-              message: "Authentication token is missing.",
-              status: 401 
-            });
+            return rejectWithValue({ message: "Authentication token is missing." });
           }
     
           const response = await axios.post(
             `${BASE_URL}/api/partner/loan-requests/approve-loan/${product_id}`,
-            { 
-              loan_ids: product_id,
-              pin: pin.join('') 
+            { pin: pin.join(''),
+            
             },
             {
               headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
               },
-              validateStatus: (status) => status < 500
             }
           );
-    
-          if (response.data.status !== 'success') {
-            return rejectWithValue(response.data);
-          }
-    
           return response.data;
         } catch (error: any) {
           if (error.response?.data) {
-            return rejectWithValue({
-              ...error.response.data,
-              status: error.response.status
-            });
+            return rejectWithValue(error.response.data);
           }
-          return rejectWithValue({ 
-            message: error.message || "Network error occurred",
-            status: 503
-          });
+          return rejectWithValue({ message: error.message || "An unexpected error occurred" });
         }
       }
     );
-            
+           
+    
+
+
+
+
+
+    
             export const reject_loan = createAsyncThunk(
               "reject_loan",
               async ({ product_id, pin }: RequestParams, { rejectWithValue }: { rejectWithValue: Function }) => {

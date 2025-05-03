@@ -33,6 +33,7 @@ import loanRepaymentReducer from '../Redux/Repayment/loanRepaymentSlice';
 import singleloanRepaymentReducer from './Repayment/single_loanRepayments_Slice';
 import loanRepaymentsStatsReducer from '../Redux/Repayment/loanRepaymentsStatsSlice';
 import loanRepaymentsTrendReducer from '../Redux/Repayment/loanRepaymentsTrendSlice';
+import auditLogsReducer from '../Redux/logs/logs_slice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -68,6 +69,7 @@ export const store = configureStore({
     sinleloanRepayment: singleloanRepaymentReducer,
     loanRepaymentsStats: loanRepaymentsStatsReducer,
     loanRepaymentsTrend: loanRepaymentsTrendReducer,
+    auditLogs: auditLogsReducer,
   },
 });
 
