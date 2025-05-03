@@ -6,6 +6,7 @@ import Table from "../TableThree/GeneralreuseableTablewithpagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/app/Redux/store";
 import { LogsSlice } from "@/app/Redux/logs/logs_thunk";
+import { formatDate } from "@/app/lib/formatdate";
 
 const LogsTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -46,7 +47,7 @@ const LogsTable = () => {
 
     switch (header) {
       case "Date and Time":
-        return <div className="truncate max-w-36">{data.created_at}</div>;
+        return <div className="truncate max-w-36">{formatDate(data.created_at)}</div>;
       case "User":
         return <div className="truncate max-w-36">{data.user || "N/A"}</div>;
       case "Description":
