@@ -1,83 +1,84 @@
 "use client";
 
-import React, { useState } from "react";
-import { toast } from "react-hot-toast";
+import React, { useEffect } from "react";
 import KeyInput from "../FormInputs/developerInput";
-import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/app/Redux/store";
+import { fetch_webhook_url } from "@/app/Redux/developer/developerthunk";
+import AnimatedLoader from "../animation";
 
 const Webhook_URLs = () => {
-  const [formData, setFormData] = useState({
-    LoanProduct: "CB_TEST_JSUBUFWJBF45",
-    LoanRequest: "FBSIFEIUE984393JFNJDODC",
-    IndicateInterest: "https://sandbox.credbevy.com",
-    ApproveLoan: "45738399312",
-  });
+  const dispatch = useDispatch<AppDispatch>();
+  const { webhooks, loading, error } = useSelector((state: any) => state.webhook);
+  
+  useEffect(() => {
+    dispatch(fetch_webhook_url());
+  }, [dispatch]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  // Helper function to find URL by event type
+  const getWebhookUrl = (eventType: string) => {
+    const webhook = webhooks?.find((wh: any) => wh.event_type === eventType);
+    return webhook?.url || "";
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   // e.preventDefault();
-  //   // toast.success("Form submitted!");
-  //   // console.log("Form data:", formData);
-  // };
+  if (loading) return <AnimatedLoader isLoading={loading}/>
+  if (error) return <div>Error loading webhooks</div>;
 
   return (
-    <>
-      <div className=" px-6 pt-6 pb-[93px] bg-white rounded-lg max-w-[822px] max-h-screen border">
-        <div>
-          <p className=" font-semibold text-[20px] leading-[24px] tracking-[-0.5px] text-[#333333] mb-6">
-            Webhook URLs
-          </p>
+    <div className="px-6 pt-6 pb-[93px] bg-white rounded-lg max-w-[822px] max-h-screen border">
+      <div>
+        <p className="font-semibold text-[20px] leading-[24px] tracking-[-0.5px] text-[#333333] mb-6">
+          Webhook URLs
+        </p>
 
-          {/* API Key field with copy functionality */}
-          <div className="space-y-6 mb-6">
-            <KeyInput
-              label="Loan Product "
-              placeholder="Enter your Loan Product "
-              value={formData.LoanProduct}
-              onChange={handleChange}
-              name="LoanProduct "
-              copyable={true}
-            />
-            <div>
-              <KeyInput
-                label="Loan Request "
-                placeholder="Enter your Loan Request "
-                value={formData.LoanRequest}
-                onChange={handleChange}
-                name="LoanRequest "
-                copyable={true}
-              />
-              {/* refresh */}
-            </div>
-          </div>
-          <div className="space-y-6">
-            <KeyInput
-              label="Indicate Interest"
-              placeholder="Enter Indicate Interest"
-              value={formData.IndicateInterest}
-              onChange={handleChange}
-              name="IndicateInterest"
-              copyable={true}
-            />
-            <KeyInput
-              label="Approve Loan"
-              placeholder="Enter your Approve Loan"
-              value={formData.ApproveLoan}
-              onChange={handleChange}
-              name="ApproveLoan"
-              copyable={true}
-            />
-          </div>
+        <div className="space-y-6 mb-6">
+          <KeyInput
+            label="Loan Product Create"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_product.create")}
+            name="loan_product_create"
+            copyable={true}
+          />
+          <KeyInput
+            label="Loan Product Update"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_product.update")}
+            name="loan_product_update"
+            copyable={true}
+          />
+        </div>
+        <div className="space-y-6">
+          <KeyInput
+            label="Loan Application Create"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_application.create")}
+            name="loan_application_create"
+            copyable={true}
+          />
+          <KeyInput
+            label="Indicate Interest"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_application.interest")}
+            name="indicate_interest"
+            copyable={true}
+          />
+          <KeyInput
+            label="Loan Disbursal"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_application.disbursal")}
+            name="loan_disbursal"
+            copyable={true}
+          />
+          <KeyInput
+            label="Loan Repayment"
+            placeholder="No URL configured"
+            value={getWebhookUrl("loan_repayment.initiate")}
+            name="loan_repayment"
+            copyable={true}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

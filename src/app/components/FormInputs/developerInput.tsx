@@ -9,7 +9,7 @@ interface KeysProps {
   label: string;
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   required?: boolean;
   error?: any;
@@ -55,8 +55,9 @@ const KeyInput: React.FC<KeysProps> = ({
           value={value}
           onChange={onChange}
           name={name}
-          className={`w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] text-[#8A8B9F] font-normal `}
+          className={`w-full relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 outline-none focus:outline-none text-[14px] text-[#8A8B9F] font-normal`}
           placeholder={placeholder}
+          disabled
         />
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center space-x-1">
         

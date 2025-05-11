@@ -1,53 +1,68 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ConfirmPin } from "./pinthunk";
 
-interface pin {
-  ConfirmPin: {
-    loading: boolean;
-    success: boolean;
-    error: string | null;
-    message: string | null;
-  };
+interface PinActionState {
+  loading: boolean;
+  success: boolean;
+  error: string | null;
+  message: string | null;
 }
 
-const initialState: pin = {
-  ConfirmPin: { loading: false, success: false, error: null, message: null },
+interface PinState {
+  interest: PinActionState;
+  accept: PinActionState;
+  reject: PinActionState;
+}
+
+const initialState: PinState = {
+  interest: { loading: false, success: false, error: null, message: null },
+  accept: { loading: false, success: false, error: null, message: null },
+  reject: { loading: false, success: false, error: null, message: null },
 };
 
 const PinSlice = createSlice({
-  name: "confirm-pin",
+  name: "pin",
   initialState,
   reducers: {
-    resetAuthState: (state) => {
-      state.ConfirmPin.loading = false;
-      state.ConfirmPin.success = false;
-      state.ConfirmPin.error = null;
-      state.ConfirmPin.message = null;
-    },
     resetPinState: (state) => {
-      state.ConfirmPin = { ...initialState.ConfirmPin };
+      Object.assign(state, initialState);
+    },
+    resetPinActionState: (
+      state,
+      action: { payload: "interest" | "accept" | "reject" }
+    ) => {
+      state[action.payload] = initialState[action.payload];
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(ConfirmPin.pending, (state) => {
-        state.ConfirmPin.loading = true;
-        state.ConfirmPin.success = false;
-        state.ConfirmPin.error = null;
-        state.ConfirmPin.message = null;
+      .addCase(ConfirmPin.pending, (state, action) => {
+        const { actionType } = action.meta.arg;
+        state[actionType] = {
+          ...initialState[actionType],
+          loading: true,
+        };
       })
       .addCase(ConfirmPin.fulfilled, (state, action) => {
-        state.ConfirmPin.loading = false;
-        state.ConfirmPin.success = !action.payload.error;
-        state.ConfirmPin.message = action.payload.message || "Operation successful";
+        const { actionType } = action.meta.arg;
+        state[actionType] = {
+          loading: false,
+          success: true,
+          error: null,
+          message: action.payload.message || "Operation successful",
+        };
       })
       .addCase(ConfirmPin.rejected, (state, action) => {
-        state.ConfirmPin.loading = false;
-        state.ConfirmPin.success = false;
-        state.ConfirmPin.error = (action.payload as string) || "PIN confirmation failed";
+        const actionType = action.meta.arg.actionType;
+        state[actionType] = {
+          loading: false,
+          success: false,
+          error: action.payload?.message || "PIN confirmation failed",
+          message: null,
+        };
       });
   },
 });
 
-export const {  resetPinState } = PinSlice.actions;
+export const { resetPinState, resetPinActionState } = PinSlice.actions;
 export default PinSlice.reducer;

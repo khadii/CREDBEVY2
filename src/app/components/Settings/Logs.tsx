@@ -5,7 +5,7 @@ import LogsTable from './logsTable'
 export default function Logs() {
   return (
     <div className='mb-[40px]'>
-      <Search  showSeeAll={false}/>
+      <Search  showSeeAll={false} searchName={'Search Logs'}/>
       <LogsTable/>
 
     </div>

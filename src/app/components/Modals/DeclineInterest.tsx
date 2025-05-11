@@ -1,11 +1,14 @@
 "use client";
 import { useDashboard } from "@/app/Context/DahboardContext";
-import { _single_loan_products_request, accept_interest, approve_loan, reject_loan } from "@/app/Redux/Loan_request/loan_request_thunk";
+import { 
+  _single_loan_products_request, 
+  reject_loan 
+} from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
 import { ConfirmPin } from "@/app/Redux/pin/pinthunk";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useRouter } from "next/navigation";
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -16,34 +19,27 @@ interface ModalProps {
   onClose: () => void;
 }
 
-interface ErrorsState {
-  pin?: string;
-}
-
-const PinModal: React.FC<ModalProps> = ({ 
-  isOpen, 
-  onClose, 
-}) => {
-  const { authPin, setAuhPin, selectedIds, refreshData, setInterested, refreshSingle } = useDashboard();
+const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } = useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
-  const [errors, setErrors] = useState<ErrorsState>({});
+  const [errors, setErrors] = useState({ pin: '' });
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
-  const [refreshid, setrefreshid] = useState<ErrorsState>();
+
   const {
     loading: pinLoading,
     success: pinSuccess,
     error: pinError,
-    message: pinMessage
-  } = useSelector((state: RootState) => state.Pin.ConfirmPin);
+    message: pinMessage,
+  } = useSelector((state: RootState) => state.Pin.reject);
 
   const {
     rejectLoading,
-  rejectSuccess,
-  rejectError,
-  rejectData,
+    rejectSuccess,
+    rejectError,
+    rejectData,
   } = useSelector((state: RootState) => state.loanCondition);
 
   const getProductCookie = () => {
@@ -60,12 +56,9 @@ const PinModal: React.FC<ModalProps> = ({
     }
   };
 
-
-
-
   const resetAll = () => {
     setPin(["", "", "", ""]);
-    setErrors({});
+    setErrors({ pin: '' });
     setBorderRed(false);
     dispatch(resetPinState());
   };
@@ -75,22 +68,9 @@ const PinModal: React.FC<ModalProps> = ({
     onClose();
   };
 
-  // useEffect(() => {
-  //   if (rejectSuccess) {
-  //     toast.success(rejectData.message);
-  //     onClose();
-  //     resetAll();
-  //   }
-  //   if (rejectError) {
-  //     toast.error(rejectError);
-  //     resetAll();
-  //     onClose();
-  //   }
-  // }, [rejectSuccess, rejectError, rejectData, dispatch]);
-
   useEffect(() => {
     if (pinSuccess) {
-      toast.success(pinMessage);
+      toast.success(pinMessage || "PIN verified successfully");
       resetAll();
     }
     if (pinError) {
@@ -100,9 +80,26 @@ const PinModal: React.FC<ModalProps> = ({
     }
   }, [pinSuccess, pinError, pinMessage, dispatch]);
 
+  useEffect(() => {
+    if (rejectSuccess) {
+      const productData = getProductCookie();
+      dispatch(_single_loan_products_request({ id: productData }));
+      refreshData();
+      toast.success(rejectData?.message || "Request declined successfully");
+      onClose();
+    }
+    if (rejectError) {
+      const productData = getProductCookie();
+      toast.error(rejectError || "Failed to decline request");
+      dispatch(_single_loan_products_request({ id: productData }));
+      setInterested(true);
+      onClose();
+    }
+  }, [rejectSuccess, rejectError, rejectData, dispatch]);
+
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
-      setErrors({});
+      setErrors({ pin: '' });
     }
     if (!/^\d?$/.test(value)) return;
     
@@ -116,7 +113,7 @@ const PinModal: React.FC<ModalProps> = ({
   };
 
   const validate = (): boolean => {
-    const newErrors: ErrorsState = {};
+    const newErrors = { pin: '' };
     const emptyIndex = pin.findIndex(digit => digit === "");
     
     if (emptyIndex !== -1) {
@@ -125,7 +122,7 @@ const PinModal: React.FC<ModalProps> = ({
     }
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return !newErrors.pin;
   };
 
   const handleSubmit = async () => {
@@ -133,7 +130,8 @@ const PinModal: React.FC<ModalProps> = ({
   
     try {
       const pinPayload = {
-        pin: pin.map(digit => Number(digit))
+        pin: pin.map(digit => Number(digit)),
+        actionType: 'reject' as const
       };
       
       const pinResult = await dispatch(ConfirmPin(pinPayload));
@@ -146,45 +144,7 @@ const PinModal: React.FC<ModalProps> = ({
           pin: pinPayload.pin
         };
   
-        const interestResult = await dispatch(reject_loan(currentRequestParams));
-        
-        // Check the response structure
-        if (interestResult.meta.requestStatus === 'fulfilled') {
-          const response = interestResult.payload as {
-            error: boolean;
-            message: string;
-            data: any;
-          };
-  
-          const productData = getProductCookie();
-          dispatch(_single_loan_products_request({ id: productData }));
-          
-          if (response.error) {
-            toast.error(response.message);
-          } else {
-            toast.success(response.message || "Operation completed successfully");
-          }
-          
-          onClose();
-          setInterested(true);
-        }
-        
-        if (interestResult.meta.requestStatus === 'rejected') {
-          const response = interestResult.payload as {
-            error: boolean;
-            message: string;
-            data: any;
-          } || {
-            error: true,
-            message: "Request failed"
-          };
-  
-          const productData = getProductCookie();
-          toast.error(response.message);
-          dispatch(_single_loan_products_request({ id: productData }));
-          setInterested(true);
-          onClose();
-        }
+        await dispatch(reject_loan(currentRequestParams));
       }
     } catch (error) {
       console.error('Error processing request:', error);
@@ -199,8 +159,8 @@ const PinModal: React.FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
       <div className="relative bg-white rounded-lg">
-        {rejectLoading ? (
-           <AnimatedLoader isLoading={rejectLoading}></AnimatedLoader>
+        {rejectLoading || pinLoading ? (
+          <AnimatedLoader isLoading={rejectLoading || pinLoading} />
         ) : (
           <>
             <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
@@ -234,9 +194,11 @@ const PinModal: React.FC<ModalProps> = ({
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleChange(index, e.target.value)}
-                        className={`w-[80px] h-[80px] border-[4px] ${errors.pin && digit === ""
+                        className={`w-[80px] h-[80px] border-[4px] ${
+                          errors.pin && digit === ""
                             ? "border-red-500 focus:ring-red-500"
-                            : "border-[#156064] focus:ring-[#156064]"} rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
+                            : "border-[#156064] focus:ring-[#156064]"
+                        } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
                       />
                     ))}
                   </div>

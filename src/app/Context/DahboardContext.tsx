@@ -14,6 +14,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [LoanApproved, setLoanApproved] = useState<boolean>(false);
   const [LoanDeclined, setLoanDeclined] = useState<boolean>(false);
   const [filter, setFilter]= useState<boolean>(false);
+  const [currentAction, setCurrentAction] = useState<'interest' | 'accept'>('interest');
   
   const [authPin, setAuhPin] = useState();
   const [pendingRequestCount, setPendingRequestCount] = useState<number>(0);
@@ -99,6 +100,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setLoanDeclined={setLoanDeclined}
         filter={filter}
         setFilter={setFilter}
+        currentAction={currentAction}
+        setCurrentAction={setCurrentAction}
       />
     </Provider>
   );

@@ -2,7 +2,6 @@
 import { useDashboard } from "@/app/Context/DahboardContext";
 import {
   _single_loan_products_request,
-  accept_interest,
   approve_loan,
 } from "@/app/Redux/Loan_request/loan_request_thunk";
 import { resetPinState } from "@/app/Redux/pin/pinkslice";
@@ -16,47 +15,45 @@ import Cookies from "js-cookie";
 import AnimatedLoader from "../animation";
 import LoanModal from "./indicateInteresteDetails";
 import IndicateSuccessModal from "./indicateSuccessModal";
+import { resetApproveState } from "@/app/Redux/Loan_request/loanConditon";
+
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface ErrorsState {
-  pin?: string;
-}
-
 const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { authPin, setAuhPin, selectedIds, refreshData, setInterested } =
     useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
-  const [errors, setErrors] = useState<ErrorsState>({});
+  const [errors, setErrors] = useState({ pin: '' });
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [borderRed, setBorderRed] = useState(false);
-  const [state, setState] = useState(1); // Added state management
+  const [state, setState] = useState(1);
 
   const {
     loading: pinLoading,
     success: pinSuccess,
     error: pinError,
     message: pinMessage,
-  } = useSelector((state: RootState) => state.Pin.ConfirmPin);
+  } = useSelector((state: RootState) => state.Pin.accept);
 
   const { approveLoading, approveSuccess, approveError, approveData } =
     useSelector((state: RootState) => state.loanCondition);
 
   const resetAll = () => {
     setPin(["", "", "", ""]);
-    setErrors({});
+    setErrors({ pin: '' });
     setBorderRed(false);
     dispatch(resetPinState());
   };
 
   const handleClose = () => {
     resetAll();
-    setState(1); // Reset to initial state when closing
+    setState(1);
     onClose();
   };
 
@@ -76,8 +73,9 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (pinSuccess) {
-      toast.success(pinMessage);
+      toast.success(pinMessage || "PIN verified successfully");
       resetAll();
+      
       const pinPayload = {
         pin: pin.map((digit) => Number(digit)),
       };
@@ -88,12 +86,9 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         pin: pinPayload.pin,
       };
 
-       dispatch(
-        approve_loan(currentRequestParams)
-      );
-
-     
+      dispatch(approve_loan(currentRequestParams));
     }
+    
     if (pinError) {
       toast.error(pinError);
       setBorderRed(true);
@@ -103,35 +98,28 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (approveSuccess) {
-     
-        
       const productData = getProductCookie();
       dispatch(_single_loan_products_request({ id: productData }));
       refreshData();
-      toast.success(approveData.message|| "Loan approved successfully");
-      setState(3)
-     }
-
-
+      toast.success(approveData?.message || "Loan approved successfully");
+      setState(3);
+    dispatch(resetApproveState());
+    }
 
     if (approveError) {
-      // const errorResponse = (approvalResult as any).payload || {
-      //   error: true,
-      //   message: "Failed to process approval request",
-      // };
-
       const productData = getProductCookie();
       toast.error(approveError || "Loan approval failed");
       refreshData();
       dispatch(_single_loan_products_request({ id: productData }));
       setInterested(true);
       handleClose();
+ dispatch(resetApproveState());
     }
   }, [approveSuccess,approveError,dispatch]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
-      setErrors({});
+      setErrors({ pin: '' });
     }
     if (!/^\d?$/.test(value)) return;
 
@@ -145,7 +133,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   };
 
   const validate = (): boolean => {
-    const newErrors: ErrorsState = {};
+    const newErrors = { pin: '' };
     const emptyIndex = pin.findIndex((digit) => digit === "");
 
     if (emptyIndex !== -1) {
@@ -154,7 +142,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return !newErrors.pin;
   };
 
   const handleSubmit = async () => {
@@ -163,11 +151,10 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     try {
       const pinPayload = {
         pin: pin.map((digit) => Number(digit)),
+        actionType: 'accept' as const
       };
 
-     await dispatch(ConfirmPin(pinPayload));
-
-
+      await dispatch(ConfirmPin(pinPayload));
     } catch (error) {
       console.error("Error processing request:", error);
       toast.error("Failed to process request");
@@ -191,7 +178,6 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 setState={setState}
                 titleName={"Accept Request"}
                 buttonName={"Accept Request"} 
-               
               />
             )}
             {state === 2 && (
@@ -268,8 +254,8 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 open={isOpen}
                 setOpen={handleClose}
                 setState={setState}
-                disc={"You have successfully disbursed loan"}
-                title={"acceptance of Request Successful"}
+                disc={"You Have Successfully Disbursed Loan"}
+                title={"Acceptance Of Request Successful"}
                 header={"Accept Request"}
               />
             )}

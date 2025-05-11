@@ -49,7 +49,7 @@ const LogsTable = () => {
       case "Date and Time":
         return <div className="truncate max-w-36">{formatDate(data.created_at)}</div>;
       case "User":
-        return <div className="truncate max-w-36">{data.user || "N/A"}</div>;
+        return <div className="truncate max-w-36">{data.user_id || "N/A"}</div>;
       case "Description":
         return <div className="truncate max-w-28">{data.action}</div>;
       case "IP Address":

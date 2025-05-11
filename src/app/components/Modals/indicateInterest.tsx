@@ -21,15 +21,11 @@ interface ModalProps {
   onClose: () => void;
 }
 
-interface ErrorsState {
-  pin?: string;
-}
-
 const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const { authPin, setAuhPin, selectedIds, refreshData, setInterested } =
     useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
-  const [errors, setErrors] = useState<ErrorsState>({});
+  const [errors, setErrors] = useState({ pin: '' });
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -41,7 +37,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     success: pinSuccess,
     error: pinError,
     message: pinMessage,
-  } = useSelector((state: RootState) => state.Pin.ConfirmPin);
+  } = useSelector((state: RootState) => state.Pin.interest);
 
   const { acceptLoading, acceptSuccess, acceptError, acceptData } = useSelector(
     (state: RootState) => state.loanrejectaccept
@@ -49,7 +45,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const resetAll = () => {
     setPin(["", "", "", ""]);
-    setErrors({});
+    setErrors({ pin: '' });
     setBorderRed(false);
     dispatch(resetPinState());
   };
@@ -76,7 +72,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (pinSuccess) {
-      toast.success(pinMessage);
+      toast.success(pinMessage || "PIN verified successfully");
       resetAll();
     }
     if (pinError) {
@@ -94,7 +90,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
-      setErrors({});
+      setErrors({ pin: '' });
     }
     if (!/^\d?$/.test(value)) return;
 
@@ -108,7 +104,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   };
 
   const validate = (): boolean => {
-    const newErrors: ErrorsState = {};
+    const newErrors = { pin: '' };
     const emptyIndex = pin.findIndex((digit) => digit === "");
 
     if (emptyIndex !== -1) {
@@ -117,7 +113,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return !newErrors.pin;
   };
 
   const handleSubmit = async () => {
@@ -126,6 +122,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     try {
       const pinPayload = {
         pin: pin.map((digit) => Number(digit)),
+        actionType: 'interest' as const
       };
 
       const pinResult = await dispatch(ConfirmPin(pinPayload));
@@ -155,11 +152,10 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
-            handleClose(); // Close on error
+            handleClose();
           } else {
             toast.success(response.message || "Loan approved successfully");
             setInterested(true);
-            // State will be updated to 3 via the useEffect watching acceptSuccess
           }
         }
 

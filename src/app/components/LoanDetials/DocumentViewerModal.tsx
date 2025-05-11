@@ -1,7 +1,4 @@
-"use client";
-
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimatedLoader from "../animation";
 
 interface DocumentViewerModalProps {
@@ -13,38 +10,40 @@ interface DocumentViewerModalProps {
 const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentViewerModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [fileType, setFileType] = useState<string | null>(null);
 
-  const getFileType = (url: string) => {
-    const extension = url.split('.').pop()?.toLowerCase();
-    return extension;
-  };
+  useEffect(() => {
+    const inferFileType = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(documentUrl, { method: 'HEAD' });
+        const contentType = response.headers.get('Content-Type');
 
-  // In case the URL doesn't have a file extension, try to infer from the MIME type
-  const getFileTypeFromUrl = (url: string) => {
-    // First try extension
-    const fileType = getFileType(url);
-    if (fileType && ['pdf', 'jpg', 'jpeg', 'png', 'gif'].includes(fileType)) {
-      return fileType;
-    }
-    
-    // For URLs like Cloudinary/other CDNs that might not have extensions
-    if (url.includes('ucarecdn.com') || !fileType) {
-      // Safe fallback to image if URL looks like an image CDN
-      return 'image';
-    }
-    
-    return 'unknown';
-  };
+        if (contentType?.includes('pdf')) {
+          setFileType('pdf');
+        } else if (contentType?.includes('image')) {
+          setFileType('image');
+        } else {
+          setFileType('unknown');
+        }
+      } catch (error) {
+        console.error("Failed to fetch document headers", error);
+        setFileType('unknown');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    inferFileType();
+  }, [documentUrl]);
 
   const renderDocument = () => {
-    const fileType = getFileTypeFromUrl(documentUrl);
-
-    switch(fileType) {
+    switch (fileType) {
       case 'pdf':
         return (
-          <iframe 
-            src={documentUrl} 
-            className="w-full h-full" 
+          <iframe
+            src={documentUrl}
+            className="w-full h-full"
             onLoad={() => setIsLoading(false)}
             onError={() => {
               setIsLoading(false);
@@ -52,14 +51,10 @@ const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentVie
             }}
           />
         );
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-      case 'image': // Added generic image type
+      case 'image':
         return (
-          <img 
-            src={documentUrl} 
+          <img
+            src={documentUrl}
             alt={documentName}
             className="max-w-full max-h-full object-contain"
             onLoad={() => setIsLoading(false)}
@@ -88,19 +83,17 @@ const DocumentViewerModal = ({ documentUrl, documentName, onClose }: DocumentVie
           </button>
         </div>
         <div className="flex-1 p-4 overflow-auto relative">
-          {isLoading && (
-            <AnimatedLoader isLoading={isLoading}/>
-          )}
+          {isLoading && <AnimatedLoader isLoading={isLoading} />}
           {imageError ? (
             <div className="flex items-center justify-center h-full w-full">
               <p>Error loading document. Please try downloading instead.</p>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full w-full">{ renderDocument()}</div>
-           
+            <div className="flex items-center justify-center h-full w-full">
+              {renderDocument()}
+            </div>
           )}
         </div>
-       
       </div>
     </div>
   );

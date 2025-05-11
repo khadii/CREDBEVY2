@@ -15,6 +15,7 @@ import { _create_loan_product } from "@/app/Redux/Loan_Product/loan_product_thun
 import toast from "react-hot-toast";
 import { AppDispatch } from "@/app/Redux/store";
 import { useRouter } from "next/navigation";
+import { LuPercent } from "react-icons/lu";
 
 export default function Form() {
   const [unsecured, setUnsecured] = useState(false);
@@ -79,53 +80,52 @@ export default function Form() {
       1,
       "At least one collateral is required"
     ),
-    
-  minCreditScore: Yup.string()
-  .max(3, "Minimum Credit Score should not exceed three digits")
-  .required("Minimum Credit Score is required")
-  .test(
-    "min-credit-limit",
-    "Minimum Credit Score should not be below 300",
-    (value) => !value || parseInt(value) >= 300 // Ensure minCreditScore is at least 300
-  )
-  .test(
-    "min-max-credit",
-    "Minimum Credit Score should not be greater than Maximum Credit Score",
-    function (value) {
-      const { maxCreditScore } = this.parent;
-      return (
-        !value ||
-        !maxCreditScore ||
-        parseInt(value) <= parseInt(maxCreditScore)
-      );
-    }
-  ),
-maxCreditScore: Yup.string()
-  .max(3, "Maximum Credit Score should not exceed three digits")
-  .required("Maximum Credit Score is required")
-  .test(
-    "max-credit-limit",
-    "Maximum Credit Score should be between 300 and 850",
-    (value) => !value || (parseInt(value) >= 300 && parseInt(value) <= 850) // Ensure maxCreditScore is between 300 and 850
-  )
-  .test(
-    "max-min-credit",
-    "Maximum Credit Score must be greater than or equal to Minimum Credit Score",
-    function (value) {
-      const { minCreditScore } = this.parent;
-      return (
-        !value ||
-        !minCreditScore ||
-        parseInt(value) >= parseInt(minCreditScore)
-      );
-    }
-  ),
+
+    minCreditScore: Yup.string()
+      .max(3, "Minimum Credit Score should not exceed three digits")
+      .required("Minimum Credit Score is required")
+      .test(
+        "min-credit-limit",
+        "Minimum Credit Score should not be below 300",
+        (value) => !value || parseInt(value) >= 300 // Ensure minCreditScore is at least 300
+      )
+      .test(
+        "min-max-credit",
+        "Minimum Credit Score should not be greater than Maximum Credit Score",
+        function (value) {
+          const { maxCreditScore } = this.parent;
+          return (
+            !value ||
+            !maxCreditScore ||
+            parseInt(value) <= parseInt(maxCreditScore)
+          );
+        }
+      ),
+    maxCreditScore: Yup.string()
+      .max(3, "Maximum Credit Score should not exceed three digits")
+      .required("Maximum Credit Score is required")
+      .test(
+        "max-credit-limit",
+        "Maximum Credit Score should be between 300 and 850",
+        (value) => !value || (parseInt(value) >= 300 && parseInt(value) <= 850) // Ensure maxCreditScore is between 300 and 850
+      )
+      .test(
+        "max-min-credit",
+        "Maximum Credit Score must be greater than or equal to Minimum Credit Score",
+        function (value) {
+          const { minCreditScore } = this.parent;
+          return (
+            !value ||
+            !minCreditScore ||
+            parseInt(value) >= parseInt(minCreditScore)
+          );
+        }
+      ),
     minimumIncome: Yup.string()
       .max(999999999, "Minimum Income should not exceed ₦999,999,999")
       .required("Minimum Income is required"),
     employmentStatus: Yup.string().required("Employment Status is required"),
-    percentage: Yup.string()
-      .max(2, "percentage should not exceed two numbers"),
+    percentage: Yup.string().max(2, "percentage should not exceed two numbers"),
     Discountduration: Yup.string(),
   });
 
@@ -211,41 +211,43 @@ maxCreditScore: Yup.string()
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
             <div>
               <AmountInput
-                label="Maximum Amount"
-                placeholder="Enter maximum amount"
-                value={formatNaira(formik.values.maxAmount)}
-                onChange={(e) => {
-                  let newValue = e.target.value.replace(/,/g, "");
-                  if (/^\d{0,9}$/.test(newValue)) {
-                    if (
-                      newValue >= formik.values.minAmount ||
-                      formik.values.minAmount === ""
-                    ) {
-                      formik.setFieldValue("maxAmount", newValue);
-                    }
-                  }
-                }}
-                error={formik.touched.maxAmount && formik.errors.maxAmount}
-                required
-              />
-            </div>
-            <div>
-              <AmountInput
                 label="Minimum Amount"
                 placeholder="Enter minimum amount"
                 value={formatNaira(formik.values.minAmount)}
                 onChange={(e) => {
                   let newValue = e.target.value.replace(/,/g, "");
                   if (/^\d{0,9}$/.test(newValue)) {
-                    if (
-                      newValue <= formik.values.maxAmount ||
-                      formik.values.maxAmount === ""
-                    ) {
+                    // if (
+                    //   newValue <= formik.values.maxAmount ||
+                    //   formik.values.maxAmount === ""
+                    // )
+                    {
                       formik.setFieldValue("minAmount", newValue);
                     }
                   }
                 }}
                 error={formik.touched.minAmount && formik.errors.minAmount}
+                required
+              />
+            </div>
+            <div>
+              <AmountInput
+                label="Maximum Amount"
+                placeholder="Enter maximum amount"
+                value={formatNaira(formik.values.maxAmount)}
+                onChange={(e) => {
+                  let newValue = e.target.value.replace(/,/g, "");
+                  if (/^\d{0,9}$/.test(newValue)) {
+                    // if (
+                    //   newValue >= formik.values.minAmount ||
+                    //   formik.values.minAmount === ""
+                    // )
+                    {
+                      formik.setFieldValue("maxAmount", newValue);
+                    }
+                  }
+                }}
+                error={formik.touched.maxAmount && formik.errors.maxAmount}
                 required
               />
             </div>
@@ -293,28 +295,35 @@ maxCreditScore: Yup.string()
                 placeholder="Select Duration"
               />
             </div>
-            <InputField
-              label="Interest Rate"
-              placeholder="Enter Interest Rate"
-              value={
-                formik.values.interestRate
-                  ? `${formik.values.interestRate}%`
-                  : ""
-              }
-              onChange={(e) => {
-                let newValue = e.target.value;
-
-                // Remove the % symbol before validation
-                newValue = newValue.replace(/%/g, "");
-
-                // Validate the input (allow up to 2 digits and optional decimal)
-                if (/^\d{0,2}(\.\d{0,1})?$/.test(newValue)) {
-                  formik.setFieldValue("interestRate", newValue);
+            <div className="relative">
+              <div className="absolute top-9 z-10 right-3">
+                <LuPercent />
+              </div>
+              <InputField
+                label="Interest Rate"
+                placeholder="Enter Interest Rate"
+                value={
+                  formik.values.interestRate
+                    ? `${formik.values.interestRate}`
+                    : ""
                 }
-              }}
-              error={formik.touched.interestRate && formik.errors.interestRate}
-              required
-            />
+                onChange={(e) => {
+                  let newValue = e.target.value;
+
+                  // Remove the % symbol before validation
+                  newValue = newValue.replace(/%/g, "");
+
+                  // Validate the input (allow up to 2 digits and optional decimal)
+                  if (/^\d{0,2}(\.\d{0,1})?$/.test(newValue)) {
+                    formik.setFieldValue("interestRate", newValue);
+                  }
+                }}
+                error={
+                  formik.touched.interestRate && formik.errors.interestRate
+                }
+                required
+              />
+            </div>
           </div>
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
             <div>
@@ -438,12 +447,15 @@ maxCreditScore: Yup.string()
             Discount
           </p>
           <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
-            <div>
+            <div className="relative">
+              <div className="absolute top-9 z-10 right-3">
+                <LuPercent />
+              </div>
               <InputField
                 label="Percentage"
                 placeholder="Enter Percentage"
                 value={
-                  formik.values.percentage ? `${formik.values.percentage}%` : ""
+                  formik.values.percentage ? `${formik.values.percentage}` : ""
                 }
                 onChange={(e) => {
                   let newValue = e.target.value;
@@ -457,7 +469,6 @@ maxCreditScore: Yup.string()
                   }
                 }}
                 error={formik.touched.percentage && formik.errors.percentage}
-                required
               />
             </div>
             <div>
@@ -471,7 +482,6 @@ maxCreditScore: Yup.string()
                   formik.touched.Discountduration &&
                   formik.errors.Discountduration
                 }
-                required
                 options={DiscountdurationOptions}
                 placeholder="Select Discount Duration"
               />

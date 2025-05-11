@@ -4,12 +4,14 @@ import React from "react";
 import { LucideSearch, ListFilter } from "lucide-react";
 import FilterModal from "./Modals/Filter";
 import { useDashboard } from "../Context/DahboardContext";
+import { string } from "yup";
 
 interface LoanRequestActionsProps {
   onSearchClick?: () => void;
   onFilterClick?: () => void;
   onSeeAllClick?: () => void;
   showSeeAll?: boolean; // Optional prop to control visibility of the "See All" link
+  searchName?:string
 }
 
 
@@ -18,6 +20,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   onFilterClick,
   onSeeAllClick,
   showSeeAll = true, // Default value is true
+  searchName='Search Request'
 }) => {
   const { filter, setFilter} = useDashboard();
   return (
@@ -28,7 +31,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
           className="flex items-center gap-2 pr-[46px] pl-[17px] py-3 border rounded-lg bg-white text-[#8A8B9F] font-bold text-xs"
         >
           <LucideSearch size={16} color="#8A8B9F" />
-          Search Request
+         { searchName}
         </button>
         <button
           onClick={()=>setFilter(true)}

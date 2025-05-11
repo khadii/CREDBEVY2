@@ -174,6 +174,7 @@ export default function Repayment({
           onSearchClick={onSearchClick}
           onFilterClick={onFilterClick}
           onSeeAllClick={onSeeAllClick}
+          searchName="Search Repayment"
         />
         <Repayment_Table
           laon_table_data_all={laon_table_data_all}

@@ -115,8 +115,8 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
     {
       label: 'Fees:',
       value: titleName === 'Indicate Interest'
-        ? ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.indication_of_interest_expense_fee || 0))
-        : ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.approval_expense_fee || 0))
+        ?<span className='text-base text-[#156064] font-semibold'>{( formatCurrency(LoanRequest_Data?.loan?.partner_info?.indication_of_interest_expense_fee || 0))}</span> 
+        :<span className='text-base text-[#156064] font-semibold'>{ ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.approval_expense_fee || 0))}</span>
     }
     
   ];
