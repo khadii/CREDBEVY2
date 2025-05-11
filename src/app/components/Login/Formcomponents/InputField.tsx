@@ -16,7 +16,7 @@ export const FormField = ({ type, name, placeholder }: FormFieldProps) => (
       type={type}
       id={name}
       name={name}
-      autoComplete="off"
+      // autoComplete="off"
       // onFocus={(e:any) => e.target.removeAttribute("readonly")}
       placeholder=" "
       className="w-full rounded-[4px] pt-7  border border-[#8A8B9F] px-6 h-[64px] focus:border-[#8A8B9F] focus:outline-none text-[#333333] peer "
