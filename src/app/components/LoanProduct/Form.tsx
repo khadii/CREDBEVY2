@@ -41,7 +41,7 @@ export default function Form() {
     "4 weeks",
     "5 weeks",
   ];
-  const employmentStatus = ["Employed", "Unemployed"];
+  const employmentStatus = ["Employed", "Unemployed","Selfemployed", "Student"];
 
   const validationSchema = Yup.object({
     Product_Name: Yup.string().required("Product Name is required"),
