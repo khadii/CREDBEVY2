@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DashboardProvider, useDashboard } from "./Context/DahboardContext";
 import AnimatedLoader from "./components/animation";
+import LogoutModal from "./components/Modals/LogoutModal";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,8 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <DashboardProvider>{children}
-        
+        <DashboardProvider>
+          {children}
+           
         </DashboardProvider>
 
 

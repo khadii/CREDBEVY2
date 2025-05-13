@@ -263,6 +263,7 @@ export default function Form() {
                 required
                 options={loanOption}
                 placeholder="Select Loan Type"
+                disabledOptions={["Business Loan", "Mortgage Loan"]} // Add this line
               />
             </div>
             <div>
@@ -505,4 +506,4 @@ export default function Form() {
   );
 }
 
-// 300 – 579: Poor 580 – 669: Fair 670 – 739: Good 740 – 799: Very Good 800 – 850: Excelle
+

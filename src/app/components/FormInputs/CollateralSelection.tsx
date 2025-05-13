@@ -10,7 +10,7 @@ interface CollateralSelectionProps {
   onChange?: (selectedOptions: string[]) => void;
   required?: boolean;
   error?: any; // Add error prop
-  visibility:any
+  visibility: any;
 }
 
 const CollateralSelection: React.FC<CollateralSelectionProps> = ({
@@ -88,34 +88,43 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div
-        className={`relative border rounded-[4px] bg-[#FAFAFA] h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer ${
+        className={`relative border rounded-[4px] bg-[#FAFAFA] min-h-[40px] border-[#DCDCE4] flex items-center px-2 cursor-pointer ${
           error ? 'border-red-500' : ''
         }`}
         onClick={toggleDropdown}
       >
-        <div className="flex flex-wrap items-center flex-grow">
+        <div className="flex flex-wrap items-center flex-grow gap-1 py-1">
           {selectedOptions.map((option) => (
             <div
               key={option}
-              className="flex items-center m-1 px-3 h-[32px] rounded-md bg-[#F0F0FF] text-[#156064] text-[12px] font-bold"
+              className="flex items-center px-3 h-[32px] rounded-md bg-[#F0F0FF] text-[#156064] text-[12px] font-bold"
             >
               <span className="mr-1">{option}</span>
-              <button onClick={() => removeOption(option)}>
-                <X size={14} color="#156064" className="border-l pl-1" />
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeOption(option);
+                }}
+                className="ml-1"
+              >
+                <X size={14} color="#156064" />
               </button>
             </div>
           ))}
         </div>
-        <button
-          onClick={toggleDropdown}
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleDropdown();
+          }}
           className="ml-auto text-gray-500 hover:text-gray-700"
         >
           <ChevronDown size={18} color="#333333" />
-        </button>
+        </div>
       </div>
 
       {isDropdownOpen && (
-        <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md">
+        <div className="absolute z-10 mt-1 bg-white border border-gray-200 rounded-md shadow-lg w-full max-w-[500px]">
           <div className="flex items-center px-2 py-1 border-b">
             <Search size={16} color="#333333" className="mr-2" />
             <input
@@ -123,7 +132,8 @@ const CollateralSelection: React.FC<CollateralSelectionProps> = ({
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full outline-none text-[#156064] text-[12px] font-bold"
+              className="w-full outline-none text-[#156064] text-[12px] font-bold py-2"
+              autoFocus
             />
           </div>
           <ul className="py-1 max-h-60 overflow-auto text-[#156064] text-[12px] font-bold">

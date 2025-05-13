@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { checkTokenConsistency, revalidateToken } from '@/app/Redux/auth/authSlice';
 import AnimatedLoader from '../animation';
 import { useDashboard } from '@/app/Context/DahboardContext';
+import LogoutModal from '../Modals/LogoutModal';
+import PrivacyPolicy from '../Modals/Privacy_policy';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 
@@ -26,6 +28,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [dispatch]);
   // const { isLoading, setIsLoading} = useDashboard();
   // const isLoading=true;
+    const { logout,setLogout,privacyPolicy,setPrivacyPolicy} = useDashboard();
   return (
     <div className='w-full'>
       <div className='flex  flex-col w-full'>
@@ -38,7 +41,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className='sticky top-0 bg-white z-50'><TopBar /></div>
             <div className='px-[27px]  pt-[48px] bg-[#FAFAFA] h-full'>
               {children}
-              
+             {logout &&( <LogoutModal onClose={()=>setLogout(false)}/> )}
+              { privacyPolicy && (<PrivacyPolicy onClose={()=>setPrivacyPolicy(false)}/> )}
             </div>
           </div>
         </div>
