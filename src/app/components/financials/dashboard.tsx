@@ -19,9 +19,9 @@ export default function Dashboard() {
   const tabs = [
     { name: "Summary" },
     { name: "Trends and History" },
-    { name: "Financial Statement" },
+    // { name: "Financial Statement" },
     { name: "Transactions History" },
-    { name: "Goals and Targets" },
+    // { name: "Goals and Targets" },
   ];
 
   const [activeTab, setActiveTab] = useState<string>(tabs[0].name);
