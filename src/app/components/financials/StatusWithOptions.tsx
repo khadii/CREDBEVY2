@@ -25,26 +25,26 @@ interface StatusWithOptionsProps {
     };
   
     const statusStyles = {
-      active: "border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2]",
-      repaid: "border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2]",
+      completed: "border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2]",
+      pending: "border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2]",
       overdue: "border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1]",
-      inactive: "border-[#FFF2C2] bg-[#FFFBEF] text-[#F4C418]"
+      failed: "border-[#FFF2C2] bg-[#FFFBEF] text-[#F4C418]"
     };
   
     const statusColors = {
-      active: "#42BE65",
-      repaid: "#42BE65",
+      completed: "#42BE65",
+      pending: "#42BE65",
       overdue: "#E33A24",
-      inactive: "#F4C418"
+      failed: "#F4C418"
     };
   
-    const statusKey = status.toLowerCase() as keyof typeof statusStyles;
+    const statusKey = status?.toLowerCase() as keyof typeof statusStyles;
 
     return (
       <div className="flex items-center space-x-[18px] ">
         <button className={`flex items-center border px-2 h-[23px] rounded-full text-xs font-semibold ${statusStyles[statusKey]}`}>
           <FaCircle className={`w-2 h-2 mr-1`} style={{ color: statusColors[statusKey] }} />
-          {status}
+          {status.toLowerCase()}
         </button>
         {/* <div className="">
           <SlOptionsVertical 

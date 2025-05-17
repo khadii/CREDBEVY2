@@ -36,6 +36,12 @@ import loanRepaymentsTrendReducer from '../Redux/Repayment/loanRepaymentsTrendSl
 import auditLogsReducer from '../Redux/logs/logs_slice';
 import apiKeysSliceReduce from '../Redux/developer/fetch_api_keys'
 import webhookReduce from '../Redux/developer/WebhookState'
+import accountSliceReducer from '../Redux/Financials/Accouunt/getAccountslice'
+import financialStatsSliceReducer from '../Redux/Financials/stat/stat_slice'
+import TransactionsSliceReducer from '../Redux/Financials/TransactionHistory/TransactionHistory_slice'
+import customerGrowthTrendReducer from '../Redux/Financials/customer_growth_trend/customer_growth_trend_slice'
+import repaymentVsDefaultTrendReducer from '../Redux/Financials/repayment_vs_default_trend/repayment_vs_default_trend_slice'
+import revenueVsProfitTrendSlice from '../Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_slice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -73,7 +79,13 @@ export const store = configureStore({
     loanRepaymentsTrend: loanRepaymentsTrendReducer,
     auditLogs: auditLogsReducer,
     apiKey:apiKeysSliceReduce,
-    webhook:webhookReduce
+    webhook:webhookReduce,
+    account:accountSliceReducer,
+    financialStats:financialStatsSliceReducer,
+     Transaction:TransactionsSliceReducer,
+     customer:customerGrowthTrendReducer,
+     repaymentVsDefaultTrend:repaymentVsDefaultTrendReducer,
+     revenueVsProfitTrend:revenueVsProfitTrendSlice
   },
 });
 

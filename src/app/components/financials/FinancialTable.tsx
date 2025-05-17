@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TableWithPagination from '../table/tablewWthPagination';
 import { CustomCheckbox } from '../CheckboxForTable/TablecheckBox';
 import { StatusWithOptions } from './StatusWithOptions';
+import { formatCurrency } from '@/app/lib/utillity/formatCurrency';
 
 
 interface StatusWithOptionsProps {
@@ -92,7 +93,7 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
     setIsHeaderChecked(newHeaderState);
 
     if (newHeaderState) {
-      const allUuids = laon_table_data_all.map((item: any) => item.uuid);
+      const allUuids = laon_table_data_all.map((item: any) => item.transaction_reference);
       setSelectedIds(allUuids);
     } else {
       setSelectedIds([]);
@@ -107,10 +108,10 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
     />
   );
 
-  const renderStatus = (status: string, uuid: string) => (
+  const renderStatus = (status: string, transaction_reference: string) => (
     <StatusWithOptions 
       status={status} 
-      uuid={uuid} 
+      uuid={transaction_reference} 
       activeDropdown={activeDropdown} 
       setActiveDropdown={setActiveDropdown} 
     />
@@ -124,26 +125,26 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
           onClick={(e) => e.stopPropagation()}
         >
           <CustomCheckbox
-            id={item.uuid}
-            checked={selectedIds.includes(item.uuid)}
-            onChange={() => handleToggle(item.uuid)}
+            id={item.transaction_reference}
+            checked={selectedIds.includes(item?.transaction_reference)}
+            onChange={() => handleToggle(item?.transaction_reference)}
           />
-          <p className="truncate max-w-[120px]">{item.Payee}</p>
+          <p className="truncate max-w-[120px]">{item?.account_name}</p>
         </div>
       </td>
-      <td className="truncate max-w-[200px] py-4 px-6">{item.Type}</td>
+      <td className="truncate max-w-[200px] py-4 px-6">{item?.transaction_type}</td>
       <td className="truncate max-w-[120px] py-4 px-6">
-        {item.Amount}
+        {formatCurrency(item.amount)}
       </td>
       <td className="truncate max-w-[35px] py-4 px-6">
-        {item.Transactions_ID}
+        {item?.transaction_reference}
       </td>
-      <td className="truncate max-w-[110px] py-4 px-6">{item.Date}</td>
+      <td className="truncate max-w-[110px] py-4 px-6">{item.transaction_date}</td>
       <td className="truncate max-w-[154px] py-4 px-6">
-        {item.Method}
+        {item?.transaction_type}
       </td>
       <td className="truncate max-w-[154px] py-4 px-4">
-        {renderStatus(item.status, item.uuid)}
+        {renderStatus(item.verified, item.transaction_reference)}
       </td>
     </>
   );

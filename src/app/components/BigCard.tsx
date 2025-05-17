@@ -38,3 +38,35 @@ export default function Bigcard({ balance, accountNumber, onFundClick }: WalletB
     </div>
   );
 }
+
+
+
+export  function Smallcard({ balance, accountNumber, onFundClick }: WalletBalanceProps) {
+  const [isHidden, setIsHidden] = useState(false);
+
+  return (
+    <div className="relative w-full mx-auto pl-10 pr-[32px] py-[25px] bg-[#156064] rounded-lg flex justify-between items-center text-white 
+                    transition-transform duration-300 ">
+      <div>
+        <h3 className="text-sm font-semibold">Wallet Balance</h3>
+        <p className="text-2xl font-semibold mt-[8px]">
+           {isHidden ? "***********" : balance}
+        </p>
+        <p className="text-xs text-white font-medium">
+          WALLET ACCOUNT NUMBER: <span className="font-semibold">{accountNumber}</span>
+        </p>
+        <button 
+          onClick={onFundClick} 
+          className=" mt-[5px] flex items-center px-[10px] py-2 bg-white text-[#333333]  rounded-[4px] gap-1"
+        >
+         <p className="text-[16px] font-bold "> + </p>
+         <p className="font-semibold text-[10px]"> Fund Wallet</p>
+        </button>
+      </div>
+      <button onClick={() => setIsHidden(!isHidden)} className="absolute right-5 top-14">
+        {isHidden ? <EyeOff className="w-6 h-6 cursor-pointer opacity-70 hover:opacity-100" /> 
+                  : <Eye className="w-6 h-6 cursor-pointer opacity-70 hover:opacity-100" />}
+      </button>
+    </div>
+  );
+}
