@@ -42,6 +42,8 @@ import TransactionsSliceReducer from '../Redux/Financials/TransactionHistory/Tra
 import customerGrowthTrendReducer from '../Redux/Financials/customer_growth_trend/customer_growth_trend_slice'
 import repaymentVsDefaultTrendReducer from '../Redux/Financials/repayment_vs_default_trend/repayment_vs_default_trend_slice'
 import revenueVsProfitTrendSlice from '../Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_slice'
+import resetapiReducer from '../Redux/developer/reset_api_keyss'
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -85,7 +87,8 @@ export const store = configureStore({
      Transaction:TransactionsSliceReducer,
      customer:customerGrowthTrendReducer,
      repaymentVsDefaultTrend:repaymentVsDefaultTrendReducer,
-     revenueVsProfitTrend:revenueVsProfitTrendSlice
+     revenueVsProfitTrend:revenueVsProfitTrendSlice,
+       resetapi:resetapiReducer
   },
 });
 

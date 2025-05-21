@@ -6,21 +6,40 @@ import KeyInput from "../FormInputs/developerInput";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/app/Redux/store";
-import { fetch_api_keys } from "@/app/Redux/developer/developerthunk";
+import {
+  fetch_api_keys,
+  reset_api_keyss,
+} from "@/app/Redux/developer/developerthunk";
 
 const API_Keys = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, data } = useSelector((state: any) => state.apiKey);
   const [isRotating, setIsRotating] = useState(false);
-  
+  const {
+    loading: resetapiloading,
+    error: resetapierror,
+    data: resetapidata,
+    success: resetapisuccess,
+  } = useSelector((state: any) => state.resetapi);
+
   const handleClick = () => {
     setIsRotating(true);
-    
+    dispatch(reset_api_keyss());
     // Reset the rotation after animation completes
     setTimeout(() => {
       setIsRotating(false);
     }, 1000); // 500ms matches the transition duration
   };
+
+  useEffect(()=>{
+      if(resetapisuccess){
+      dispatch(fetch_api_keys())
+      toast.success('reset successful')
+    }
+    if(resetapierror){
+      toast.error(error ||' reset failed')
+    }
+  },[dispatch,resetapierror,resetapisuccess])
   const [formData, setFormData] = useState({
     apiKey: "",
     Secretkey: "",
@@ -42,7 +61,7 @@ const API_Keys = () => {
 
   useEffect(() => {
     if (data) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         apiKey: data.api_key || "",
         Secretkey: data.secret_key || "",
@@ -86,24 +105,29 @@ const API_Keys = () => {
               />
 
               {/* refresh */}
-    <div 
-      className="items-center flex justify-end gap-1 mt-3 cursor-pointer"
-      onClick={handleClick}
-    >
-      <div 
-        className={`transition-transform duration-500 ease-in-out ${isRotating ? "rotate-180" : ""}`}
-      >
-      <Image
-        src="/icons/rotate-right.svg"
-        alt="svg"
-        height={16}
-        width={16}
-        className={`transition-transform duration-500 ${isRotating ? 'rotate-360' : ''}`}
-      />
-  
-    </div>       <p className="font-inter font-medium text-[12px] leading-[20px] tracking-[0px] align-middle text-[#156064]">
-        Reset API keys
-      </p> </div>
+              <div
+                className="items-center flex justify-end gap-1 mt-3 cursor-pointer"
+                onClick={handleClick}
+              >
+                <div
+                  className={`transition-transform duration-500 ease-in-out ${
+                    isRotating ? "rotate-180" : ""
+                  }`}
+                >
+                  <Image
+                    src="/icons/rotate-right.svg"
+                    alt="svg"
+                    height={16}
+                    width={16}
+                    className={`transition-transform duration-500 ${
+                      isRotating ? "rotate-360" : ""
+                    }`}
+                  />
+                </div>{" "}
+                <p className="font-inter font-medium text-[12px] leading-[20px] tracking-[0px] align-middle text-[#156064]">
+                  Reset API keys
+                </p>{" "}
+              </div>
             </div>
           </div>
           <div className="space-y-6">

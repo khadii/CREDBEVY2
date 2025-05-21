@@ -74,7 +74,8 @@ const BarChartComponent = ({
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <RechartsBarChart data={data}>
+      <RechartsBarChart data={data}
+      margin={{ top: 20, right: 20, left: 60, bottom: 0 }}>
         <XAxis
           dataKey="name"
           stroke="#888888"
@@ -83,7 +84,8 @@ const BarChartComponent = ({
           tick={{ fill: "#333333", fontSize: 12 }}
         />
         <YAxis
-          tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
+          tickFormatter={(tick: number) => `${tick}M`}
+          //  tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
           stroke="#888888"
           axisLine={false}
           tickLine={false}

@@ -39,7 +39,7 @@ export const reset_api_keyss = createAsyncThunk(
     try {
       const token = Cookies.get("authToken");
       const response = await axios.get(
-        `${BASE_URL}/api/partner/developer/reset-api-keyss`,
+        `${BASE_URL}/api/partner/developer/credentials/reset`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

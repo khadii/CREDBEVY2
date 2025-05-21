@@ -33,7 +33,8 @@ const LineChartComponent = ({
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)} // Shorten month names to 3 letters
+          //  tickFormatter={(value) => value} 
+          // tickFormatter={(value) => value.slice(0, 3)} // Shorten month names to 3 letters
           tick={{ fill: "#333333", fontSize: 12 }}
         />
         <YAxis

@@ -10,10 +10,20 @@ import { TbLogout2 } from "react-icons/tb";
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuSettings } from "react-icons/lu";
 import { useDashboard } from "@/app/Context/DahboardContext";
+import { useRouter } from "next/navigation";
 
 export default function TopBar() {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, data } = useSelector((state: RootState) => state.user);
+  const { loading, error, data } = useSelector(
+    (state: RootState) => state.user
+  );
+  const router=useRouter()
+    useEffect(() => {
+    if (error) {
+      router.push("/")
+    }
+  }, [error, router])
+
   const user = data?.data;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -23,7 +33,7 @@ export default function TopBar() {
       dispatch(fetchUserData());
     }
   }, [dispatch, user]);
-  const { logout,setLogout } = useDashboard();
+  const { logout, setLogout } = useDashboard();
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -38,8 +48,8 @@ export default function TopBar() {
 
   // Memoize user avatar URL to prevent unnecessary regenerations
   const userAvatarUrl = useMemo(() => {
-    const firstName = user?.first_name || 'U';
-    const lastName = user?.last_name || 's';
+    const firstName = user?.first_name || "U";
+    const lastName = user?.last_name || "s";
     return `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=random`;
   }, [user]);
 
@@ -47,13 +57,11 @@ export default function TopBar() {
     return <div className="flex justify-center p-4">Loading user data...</div>;
   }
 
-  if (error) {
-    return (
-      <div className="flex justify-center p-4 text-red-500">
-        Error: {error}
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //    router.push('/')
+  //   );
+  // }
 
   return (
     <div className="flex  relative items-center justify-between h-full min-h-[72px] w-full bg-white px-4 sm:px-6 md:pr-[76px] md:pl-[41px]">
@@ -76,17 +84,23 @@ export default function TopBar() {
       {/* Notification & Profile */}
       <div className="flex items-center space-x-2 md:space-x-4">
         {/* Notification Icon */}
-        <button className="relative focus:outline-none" aria-label="Notifications">
+        <button
+          className="relative focus:outline-none"
+          aria-label="Notifications"
+        >
           <Bell className="text-gray-500" size={20} />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
         {/* Divider */}
-        <div className="hidden md:block border-l border-[#A1A6B0] h-8" aria-hidden="true"></div>
+        <div
+          className="hidden md:block border-l border-[#A1A6B0] h-8"
+          aria-hidden="true"
+        ></div>
 
         {/* User Profile */}
         <div className=" flex items-center space-x-2">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               setIsDropdownOpen(!isDropdownOpen);
@@ -95,7 +109,9 @@ export default function TopBar() {
           >
             <img
               src={userAvatarUrl}
-              alt={user ? `${user.first_name} ${user.last_name}` : "User avatar"}
+              alt={
+                user ? `${user.first_name} ${user.last_name}` : "User avatar"
+              }
               className="w-8 h-8 rounded-full"
               width={32}
               height={32}
@@ -113,40 +129,55 @@ export default function TopBar() {
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-2 top-full mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-              <div className="px-4 py-2 border-b border-gray-200 flex items-center">
-                    <img
-              src={userAvatarUrl}
-              alt={user ? `${user.first_name} ${user.last_name}` : "User avatar"}
-              className="w-8 h-8 rounded-full mr-2"
-              width={32}
-              height={32}
-            />
-             <div>   <p className="text-[10px] font-bold text-[#333333] ">
-                  {user ? `${user.first_name} ${user.last_name}` : "User Name"}
-                </p>
-                <p className="text-[8px] font-semibold text-[#A1A6B0] truncate">
-                  {user?.email || "user@example.com"}
-                </p></div>
+            <div className="absolute right-2 top-20 w-[240px] bg-white rounded-md shadow-lg py-[35px] z-50">
+              {/* User Info */}
+              <div className="px-6 mb-[32px] flex items-center">
+                <img
+                  src={userAvatarUrl}
+                  alt={
+                    user
+                      ? `${user.first_name} ${user.last_name}`
+                      : "User avatar"
+                  }
+                  className="w-8 h-8 rounded-full mr-2"
+                  width={32}
+                  height={32}
+                />
+                <div>
+                  <p className="text-[10px] font-bold text-[#333333]">
+                    {user
+                      ? `${user.first_name} ${user.last_name}`
+                      : "User Name"}
+                  </p>
+                  <p className="text-[8px] font-semibold text-[#A1A6B0] truncate mt-[8px]">
+                    {user?.email || "user@example.com"}
+                  </p>
+                </div>
               </div>
-              <a
-                href="#"
-                className="flex font-semibold px-4 py-2 text-sm text-[#8A8B9F] hover:bg-gray-100 items-center"
-              >
-              <Bell size={24} className="text-[#8A8B9F] mr-2" />    Notification
-              </a>
-              <a
-                href="/dashboard/settings"
-                className=" font-semibold px-4 py-2 text-sm text-[#8A8B9F] hover:bg-gray-100 flex items-center"
-              >
-               <LuSettings size={24} className="text-[#8A8B9F] mr-2" /> Settings
-              </a>
-              <a
-               onClick={()=>setLogout(true)}
-                className=" font-semibold px-4 py-2 text-sm text-[#FA4D56] hover:bg-gray-100 flex items-center"
-              >
-               <TbLogout2 size={24}  className="text-[#FA4D56] mr-2"/> Logout
-              </a>
+
+              {/* Menu Items */}
+              <div className="space-y-[16px]">
+                {" "}
+                {/* Reduced space between items for better hover cohesion */}
+                <a
+                  href="#"
+                  className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center"
+                >
+                  <Bell size={20} className="mr-3" /> Notification
+                </a>
+                <a
+                  href="/dashboard/settings"
+                  className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center"
+                >
+                  <LuSettings size={20} className="mr-3" /> Settings
+                </a>
+                <a
+                  onClick={() => setLogout(true)}
+                  className="block px-6 py-3 text-sm font-semibold text-[#FA4D56] hover:bg-[#F5F5F5] hover:text-[#FA4D56] transition-colors duration-200 flex items-center cursor-pointer"
+                >
+                  <TbLogout2 size={20} className="mr-3" /> Logout
+                </a>
+              </div>
             </div>
           )}
         </div>
