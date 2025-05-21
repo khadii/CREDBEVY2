@@ -107,7 +107,7 @@ export const update_webhook_url = createAsyncThunk(
     try {
       const token = Cookies.get("authToken");
       const response = await axios.put(
-        `${BASE_URL}/api/partner/developer/update-webhook-url`,
+        `${BASE_URL}/api/partner/developer/partners/webhooks`,
         payload,
         {
           headers: {
