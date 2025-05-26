@@ -142,13 +142,16 @@ export const LoanProduct = ({
       <td className="pl-[27px] py-4 px-6 ">
         <div
           className="flex items-center gap-4 h-full"
-          onClick={(e) => e.stopPropagation()}
+         
         >
-          <CustomCheckbox
+          <div  onClick={(e) => e.stopPropagation()}>
+             <CustomCheckbox
             id={item.uuid}
             checked={selectedIds.includes(item.uuid)}
             onChange={() => handleToggle(item.uuid)}
           />
+          </div>
+         
           <p className="truncate max-w-[120px]">{item.product_name}</p>
         </div>
       </td>

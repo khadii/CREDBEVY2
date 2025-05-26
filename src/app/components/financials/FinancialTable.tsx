@@ -122,13 +122,16 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
       <td className="pl-[27px] py-4 px-6">
         <div
           className="flex items-center gap-4 h-full"
-          onClick={(e) => e.stopPropagation()}
+        
         >
-          <CustomCheckbox
+          <div   onClick={(e) => e.stopPropagation()}>
+            <CustomCheckbox
             id={item.transaction_reference}
             checked={selectedIds.includes(item?.transaction_reference)}
             onChange={() => handleToggle(item?.transaction_reference)}
           />
+          </div>
+          
           <p className="truncate max-w-[120px]">{item?.account_name}</p>
         </div>
       </td>
@@ -155,7 +158,7 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
         headers={loanHeaders}
         data={laon_table_data_all}
         titleProps={titleProps}
-        href="/dashboard/loan-products/performance"
+        href="#"
         renderRow={renderRow}
         renderHeader={renderHeader}
         isHeaderChecked={isHeaderChecked}

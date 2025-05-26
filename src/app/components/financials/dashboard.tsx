@@ -5,12 +5,6 @@ import { YearDropdown } from "../Yeardropdown";
 import { CircleAlert } from "lucide-react";
 import { Tabs } from "../Tabs";
 import Card from "../Card";
-import { TbCurrencyNaira } from "react-icons/tb";
-import { LuSquareActivity } from "react-icons/lu";
-import CardChart from "../ChartCards/DoubleBatchart";
-import LineChartTwo from "../ChartCards/doublelinechart";
-import EqualHeightContainer from "../equator";
-import LoanApprovalChart from "../ChartCards/Piechart";
 import Summary from "./summary";
 import Trends from "./Trends";
 import TransactionHistory from "./TransactionHistory";
@@ -31,24 +25,15 @@ export default function Dashboard() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "Summary":
-        return <Summary />; 
+        return <Summary />;
       case "Trends and History":
-        return (
-          
-         <Trends/>
-        );
+        return <Trends />;
       case "Financial Statement":
-        return (
-         <></>
-        );
+        return <></>;
       case "Transactions History":
-        return (
-          <TransactionHistory/>
-        );
+        return <TransactionHistory />;
       case "Goals and Targets":
-        return (
-          <></>
-        );
+        return <></>;
       default:
         return <Summary />;
     }

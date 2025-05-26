@@ -108,7 +108,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
     if (approveError) {
       const productData = getProductCookie();
-      toast.error(approveError || "Loan approval failed");
+      toast.error(approveError );
       refreshData();
       dispatch(_single_loan_products_request({ id: productData }));
       setInterested(true);

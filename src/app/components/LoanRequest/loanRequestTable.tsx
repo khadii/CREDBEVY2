@@ -137,12 +137,14 @@ export const LoanRequest= ({ bulkAction, laon_table_data_all, total_count }: { l
   const renderRow = useCallback((item: LoanData, index: number) => (
     <>
       <td className="pl-[27px] py-4 px-6 loan-request-name">
-        <div className="flex items-center gap-4 h-full" onClick={(e) => e.stopPropagation()}>
-          <CustomCheckbox
+        <div className="flex items-center gap-4 h-full" >
+        <div onClick={(e) => e.stopPropagation()}>
+            <CustomCheckbox
             id={item.loan_uuid}
             checked={selectedIds?.includes(item.loan_uuid)}
             onChange={() => handleToggle(item.loan_uuid)}
           />
+        </div>
           {item.image && (
             <img
               src={item.image} 
