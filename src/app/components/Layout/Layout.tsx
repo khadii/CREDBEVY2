@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar } from "./SideBar/SIdeBar";
 import TopBar from "./navBar/NavBar";
 import { AppDispatch, RootState } from "@/app/Redux/store";
@@ -37,12 +37,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, [dispatch]);
   // const { isLoading, setIsLoading} = useDashboard();
   // const isLoading=true;
-  const { logout, setLogout, privacyPolicy, setPrivacyPolicy } = useDashboard();
+  const { logout, setLogout } = useDashboard();
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
   useEffect(() => {
-    if (userdata && userdata?.policy_accepted) {
-      setPrivacyPolicy(userdata?.policy_accepted);
+    if (userdata && userdata?.data.policy_accepted) {
+      setPrivacyPolicy(userdata?.data.policy_accepted);
     }
-  }, [userdata, setPrivacyPolicy]);
+  }, [userdata, privacyPolicy]);
 
   return (
     <div className="w-full">
@@ -59,9 +60,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="px-[27px]  pt-[48px] bg-[#FAFAFA] h-full">
               {children}
               {logout && <LogoutModal onClose={() => setLogout(false)} />}
-              {privacyPolicy==='false'&& (
+              {!privacyPolicy && (
                 <PrivacyPolicy
-                  onClose={() => setPrivacyPolicy(userdata?.policy_accepted)}
+                  onClose={() =>
+                    setPrivacyPolicy(userdata?.data.policy_accepted)
+                  }
                 />
               )}
             </div>

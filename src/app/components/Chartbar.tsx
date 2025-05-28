@@ -34,6 +34,12 @@ const BarChartComponent = ({
   showValuesOnTop = true,
   tooltip = true, 
 }: BarChartComponentProps) => {
+  // Convert data values to millions
+  const dataInMillions = data.map(item => ({
+    ...item,
+    revenue: item.revenue / 1000000
+  }));
+
   // Custom Bar Shape for dynamic coloring
   const renderCustomBar = (props: any) => {
     const { x, y, width, height, name } = props;
@@ -45,20 +51,19 @@ const BarChartComponent = ({
         width={width}
         height={height}
         fill={fillColor}
-        rx={5} // Rounded corners
+        rx={5} 
         ry={5}
-      
-      
-        
       />
     );
   };
+
   const formatToTwoDecimals = (value: number): string => {
-    return value.toFixed(2);
+    return value.toFixed(3);
   };
+
   const renderCustom = (props: any) => {
     const { x, y, width, height, name } = props;
-    const fillColor = name === highlightBar ? highlightColor : barColor; // Conditional color
+    const fillColor = name === highlightBar ? highlightColor : barColor;
     return (
       <rect
         x={x}
@@ -66,7 +71,7 @@ const BarChartComponent = ({
         width={width}
         height={height}
         fill={fillColor}
-        rx={10} // Rounded corners
+        rx={10}
         ry={10}
       />
     );
@@ -74,8 +79,8 @@ const BarChartComponent = ({
 
   return (
     <ResponsiveContainer width="100%" height={280}>
-      <RechartsBarChart data={data}
-      margin={{ top: 20, right: 20, left: 60, bottom: 0 }}>
+      <RechartsBarChart data={dataInMillions}
+      margin={{ top: 20, right: 20, left: 20, bottom: 0 }}>
         <XAxis
           dataKey="name"
           stroke="#888888"
@@ -84,26 +89,24 @@ const BarChartComponent = ({
           tick={{ fill: "#333333", fontSize: 12 }}
         />
         <YAxis
-          tickFormatter={(tick: number) => `${tick}M`}
-          //  tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
+         tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
           stroke="#888888"
           axisLine={false}
           tickLine={false}
           width={30}
           tick={{ fill: "#333333", fontSize: 12 }}
         />
-     <Tooltip 
-  content={<CustomTooltip />}
-  wrapperStyle={{ backgroundColor: 'transparent', border: 'none', height: 257 }}
-  cursor={false} 
-/>
+        <Tooltip 
+          content={<CustomTooltip />}
+          wrapperStyle={{ backgroundColor: 'transparent', border: 'none', height: 257 }}
+          cursor={false} 
+        />
         <Bar
           dataKey="revenue"
           shape={renderCustomBar}
           barSize={barSize}
         >
         </Bar>
-       
       </RechartsBarChart>
     </ResponsiveContainer>
   );
