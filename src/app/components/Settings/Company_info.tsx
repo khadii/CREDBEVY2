@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect } from 'react';
 import InputField from '../FormInputs/iputDetails';
 import { useFormik } from 'formik';
@@ -10,6 +12,7 @@ import { resetSuccess } from '@/app/Redux/company_info/company_info_form_slice';
 import toast from 'react-hot-toast';
 import { AppDispatch, RootState } from '@/app/Redux/store';
 import AnimatedLoader from '../animation';
+import { useRouter } from 'next/navigation';
 
 
 // Yup validation schema (for form submission)
@@ -61,6 +64,12 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
  const { loading:comploading, error:comperror, data:compandata } = useSelector(
     (state: RootState) => state.companyInfo
   );
+    const router = useRouter()
+    useEffect(() => {
+    if (comperror==='Unauthorized') {
+      router.push("/")
+    }
+  }, [comperror, router])
   const companyData = compandata as {
     company_name?: string;
     company_logo?: File;

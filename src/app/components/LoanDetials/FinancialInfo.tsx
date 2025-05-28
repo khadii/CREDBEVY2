@@ -12,6 +12,8 @@ import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_req
 import Cookies from "js-cookie";
 import SpinningFaceExact from "../credbevyLoader";
 import Prediction from "./prediction";
+import { useRouter } from "next/navigation";
+
 
 export default function FinancialInfo({ id }: { id: any }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,6 +27,15 @@ export default function FinancialInfo({ id }: { id: any }) {
   } = useSelector(
     (state: RootState) => state.loanRequest.single_loan_products_request
   );
+
+
+
+    const router = useRouter()
+      useEffect(() => {
+      if (LoanRequest_SuccessError==='Unauthorized') {
+        router.push("/")
+      }
+    }, [LoanRequest_SuccessError, router])
 
   const { approveSuccess } = useSelector(
     (state: RootState) => state.loanCondition

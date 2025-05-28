@@ -194,7 +194,7 @@ export default function Dashboard() {
 
   // Add this useEffect to handle navigation when error occurs
   useEffect(() => {
-    if (error) {
+    if (error==='Unauthorized') {
       router.push("/")
     }
   }, [error, router])

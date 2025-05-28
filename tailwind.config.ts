@@ -20,8 +20,7 @@ export default {
         mygrey2: "var(--color-mygrey2)",
       },
       fontFamily: {
-        inter: ["var(--font-inter)", "sans-serif"],
-     
+        inter: ["Inter", "sans-serif"], // Changed to match font-face declaration
       },
       fontWeight: {
         thin: '100',

@@ -40,6 +40,8 @@ export default function Dashboard() {
       }
     };
 
+
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -77,6 +79,11 @@ export default function Dashboard() {
     loanProductsStats,
   } = useSelector((state: any) => state.loanProductsTable);
 
+      useEffect(() => {
+      if (error==='Unauthorized') {
+        router.push("/")
+      }
+    }, [error, router])
   useEffect(() => {
     dispatch(_loan_products_all(filters));
     console.log({ ii: tabledata });

@@ -2,12 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-/* inter Font Setup */
+/* Inter Font Setup - Recommended to put fonts in public/fonts */
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Thin-BETA.otf') format('opentype');
+  src: url('/fonts/Inter-Thin-BETA.otf') format('opentype');
   font-weight: 100;
   font-style: normal;
   font-display: swap;
@@ -15,7 +13,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-ExtraLight-BETA.otf') format('opentype');
+  src: url('/fonts/Inter-ExtraLight-BETA.otf') format('opentype');
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -23,7 +21,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Light-BETA.otf') format('opentype');
+  src: url('/fonts/Inter-Light-BETA.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -31,7 +29,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Regular.otf') format('opentype');
+  src: url('/fonts/Inter-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -39,7 +37,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Medium.otf') format('opentype');
+  src: url('/fonts/Inter-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -47,7 +45,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-SemiBold.otf') format('opentype');
+  src: url('/fonts/Inter-SemiBold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -55,7 +53,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Bold.otf') format('opentype');
+  src: url('/fonts/Inter-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -63,7 +61,7 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-ExtraBold.otf') format('opentype');
+  src: url('/fonts/Inter-ExtraBold.otf') format('opentype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -71,36 +69,17 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('/src/app/lib/inter/Inter-Black.otf') format('opentype');
+  src: url('/fonts/Inter-Black.otf') format('opentype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
-
-/* Add all other Inter font weights here... */
-
-/* Font Utility Classes */
-.font-inter { 
-  font-family: var(--font-inter) !important; 
-}
-
-.font-thin { font-weight: 100 !important; }
-.font-extralight { font-weight: 200 !important; }
-.font-light { font-weight: 300 !important; }
-.font-325 { font-weight: 325 !important; }
-.font-350 { font-weight: 350 !important; }
-.font-normal { font-weight: 400 !important; }
-.font-book { font-weight: 400 !important; }
-.font-medium { font-weight: 500 !important; }
-.font-semibold { font-weight: 600 !important; }
-.font-bold { font-weight: 700 !important; }
-.font-extrabold { font-weight: 800 !important; }
-.font-black { font-weight: 900 !important; }
 :root {
   --background: #FAFAFA;
 }
 
 body {
-    background: var(--background);
-  }
+  background: var(--background);
+  font-family: 'Inter', sans-serif; /* Set Inter as default font */
+}

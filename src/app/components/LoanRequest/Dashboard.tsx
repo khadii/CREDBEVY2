@@ -25,6 +25,7 @@ import { useDashboard } from "@/app/Context/DahboardContext";
 import { useDispatch, useSelector } from "react-redux";
 import { formatToNaira } from "@/app/lib/Naira";
 import AnimatedLoader from "../animation";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,7 +51,7 @@ export default function Dashboard() {
   const [selectedYear, setSelectedYear] = useState("2025");
   const [selectedPeriod, setSelectedPriod] = useState("This Year");
   const years = ["2022", "2023", "2024", "2025", "2026"];
-
+ const router = useRouter();
   // const Year = {
   //   year: "",
   //   month: "",
@@ -74,7 +75,11 @@ export default function Dashboard() {
     data: LoanRequestAll_Data,
     total_count: total_count_all_loan_data,
   } = useSelector((state: RootState) => state.loanRequest.LoanRequestAll);
-
+  useEffect(() => {
+      if (LoanRequestAll_SuccessError==='Unauthorized') {
+        router.push("/")
+      }
+    }, [LoanRequestAll_SuccessError, router])
   // useEffect(() => {
   //   const fetchPendingCount = async () => {
   //     try {

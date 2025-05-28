@@ -8,6 +8,7 @@ import { fetch_webhook_url, update_webhook_url } from "@/app/Redux/developer/dev
 import AnimatedLoader from "../animation";
 import { KeyInputweb } from "../FormInputs/developerInput";
 import CustomizedButton from "../CustomizedButton";
+import { useRouter } from "next/navigation";
 
 const Webhook_URLs = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,12 @@ const Webhook_URLs = () => {
     const webhook = webhooks?.find((wh: any) => wh.event_type === eventType);
     return webhook?.url || "";
   };
+   const router = useRouter();
+    useEffect(() => {
+      if (error==='Unauthorized') {
+        router.push("/")
+      }
+    }, [error, router])
 
   const formik = useFormik({
     initialValues: {

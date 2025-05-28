@@ -10,6 +10,7 @@ import {
   fetch_api_keys,
   reset_api_keyss,
 } from "@/app/Redux/developer/developerthunk";
+import { useRouter } from "next/navigation";
 
 const API_Keys = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +23,12 @@ const API_Keys = () => {
     success: resetapisuccess,
   } = useSelector((state: any) => state.resetapi);
 
+     const router = useRouter();
+      useEffect(() => {
+        if (error==='Unauthorized') {
+          router.push("/")
+        }
+      }, [error, router])
   const handleClick = () => {
     setIsRotating(true);
     dispatch(reset_api_keyss());

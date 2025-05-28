@@ -16,6 +16,7 @@ import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
 import toast from "react-hot-toast";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { DropdownMenu } from "./activateDeActivateBulk";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,8 +34,25 @@ export default function Dashboard() {
     loading: trendloading,
     error: trenderror,
   } = useSelector((state: RootState) => state.loanRepaymentsTrend);
+
+
+
+   const router = useRouter();
+
+  useEffect(() => {
+    if (error==='Unauthorized') {
+      router.push("/")
+    }
+  }, [error, router])
+
+
   const [selectedYear, setSelectedYear] = useState("2025");
   const years = ["2022", "2023", "2024", "2025", "2026"];
+
+
+
+
+
 
   const params = {
     search: "",
