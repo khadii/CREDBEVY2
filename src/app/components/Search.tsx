@@ -20,7 +20,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   onFilterClick,
   onSeeAllClick,
   showSeeAll = true, // Default value is true
-  searchName='Search Request'
+  searchName='Search'
 }) => {
   const { filter, setFilter} = useDashboard();
   return (

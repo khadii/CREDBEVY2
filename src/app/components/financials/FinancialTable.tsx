@@ -131,7 +131,13 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
             onChange={() => handleToggle(item?.transaction_reference)}
           />
           </div>
-          
+       
+              <img
+                src={item.image}
+                alt="avatar"
+                className="w-8 h-8 rounded-full"
+              />
+
           <p className="truncate max-w-[120px]">{item?.account_name}</p>
         </div>
       </td>

@@ -8,6 +8,7 @@ import { TheeContainer } from '@/app/components/equator';
 import { DropdownMenu } from '@/app/components/Modals/activateDeActivate';
 import { YearDropdown } from '@/app/components/Yeardropdown';
 import { useDashboard } from '@/app/Context/DahboardContext';
+import { formatCurrency } from '@/app/lib/utillity/formatCurrency';
 import { resetBulkAction } from '@/app/Redux/Loan_Product/Bulkslice';
 import { _single_loan_products_stats, loan_products_single } from '@/app/Redux/Loan_Product/loan_product_thunk';
 import { AppDispatch, RootState } from '@/app/Redux/store';
@@ -92,21 +93,21 @@ export default function LoanPerformance({params}:{params:any}) {
   const stats = [
     {
       title: "Total Defaults Product",
-      amount: data?.data?.totalLoanProducts,
+      amount:formatCurrency( data?.data?.totalLoanProducts),
       percentage: data?.data?.totalLoanProductPercentage + "%",
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Revenue Generated",
-      amount: data?.data?.totalRevenueGenerated,
+      amount: formatCurrency(data?.data?.totalRevenueGenerated),
       percentage: data?.data?.totalRevenueGeneratedPercentage + "%",
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Amount Disbursed",
-      amount: data?.data?.totalAmountDisbursed,
+      amount:formatCurrency( data?.data?.totalAmountDisbursed),
       percentage: data?.data?.totalAmountDisbursedPercentage + "%",
-      icon: <SquareActivity size={"18px"} className="text-gray-500" />,
+      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
   ];
 

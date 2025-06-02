@@ -92,14 +92,14 @@ const DoubleBarChartComponent = ({
           axisLine={false}
           tickLine={false}
           width={10}
-          tick={{ fill: "#666", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         <YAxis
           tickFormatter={yAxisFormatter}
           axisLine={false}
           tickLine={false}
           width={10}
-          tick={{ fill: "#666", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         {tooltip && (
           <Tooltip 

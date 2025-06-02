@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
-
+import { FaAngleDown } from "react-icons/fa";
 
 interface TableProps<T> {
   headers: string[];
@@ -16,6 +16,7 @@ interface TableProps<T> {
   currentPage: number;
   totalPages: number;
   setCurrentPage: (page: number) => void;
+  showDownloadButton?: boolean; // New prop to control button visibility
 }
 
 const Table = <T,>({
@@ -26,7 +27,14 @@ const Table = <T,>({
   currentPage,
   totalPages,
   setCurrentPage,
+  showDownloadButton = false, // Default to false if not provided
 }: TableProps<T>) => {
+  const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+
+  const handleDownloadClick = () => {
+    setShowDownloadOptions(!showDownloadOptions);
+  };
+
   return (
     <div className="bg-white rounded-lg mt-3 w-full">
       <div className="flex justify-between items-center pb-6 py-6 px-6 border rounded-lg border-b-0 rounded-b-none">
@@ -43,6 +51,40 @@ const Table = <T,>({
             {titleProps.subtitle}
           </p>
         </div>
+        {showDownloadButton && ( // Conditionally render the download button
+          <div className="relative">
+            <button
+              onClick={handleDownloadClick}
+              className="bg-[#24262D] text-white px-[16px] py-[12px] text-[12px] font-semibold rounded-lg flex items-center gap-x-[8px]"
+            >
+              Download Log <FaAngleDown />
+            </button>
+            {showDownloadOptions && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      // Add download as CSV logic here
+                      setShowDownloadOptions(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Download as CSV
+                  </button>
+                  <button
+                    onClick={() => {
+                      // Add download as PDF logic here
+                      setShowDownloadOptions(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Download as PDF
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <table className="w-full text-left">
         <thead className="bg-[#FFFFFF] text-[#8A8B9F] font-bold text-xs border">
@@ -70,8 +112,6 @@ const Table = <T,>({
           ))}
         </tbody>
       </table>
-      {/* <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg border-t-0 rounded-t-none"></div>
-       */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

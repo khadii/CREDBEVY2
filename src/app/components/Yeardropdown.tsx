@@ -46,7 +46,7 @@ export const YearDropdown = ({
           className="w-[134px] text-[13px] font-bold h-[38px] border rounded-md text-white bg-[#24262D] flex items-center gap-[22px] text-center justify-center"
           onClick={handleOptionalClick}
         >
-         Withdraw
+         Download
         </button>
       )}
       <button

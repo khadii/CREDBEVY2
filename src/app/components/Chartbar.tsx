@@ -58,7 +58,7 @@ const BarChartComponent = ({
   };
 
   const formatToTwoDecimals = (value: number): string => {
-    return value.toFixed(3);
+    return value.toFixed(4);
   };
 
   const renderCustom = (props: any) => {
@@ -86,7 +86,7 @@ const BarChartComponent = ({
           stroke="#888888"
           axisLine={false}
           tickLine={false}
-          tick={{ fill: "#333333", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         <YAxis
          tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
@@ -94,7 +94,7 @@ const BarChartComponent = ({
           axisLine={false}
           tickLine={false}
           width={30}
-          tick={{ fill: "#333333", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         <Tooltip 
           content={<CustomTooltip />}

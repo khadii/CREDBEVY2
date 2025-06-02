@@ -35,14 +35,14 @@ const LineChartComponent = ({
           tickMargin={8}
           //  tickFormatter={(value) => value} 
           // tickFormatter={(value) => value.slice(0, 3)} // Shorten month names to 3 letters
-          tick={{ fill: "#333333", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `${value}%`} // Format Y-axis labels as percentages
           width={30}
-          tick={{ fill: "#333333", fontSize: 12 }}
+          tick={{ fill: "#858688", fontSize: 14 }}
         />
         <Tooltip content={<CustomTooltip />} />
         <Line

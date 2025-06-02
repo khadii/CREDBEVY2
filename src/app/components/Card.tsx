@@ -23,7 +23,7 @@ const Card = ({ title, amount, percentage, icon }: CardProps) => {
             {isNaira && (
             <p className="text-3xl font-bold text-[#333333] mr-2"></p>
             )}
-            <h2 className="text-3xl font-extrabold text-[#333333] truncate">
+            <h2 className="text-3xl font-semibold text-[#333333] truncate">
               {amount} 
             </h2>
           </div>

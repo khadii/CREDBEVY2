@@ -156,7 +156,7 @@ export default function TransactionHistory() {
         ? formatCurrency(dataStat.transactionStats.currentPeriod.totalRevenue)
         : "N/A",
       percentage: dataStat?.transactionStats?.percentageChanges?.totalRevenuePercentageChange ?? "N/A",
-      icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
+      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
   ];
 
@@ -183,7 +183,7 @@ export default function TransactionHistory() {
         ? formatCurrency(dataStat.transactionStats.currentPeriod.netRevenue)
         : "N/A",
       percentage: dataStat?.transactionStats?.percentageChanges?.netProfitPercentageChange ?? "N/A",
-      icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
+      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
   ];
 

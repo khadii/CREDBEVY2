@@ -252,8 +252,8 @@ export default function Dashboard() {
               setSelectedYear={setlinechartSelectedYear}
               barselectedYear={barchartselectedYear}
               barsetSelectedYear={setbarchartSelectedYear}
-              progressBarTitle="Sales Performance"
-              progressBarDescription="Total sales performance of different products"
+              progressBarTitle="Loan Performance"
+              progressBarDescription="Total disbursal of different loan products"
               href={"#"}
               total_count={total_count}
               laon_table_data_all={pending_loans}

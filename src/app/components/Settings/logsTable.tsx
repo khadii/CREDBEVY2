@@ -66,6 +66,7 @@ const LogsTable = () => {
   return (
     <div className="p-4">
       <Table
+      showDownloadButton
         headers={tableHead}
         data={logsData}
         renderCell={renderCell}

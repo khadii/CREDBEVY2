@@ -376,8 +376,8 @@ export default function Dashboard() {
               lineChartRevenueChange="(30,00)"
               lineChartLineColor="#0F4C5C"
               lineChartDefaultSelectedYear="This Year"
-              progressBarTitle="Sales Performance"
-              progressBarDescription="Total sales performance of different products"
+              progressBarTitle="Top Performing Products"
+              progressBarDescription="Highest performing loan products"
               href={"#"}
               laon_table_data_all={tabledata}
               setCurrentPage={setCurrentPage}
