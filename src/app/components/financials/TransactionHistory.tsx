@@ -281,7 +281,7 @@ export default function TransactionHistory() {
           titleProps={{
             title: "Transaction History",
             description: "All financial transactions recorded",
-            totalAmount: `${dataTra.count || 0} transactions`,
+            count: `${dataTra.count || 0} transactions`,
           }}
           bulkAction={{
             label: "Bulk Action",

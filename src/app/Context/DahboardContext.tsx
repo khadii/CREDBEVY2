@@ -16,7 +16,7 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [filter, setFilter]= useState<boolean>(false);
   const [currentAction, setCurrentAction] = useState<'interest' | 'accept'>('interest');
   const [logout,setLogout]=useState(false)
-   const [PrivacyPolicy,setPrivacyPolicy]=useState(false)
+   const [PrivacyPolicy,setPrivacyPolicy]=useState(true)
   const [authPin, setAuhPin] = useState();
   const [pendingRequestCount, setPendingRequestCount] = useState<number>(0);
   

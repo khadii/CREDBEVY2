@@ -101,13 +101,13 @@ const menuItems = [
   //   icon: "/icons/diagram.svg",
   //   activeIcon: "/icons/diagram.svg",
   // },
-  // {
-  //   id: 1097,
-  //   name: "Customers",
-  //   href: "/dashboard/customers",
-  //   icon: "/icons/profile-2user.svg",
-  //   activeIcon: "/icons/profile-2user-active.svg",
-  // },
+  {
+    id: 1097,
+    name: "Customers",
+    href: "/dashboard/customers",
+    icon: "/icons/profile-2user.svg",
+    activeIcon: "/icons/profile-2user-active.svg",
+  },
   // {
   //   id: 1098,
   //   name: "Integrations",
