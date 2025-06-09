@@ -80,20 +80,24 @@ const BarChartComponent = ({
   return (
     <ResponsiveContainer width="100%" height={280}>
       <RechartsBarChart data={dataInMillions}
-      margin={{ top: 20, right: 20, left: 20, bottom: 0 }}>
+      // margin={{ top: 20, right: 20, left: 20, bottom: 0 }}
+      >
         <XAxis
           dataKey="name"
           stroke="#888888"
           axisLine={false}
           tickLine={false}
           tick={{ fill: "#858688", fontSize: 14 }}
+           interval={0} // Force all labels to show
+  tickMargin={2} // Add space between tick and label
+
         />
         <YAxis
          tickFormatter={(tick: number) => `${formatToTwoDecimals(tick)}M`}
           stroke="#888888"
           axisLine={false}
           tickLine={false}
-          width={30}
+          width={60}
           tick={{ fill: "#858688", fontSize: 14 }}
         />
         <Tooltip 

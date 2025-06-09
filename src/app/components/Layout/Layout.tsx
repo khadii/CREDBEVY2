@@ -35,15 +35,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     dispatch(revalidateToken());
     dispatch(checkTokenConsistency());
   }, [dispatch]);
-  // const { isLoading, setIsLoading} = useDashboard();
-  // const isLoading=true;
+
   const { logout, setLogout } = useDashboard();
-  const [privacyPolicy, setPrivacyPolicy] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+
   useEffect(() => {
-    if (userdata && userdata?.data.policy_accepted) {
-      setPrivacyPolicy(userdata?.data.policy_accepted);
+    // Only set the privacy policy visibility after userdata is loaded
+    if (!userloading && userdata) {
+      setShowPrivacyPolicy(!userdata?.data.policy_accepted);
     }
-  }, [userdata, privacyPolicy]);
+  }, [userloading, userdata]);
 
   return (
     <div className="w-full">
@@ -60,11 +61,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="px-[27px]  pt-[48px] bg-[#FAFAFA] h-full">
               {children}
               {logout && <LogoutModal onClose={() => setLogout(false)} />}
-              {!privacyPolicy && (
+              {showPrivacyPolicy && (
                 <PrivacyPolicy
-                  onClose={() =>
-                    setPrivacyPolicy(userdata?.data.policy_accepted)
-                  }
+                  onClose={() => setShowPrivacyPolicy(false)}
                 />
               )}
             </div>
