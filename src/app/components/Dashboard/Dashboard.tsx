@@ -112,7 +112,7 @@ export default function Dashboard() {
   const chartData =
     linechartselectedYear === "This Year"
       ? total_defaults_by_year?.map((item: any) => ({
-          month: new Date(currentYear, item.month - 1).toLocaleString("default", { month: "long" }),
+          month: new Date(currentYear, item.month - 1).toLocaleString("default", { month: "short" }),
           value: item.default_percentage,
         }))
       : linechartselectedYear === "This Month"
@@ -234,8 +234,8 @@ export default function Dashboard() {
               onFilterClick={handleFilterClick}
               onSeeAllClick={handleSeeAllClick}
               onFundWallet={handleFundWallet}
-              barChartTitle="Revenue Generated"
-              barChartDescription="Total loan amount disbursed over time."
+              barChartTitle=" revenue generated over time"
+              barChartDescription="Total revenue generated over time"
               barChartTotalAmount={formattedTotalSumRevenue}
               barChartHighlightBar="Dec"
               barChartHighlightColor="#EC7910"

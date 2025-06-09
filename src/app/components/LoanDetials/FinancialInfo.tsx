@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import SpinningFaceExact from "../credbevyLoader";
 import Prediction from "./prediction";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 export default function FinancialInfo({ id }: { id: any }) {
@@ -130,12 +131,19 @@ export default function FinancialInfo({ id }: { id: any }) {
                 LoanRequest_Data.loan.request_details.created_at
               ).toLocaleString(),
             },
-            {
-              label: "Loan Product",
-              value:
-                LoanRequest_Data.loan.request_details.loan_product_name ??
-                "N/A",
-            },
+           {
+  label: "Loan Product",
+  value: (
+    <Link
+      href={`/dashboard/loan-products/performance/${LoanRequest_Data?.loan?.request_details?.product_uuid}`}
+      className="text-blue-600 hover:underline"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {LoanRequest_Data?.loan?.request_details?.loan_product_name ?? "N/A"}
+    </Link>
+  ),
+},
           ]
         : [],
     [LoanRequest_Data, formatCurrency]

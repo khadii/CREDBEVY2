@@ -273,12 +273,12 @@ const CreditScoreGauge: React.FC<CreditScoreGaugeProps> = ({
           </div>
           
           {/* Last updated text - responsive positioning */}
-          <div className="absolute text-[#8C8C8C] font-semibold text-center" style={{ 
+          <div className="absolute text-[#8C8C8C]   font-semibold text-center" style={{ 
             bottom: `${size * 0.25}px`, 
             left: '50%',
             transform: 'translateX(-50%)',
             width: `${size * 0.8}px`,
-            fontSize: labelFontSize
+            fontSize: '8px'
           }}>
             Last updated {lastUpdated}
           </div>
