@@ -9,7 +9,7 @@ interface AllRequestProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   stats: any;
-  chartData: any;
+  chartData:  any;
   barChartData:any;
   pieChartData: any;
   progressBarData: any;

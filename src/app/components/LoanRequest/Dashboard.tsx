@@ -238,7 +238,7 @@ export default function Dashboard() {
       }
   
       // Convert to millions and round to 2 decimal places
-      const valueInMillions = numericValue / 1_000_000;
+      const valueInMillions = numericValue 
       return parseFloat(valueInMillions.toFixed(2));
     };
   

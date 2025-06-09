@@ -234,7 +234,7 @@ export default function Dashboard() {
               onFilterClick={handleFilterClick}
               onSeeAllClick={handleSeeAllClick}
               onFundWallet={handleFundWallet}
-              barChartTitle=" revenue generated over time"
+              barChartTitle=" revenue generated"
               barChartDescription="Total revenue generated over time"
               barChartTotalAmount={formattedTotalSumRevenue}
               barChartHighlightBar="Dec"
