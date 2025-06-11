@@ -42,7 +42,7 @@ const DoubleLineChartComponent = ({
     <ResponsiveContainer width="100%" height={260}>
       <RechartsLineChart
         data={data}
-        margin={{ top: 20, right: 10, left: 60, bottom: 5 }}
+        margin={{ top: 20, right: 10, bottom: 5 }}
       >
         {showGrid && <CartesianGrid vertical={false} stroke="#E5E7EB" />}
         <XAxis
@@ -60,7 +60,7 @@ const DoubleLineChartComponent = ({
           width={30}
           tick={{ fill: "#858688", fontSize: 14 }}
         />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<CustomTooltip  />} />
         {/* {showLegend && <Legend />} */}
         <Line
           name={firstLineName}

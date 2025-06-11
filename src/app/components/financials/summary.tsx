@@ -193,6 +193,7 @@ export default function Summary() {
         selectedYear={2024}
         setSelectedYear={(year: any) => console.log(year)}
         withdrawal={2}
+        optionalButtonText="Withdraw"
         onOptionalButtonClick={() => alert("Button clicked!")}
       />
 

@@ -4,16 +4,17 @@ import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import TableWithPagination from "../table/tablewWthPagination";
 import { StatusWithOptions } from "./StatusWithOptions";
+import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
 
 interface LoanData {
   id: string;
   product_name: string;
   loan_type: string;
-  maximum_amount: string;
+  maximum_amount: any;
   minimum_credit_score: string;
   maximum_credit_score: string;
   duration: string;
-  total_revenue_generated: string;
+  total_revenue_generated: any;
   status: "Active" | "Repaid" | "Overdue" | "Inactive";
   imageUrl?: string;
   uuid: string;
@@ -157,14 +158,14 @@ export const LoanProduct = ({
       </td>
       <td className="truncate max-w-[200px] py-4 px-6">{item.loan_type}</td>
       <td className="truncate max-w-[120px] py-4 px-6">
-        {item.maximum_amount}
+ {formatCurrency(item.maximum_amount)}
       </td>
       <td className="truncate max-w-[35px] py-4 px-6">
         {item.minimum_credit_score}/{item.maximum_credit_score}
       </td>
       <td className="truncate max-w-[110px] py-4 px-6">{item.duration}</td>
       <td className="truncate max-w-[154px] py-4 px-6">
-        {item.total_revenue_generated}
+        {formatCurrency(item.total_revenue_generated)}
       </td>
       <td className="truncate max-w-[154px] py-4 px-4">
       {renderStatus(item.status, item.uuid)}

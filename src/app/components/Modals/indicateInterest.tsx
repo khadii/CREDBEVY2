@@ -72,7 +72,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (pinSuccess) {
-      toast.success(pinMessage || "PIN verified successfully");
+      // toast.success(pinMessage || "PIN verified successfully");
       resetAll();
     }
     if (pinError) {
@@ -86,7 +86,10 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     if (acceptSuccess) {
       setState(3);
     }
-  }, [acceptSuccess]);
+      if (acceptError) {
+  toast.error(acceptError)
+    }
+  }, [acceptSuccess,acceptError,dispatch]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
@@ -166,7 +169,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           };
 
           const productData = getProductCookie();
-          toast.error(errorResponse.message);
+          // toast.error(errorResponse.message);
           refreshData();
           dispatch(_single_loan_products_request({ id: productData }));
           setInterested(true);

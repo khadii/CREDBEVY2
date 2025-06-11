@@ -73,7 +73,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (pinSuccess) {
-      toast.success(pinMessage || "PIN verified successfully");
+      // toast.success(pinMessage || "PIN verified successfully");
       resetAll();
       
       const pinPayload = {

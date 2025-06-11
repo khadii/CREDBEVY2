@@ -85,7 +85,7 @@ const DoubleBarChartComponent = ({
         data={comparisonData}
         barGap={2}
         barCategoryGap={10}
-        margin={{ top: 20, right: 10, left: 80, bottom: 5 }}
+        margin={{ top: 20, right: 10, bottom: 5 }}
       >
         <XAxis
           dataKey="name"
@@ -98,7 +98,7 @@ const DoubleBarChartComponent = ({
           tickFormatter={yAxisFormatter}
           axisLine={false}
           tickLine={false}
-          width={10}
+          width={50}
           tick={{ fill: "#858688", fontSize: 14 }}
         />
         {tooltip && (

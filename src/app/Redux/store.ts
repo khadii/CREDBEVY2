@@ -44,6 +44,8 @@ import repaymentVsDefaultTrendReducer from '../Redux/Financials/repayment_vs_def
 import revenueVsProfitTrendSlice from '../Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_slice'
 import resetapiReducer from '../Redux/developer/reset_api_keyss'
 import policySlice from '../Redux/acceptprivacypolicy/policy_slice'
+import customersStatsSlice from '../Redux/customer/customer_slice'
+import customerLoanRequestsReducer from '../Redux/customer/customer_request_slice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -89,7 +91,9 @@ export const store = configureStore({
      repaymentVsDefaultTrend:repaymentVsDefaultTrendReducer,
      revenueVsProfitTrend:revenueVsProfitTrendSlice,
        resetapi:resetapiReducer,
-       policy:policySlice
+       policy:policySlice,
+       customersStats:customersStatsSlice,
+       customerLoanRequests:customerLoanRequestsReducer
   },
 });
 

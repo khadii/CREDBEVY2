@@ -7,13 +7,15 @@ export const YearDropdown = ({
   selectedYear, 
   setSelectedYear,
   withdrawal = false,
-  onOptionalButtonClick
+  onOptionalButtonClick,
+  optionalButtonText = "Download" // New prop with default value
 }: { 
   years: any, 
   selectedYear: any, 
   setSelectedYear: any,
   withdrawal?: boolean | number,
-  onOptionalButtonClick?: () => void
+  onOptionalButtonClick?: () => void,
+  optionalButtonText?: string // Type definition for the new prop
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -46,7 +48,7 @@ export const YearDropdown = ({
           className="w-[134px] text-[13px] font-bold h-[38px] border rounded-md text-white bg-[#24262D] flex items-center gap-[22px] text-center justify-center"
           onClick={handleOptionalClick}
         >
-         Download
+          {optionalButtonText}
         </button>
       )}
       <button

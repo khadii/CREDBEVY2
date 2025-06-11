@@ -109,7 +109,7 @@ const BarChartComponent = ({
           dataKey="revenue"
           shape={renderCustomBar}
           barSize={barSize}
-        >
+        > 
         </Bar>
       </RechartsBarChart>
     </ResponsiveContainer>
