@@ -97,7 +97,7 @@ const BarChartComponent = ({
           stroke="#888888"
           axisLine={false}
           tickLine={false}
-          width={60}
+          width={85}
           tick={{ fill: "#858688", fontSize: 14 }}
         />
         <Tooltip 

@@ -5,33 +5,53 @@ import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { CSSProperties } from "react";
-import { RootState } from "@/app/Redux/store";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/Redux/store";
+import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
+import { clearLoanRequest, fetchSingleLoanRequest } from "@/app/Redux/customer/fetchSingleLoanRequest";
+import { GoDotFill } from "react-icons/go";
+
+
 
 export default function ProfileCardCustomrs({ id }: { id: any }) {
-  // Mock data from the image
-  const user = {
-    firstname: "Oripeloye",
-    lastname: "Timilehin",
-    date_of_birth: "Dec, 16, 199X",
-    email: "Timilehinoripeloye@gmail.com",
-    phone: "+2349055380387",
-    address: "10, Lawani Street, Abule Oja, Yaba, Lagos",
-    state: "Lagos State",
-    country: "Nigeria",
-    gender: "Male",
-    status: "Active",
-    credit_score: 660
-  };
+ const dispatch = useDispatch<AppDispatch>();
+  const { data: loanRequest, loading, error } = useSelector((state: RootState) => state.customerpersoninfo);
 
-  const fullName = `${user.firstname} ${user.lastname}`;
+  useEffect(() => {
+   if (id) {
+      dispatch(fetchSingleLoanRequest(id));
+    }
+
+    return () => {
+      dispatch(clearLoanRequest());
+    };
+  }, [id, dispatch]);
+
+  if (loading) {
+    return <div>Loading user data...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading user data: {error}</div>;
+  }
+
+  if (!loanRequest) {
+    return <div>No user data available</div>;
+  }
+
+  const user = loanRequest.user;
+  const fullName = `${user.first_name} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name}`;
   const credit_score = user.credit_score || 0;
 
-  // Format date of birth (modified to handle the existing format)
+  // Format date of birth
   const formatDateOfBirth = (dateString: string) => {
     if (!dateString) return "N/A";
-    return dateString; // Return as-is since it's already formatted
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch {
+      return dateString; // Return as-is if parsing fails
+    }
   };
 
   // Create user data from API response
@@ -44,7 +64,10 @@ export default function ProfileCardCustomrs({ id }: { id: any }) {
       { label: "State", value: user.state || "N/A" },
       { label: "Country", value: user.country || "N/A" },
       { label: "Gender", value: user.gender || "N/A" },
-      { label: "Status", value: user.status || "N/A" },
+      { 
+        label: "Status", 
+        value: loanRequest.request_details.status || "N/A" 
+      },
     ];
   };
 
@@ -53,39 +76,62 @@ export default function ProfileCardCustomrs({ id }: { id: any }) {
   return (
     <div className="bg-[#FFFFFF] flex flex-col items-center rounded-lg text-center h-[1100px] border-[1px]">
       {/* Profile Image */}
-      <Image
-        src={
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            `${user?.firstname || "U"}${user?.lastname ? `+${user.lastname}` : ""}`
-          )}&background=random`
-        }
-        alt={`${user?.firstname || "User"}'s avatar`}
-        width={96}
-        height={96}
-        className="w-24 h-24 mx-auto mb-4 mt-[48px] rounded-full"
-        unoptimized={true}
-        onError={(e) => {
-          e.currentTarget.src =
-            "https://ui-avatars.com/api/?name=User&background=random";
-        }}
-      />
+      {user.selfie_base_image_64 ? (
+        <img 
+          src={`data:image/jpeg;base64,${user.selfie_base_image_64}`}
+          alt={`${user.first_name}'s profile`}
+          className="w-24 h-24 mx-auto mb-4 mt-[48px] rounded-full object-cover"
+        />
+      ) : (
+        <Image
+          src={
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              `${user.first_name || "U"}${user.last_name ? `+${user.last_name}` : ""}`
+            )}&background=random`
+          }
+          alt={`${user.first_name || "User"}'s avatar`}
+          width={96}
+          height={96}
+          className="w-24 h-24 mx-auto mb-4 mt-[48px] rounded-full"
+          unoptimized={true}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src =
+              "https://ui-avatars.com/api/?name=User&background=random";
+          }}
+        />
+      )}
       
       {/* Name */}
       <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">
         {fullName}
       </h2>
 
-      {/* Buttons */}
+      {/* Status Button */}
       <div className="mt-6 grid justify-center gap-2">
-        <div className="w-[83px] h-[23px] rounded-[16px] border border-solid pt-[2px] pr-[8px] pb-[2px] pl-[6px] flex justify-center items-center text-xs font-semibold text-[#42BE65] border-[#BFFFD1]">
-          <Image 
-            src="/Image/appproveddot.svg" 
-            alt="Approved icon" 
-            height={8} 
-            width={8} 
-            className="mr-1" 
-          />
-          Repaid
+        <div className={`w-[83px] h-[23px] rounded-[16px] border border-solid pt-[2px] pr-[8px] pb-[2px] pl-[6px] flex justify-center items-center text-xs font-semibold ${
+          loanRequest.request_details.approval_status === 'APPROVED' 
+            ? 'text-[#42BE65] border-[#BFFFD1]' 
+            : loanRequest.request_details.approval_status === 'REJECTED'
+            ? 'text-[#FF4D4F] border-[#FFCCC7]'
+            : 'text-[#FAAD14] border-[#FFF7E6]'
+        }`}>
+          {loanRequest.request_details.approval_status === 'APPROVED' || loanRequest.request_details.approval_status === 'APPROVED' ? (
+            <>
+             <GoDotFill size={24} className="mr-1" />
+              {'repaid'}
+            </>
+          ) : loanRequest.request_details.approval_status === 'REJECTED' || loanRequest.request_details.approval_status === 'REJECTED' ? (
+            <>
+             <GoDotFill size={24} className="mr-1" />
+              {'defaulted'}
+            </>
+          ) : (
+            <>
+             <GoDotFill size={24} className="mr-1" />
+              {'Pending'}
+            </>
+          )}
         </div>
       </div>
 

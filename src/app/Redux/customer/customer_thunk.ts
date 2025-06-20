@@ -48,15 +48,15 @@
     })
 
 interface ElectionFilters {
-  search?: string; // Optional: Search term for filtering elections
-  sort_by?: 'ASC' | 'DESC'; // Optional: Sorting order (ASC or DESC)
-  start_date?: string; // Optional: Start date for filtering elections (format: YYYY-MM-DD)
-  end_date?: string; // Optional: End date for filtering elections (format: YYYY-MM-DD)
-  single?: boolean | string; // Optional: If true, return only a single election (if available)
-  limit?: number | string; // Optional: Limit the number of results
-  paginate?: boolean; // Optional: Enable pagination (if limit is not set)
-  filter_by?: 'interested' | 'not_interested' | string; // Optional: Filter by interest status
-  approvalStatus?: 'pending' | 'approved' | 'declined' | string; // Optional: Filter by approval status
+  search?: string; 
+  sort_by?: 'ASC' | 'DESC'; 
+  start_date?: string;
+  end_date?: string; 
+  single?: boolean | string; 
+  limit?: number | string; 
+  paginate?: boolean; 
+  filter_by?: 'interested' | 'not_interested' | string; 
+  approvalStatus?: 'pending' | 'approved' | 'declined' | string; 
 }
 
       export const Customers_stats_loan_requests = createAsyncThunk(

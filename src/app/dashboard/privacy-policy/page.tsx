@@ -8,71 +8,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { resetPolicyState } from "@/app/Redux/acceptprivacypolicy/policy_slice";
 import toast from "react-hot-toast";
-import { CustomCheckbox } from "../CheckboxForTable/TablecheckBox";
+
 import { fetchUserData } from "@/app/Redux/auth/userdata";
+import Layout from "@/app/components/Layout/Layout";
 
 interface PrivacyPolicyProps {
-  onClose: () => void;
+  onClose?: () => void;
   onProceed?: () => void;
 }
 
-export default function PrivacyPolicy({
-  onClose,
-  onProceed,
-}: PrivacyPolicyProps) {
-  const [isChecked, setIsChecked] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
-  const { loading, error, data, success, message } = useSelector(
-    (state: RootState) => state.policy
-  );
-  
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(resetPolicyState());
-    }
+export default function PrivacyPolicy() {
 
-    if (success && message) {
-      toast.success(message);
-      dispatch(resetPolicyState());
-       dispatch(fetchUserData());
-    }
-  }, [error, success, message, dispatch]);
-  const handleProceed = async () => {
-    if (isChecked) {
-      try {
-        // Dispatch the policy acceptance action
-        await dispatch(Policy({ accept: true })).unwrap();
-
-        // Call the onProceed callback if provided
-        onProceed?.();
-
-        // Close the modal
-        onClose();
-      } catch (error) {
-        // Error handling would be automatic through the Redux slice
-        console.error("Failed to accept policy:", error);
-      }
-    }
-  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA] p-4">
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
-        {/* Header with close button */}
-        <div className="flex justify-between items-center p-6 pb-0">
-          <h1 className="text-2xl font-bold text-gray-800">Privacy Policy</h1>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors p-1"
-            aria-label="Close privacy policy"
-          >
-            {/* <X size={24} /> */}
-          </button>
-        </div>
+    <Layout >
+      <div className="
+      ">
+        {/* Header */}
+        
 
         {/* Meta info */}
         <div className="px-6 pt-2 pb-4 text-sm text-gray-600">
@@ -92,8 +45,8 @@ export default function PrivacyPolicy({
           </p>
         </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-6 py-2 text-sm border-t border-b border-gray-200">
+        {/* Content */}
+        <div className="px-6 py-2 text-sm border-t border-gray-200">
           <Section num={1} title="Who We Are">
             <p>
               Credbevy is an AI-powered loan marketplace platform that connects
@@ -361,42 +314,8 @@ export default function PrivacyPolicy({
             </p>
           </Section>
         </div>
-
-        {/* Footer with actions */}
-        <div className="p-6">
-          <div className="flex items-center mb-4">
-            {/* <input
-              type="checkbox"
-              id="agreement"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            /> */}
-            <CustomCheckbox id={'agreement'} checked={isChecked} onChange={handleCheckboxChange}/>
-            <label
-              htmlFor="agreement"
-              className="ml-2 text-sm font-medium text-gray-700"
-            >
-              Yes I agree and Understand
-            </label>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-between gap-3">
-            <button
-              className={`text-sm text-white w-[134px] h-[36px] rounded-[4px] text-center text-[12px] font-bold ${
-                isChecked
-                  ? "bg-[#156064] hover:bg-teal-800"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!isChecked}
-              onClick={handleProceed}
-            >
-              Proceed
-            </button>
-          </div>
-        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 
@@ -416,4 +335,3 @@ function Section({ num, title, children }: SectionProps) {
     </div>
   );
 }
-         

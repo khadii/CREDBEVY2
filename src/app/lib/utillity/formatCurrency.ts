@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
- export const formatCurrency =(value: number) => {
+ export const formatCurrency =(value: any) => {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
       currency: "NGN",

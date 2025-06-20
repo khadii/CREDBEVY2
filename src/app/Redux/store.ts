@@ -46,6 +46,12 @@ import resetapiReducer from '../Redux/developer/reset_api_keyss'
 import policySlice from '../Redux/acceptprivacypolicy/policy_slice'
 import customersStatsSlice from '../Redux/customer/customer_slice'
 import customerLoanRequestsReducer from '../Redux/customer/customer_request_slice'
+import customerpersoninfoReducer from '../Redux/customer/fetchSingleLoanRequest'
+import loanHistoryStatsReducer from './LoanHistory/LoanHistory_stat'
+import loanHistoryRequestsSliceReducer from './LoanHistory/loanRequestSlice'
+import historyloanDefaultRateReducer from './LoanHistory/loanDefaultRate'
+import historysingleLoanRequestReducere from './LoanHistory/singleLoanRequestSlice'
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -93,7 +99,12 @@ export const store = configureStore({
        resetapi:resetapiReducer,
        policy:policySlice,
        customersStats:customersStatsSlice,
-       customerLoanRequests:customerLoanRequestsReducer
+       customerLoanRequests:customerLoanRequestsReducer,
+       customerpersoninfo:customerpersoninfoReducer,
+       loanHistoryStats:loanHistoryStatsReducer,
+       loanHistoryRequestsSlice:loanHistoryRequestsSliceReducer,
+       historyloanDefaultRate:historyloanDefaultRateReducer,
+       historysingleLoanRequest:historysingleLoanRequestReducere
   },
 });
 

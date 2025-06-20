@@ -87,13 +87,13 @@ const menuItems = [
     activeIcon: "/icons/repeatactive.svg",
   },
 
-  // {
-  //   id: 1095,
-  //   name: "Loan History",
-  //   href: "/dashboard/loan-history",
-  //   icon: "/icons/bag.svg",
-  //   activeIcon: "/icons/bag-active.svg",
-  // },
+  {
+    id: 1096,
+    name: "Loan History",
+    href: "/dashboard/loan-history",
+    icon: "/icons/bag.svg",
+    activeIcon: "/icons/bag-active.svg",
+  },
   // {
   //   id: 1096,
   //   name: "Analytics",

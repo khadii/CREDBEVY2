@@ -114,16 +114,16 @@ const initialState: LoanRequestState = {
   error: null,
 };
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const fetchSingleLoanRequest = createAsyncThunk(
-  'loans/singleRequest',
+  '/singleRequest',
   async (loanUuid: string, { rejectWithValue }) => {
     try {
-      const token = Cookies.get('authToken');
-      if (!token) {
-        return rejectWithValue('Authentication token is missing.');
-      }
+   const token = Cookies.get("authToken");
+                   if (!token) {
+                     return rejectWithValue("Authentication token is missing.");
+                   }
 
       const response = await axios.get<ApiResponse>(
         `${BASE_URL}/api/partner/customers/single-loan-request/${loanUuid}`,
