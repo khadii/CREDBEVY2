@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_request_thunk";
 import Table from "../../TableThree/GeneralreuseableTable";
+import NoDataFound from "../../NoDataFound";
 
 const RepaymentScheduleTable = ({ 
   LoanRequest_Data, 
@@ -52,10 +53,14 @@ const RepaymentScheduleTable = ({
 
   const formattedData = formatTableData();
   const displayCount = totalRepaymentschedule ;
+ if (formattedData.length < 1) {
+    return <NoDataFound />;
+  }
 
   return (
     <>
       <Table
+      
         headers={tableHead}
         data={formattedData}
         titleProps={{

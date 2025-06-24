@@ -1,6 +1,6 @@
 // store.ts
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import authReducer from '../Redux/auth/authSlice'
+import authReducer from '../Redux/auth/AuthTwoSlice'
 import walletReducer from '../Redux/dashboard/dashboardSlice';
 import loanProductReducer from'../Redux/Loan_Product/loan_product_slice';
 import loanProductsTableReducer from'../Redux/Loan_Product/loanProductTableSlice';

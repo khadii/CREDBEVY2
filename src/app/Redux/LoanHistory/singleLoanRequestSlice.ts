@@ -9,7 +9,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 interface User {
   user_uuid: string;
   first_name: string;
-  middle_name: string;
+  middle_name: string | null;
   last_name: string;
   selfie_base_image_64: string;
   date_of_birth: string;
@@ -31,7 +31,7 @@ interface RequestDetails {
   monthly_repayment: number;
   created_at: string;
   updated_at: string;
-  start_date: string | null;
+  start_date: string;
   repaid_at: string | null;
   total_paid: number;
   remaining_balance: number;
@@ -49,8 +49,8 @@ interface EmploymentInfo {
   monthly_income: number;
   job_role: string;
   current_employer: string | null;
-  business_name: string;
-  business_address: string;
+  business_name: string | null;
+  business_address: string | null;
 }
 
 interface FinancialInfo {
@@ -104,6 +104,24 @@ interface Prediction {
   income_comparison: IncomeComparison;
 }
 
+interface Repayment {
+  uuid: string;
+  installment: number;
+  amount_paid: string;
+  balance: number;
+  due_date: string;
+  status: string;
+  created_at: string;
+}
+
+interface Transaction {
+  uuid: string;
+  amount_paid: number;
+  transaction_date: string;
+  transaction_type: string;
+  narration: string;
+}
+
 interface LoanData {
   uuid: string;
   user: User;
@@ -114,6 +132,8 @@ interface LoanData {
   credit_info: any | null;
   documents: Document[];
   prediction: Prediction;
+  repayment: Repayment[];
+  transactions: Transaction[];
 }
 
 interface SingleLoanResponse {
@@ -140,14 +160,14 @@ const initialState: SingleLoanState = {
 // Thunk
 export const fetchSingleLoanRequest = createAsyncThunk(
   "singleLoanRequest/fetch",
-  async (loanUuid: string, { rejectWithValue }: { rejectWithValue: Function }) => {
+  async (loanUuid: string, { rejectWithValue }) => {
     try {
       const token = Cookies.get("authToken");
       if (!token) {
         return rejectWithValue("Authentication token is missing.");
       }
 
-      const response = await axios.get(
+      const response = await axios.get<SingleLoanResponse>(
         `${BASE_URL}/api/partner/loan-history/single-loan-request/${loanUuid}`,
         {
           headers: {

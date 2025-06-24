@@ -11,6 +11,7 @@ import Layout from "../../Layout/Layout";
 import AnimatedLoader from "../../animation";
 import RepaymentInfo from "./repaymentInfo";
 import { single_loan_repayments } from "@/app/Redux/Repayment/repayment_thunk";
+import NoDataFound from "../../NoDataFound";
 
 
 interface RepaymentDetailsProps {
@@ -19,8 +20,8 @@ interface RepaymentDetailsProps {
 
 export default function RepaymentDetails({id}:RepaymentDetailsProps) {
 
-
-
+const { data: loanData, loading, error } = useSelector(
+    (state: RootState) => state.historysingleLoanRequest);
 
   
   return (

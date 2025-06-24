@@ -10,6 +10,7 @@ import DocumentsTable from "./DocTable";
 import { fetchSingleLoanRequest } from "@/app/Redux/LoanHistory/singleLoanRequestSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Redux/store";
+import NoDataFound from "../../NoDataFound";
 
 interface RepaymentDetailsProps {
   id: string;
@@ -18,7 +19,8 @@ interface RepaymentDetailsProps {
 export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
   const dispatch = useDispatch<AppDispatch>();
   const { data: loanData, loading, error } = useSelector(
-    (state: RootState) => state.historysingleLoanRequest);
+    (state: RootState) => state.historysingleLoanRequest
+  );
 
   useEffect(() => {
     if (id) {
@@ -37,55 +39,42 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
       loan_terms: loanData.request_details.loan_duration,
       interest_rate: loanData.request_details.interest_rate,
       request_date: loanData.request_details.created_at,
+      start_date: loanData.request_details.start_date,
       end_date: loanData.request_details.repaid_at || "N/A",
       status: loanData.request_details.status,
       fee: loanData.partner_info.total_expense_fee,
       balance: loanData.request_details.remaining_balance,
+      total_paid: loanData.request_details.total_paid,
     };
   }, [loanData]);
 
-  // Format repayment schedule
+  // Format repayment schedule using actual API data
   const repaymentSchedule = useMemo(() => {
     if (!loanData) return { repayment_schedule: [], total_repaymentSchedule: 0 };
 
-    // This is a simplified version - you might need to adjust based on your actual API response
     return {
-      repayment_schedule: [
-        {
-          installment: 0,
-          payment: 0,
-          balance: loanData.request_details.loan_amount,
-          due_date: "",
-          status: "",
-        },
-        // Add actual repayment schedule items here based on API data
-        // This is just a placeholder - you'll need to map the actual schedule
-        {
-          installment: 1,
-          payment: loanData.request_details.monthly_repayment,
-          balance: loanData.request_details.remaining_balance,
-          due_date: loanData.request_details.next_due_date || "N/A",
-          status: loanData.request_details.status.toLowerCase(),
-        },
-      ],
+      repayment_schedule: loanData.repayment.map((item: { installment: any; amount_paid: string; balance: any; due_date: any; status: any; }) => ({
+        installment: item.installment,
+        payment: parseFloat(item.amount_paid) || 0,
+        balance: item.balance,
+        due_date: item.due_date,
+        status: item.status,
+      })),
       total_repaymentSchedule: loanData.request_details.loan_duration,
     };
   }, [loanData]);
 
-  // Format transaction history
+  // Format transaction history using actual API data
   const transactionHistory = useMemo(() => {
-    // This should be replaced with actual transaction data from your API
-    // Currently using a placeholder
+    if (!loanData) return { transactions: [], total_transactions: 0 };
+
     return {
-      transactions: [
-        {
-          transaction_type: "Loan Disbursement",
-          amount_paid: loanData?.request_details.loan_amount || 0,
-          transaction_date: loanData?.request_details.created_at || "N/A",
-        },
-        // Add more transactions as needed
-      ],
-      total_transactions: 1,
+      transactions: loanData.transactions.map((tx:any)=> ({
+        transaction_type: tx.narration,
+        amount_paid: tx.amount_paid,
+        transaction_date: tx.transaction_date,
+      })),
+      total_transactions: loanData.transactions.length,
     };
   }, [loanData]);
 
@@ -114,14 +103,28 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
         value: formatCurrency(summary.loan_amount) ?? "N/A",
       },
       {
+        label: "Monthly Repayment",
+        value: formatCurrency(summary.monthly_repayment) ?? "N/A",
+      },
+      {
         label: "Loan Purpose",
         value: summary.loan_purpose ?? "N/A",
       },
-      { label: "Loan Terms", value: `${summary.loan_terms} Months` },
-      { label: "Interest Rate", value: `${summary.interest_rate}%`},
+      { 
+        label: "Loan Terms", 
+        value: `${summary.loan_terms} Months` 
+      },
+      { 
+        label: "Interest Rate", 
+        value: `${summary.interest_rate}%`
+      },
+      {
+        label: "Request Date",
+        value: formatDate(summary.request_date) ?? "N/A",
+      },
       {
         label: "Start Date",
-        value: formatDate(summary.request_date) ?? "N/A",
+        value: formatDate(summary.start_date) ?? "N/A",
       },
       {
         label: "End Date",
@@ -136,26 +139,36 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
         value: formatCurrency(Number(summary.fee)) ?? "N/A",
       },
       {
+        label: "Total Paid",
+        value: formatCurrency(summary.total_paid) ?? "N/A",
+      },
+      {
         label: "Balance",
         value: formatCurrency(summary.balance) ?? "N/A",
       },
     ];
   }, [summary]);
 
-  if (loading) {
-    return <div>Loading loan details...</div>;
-  }
+  if (loading || !loanData) {
+    return (
+      <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
+       
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-6 w-full bg-gray-200 animate-pulse rounded"></div>
+          ))}
+        </div>
+      </div>
+    );}
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="flex justify-center items-center h-full text-red-500">Error: {error}</div>;
   }
 
-  if (!loanData) {
-    return <div>No loan data available</div>;
-  }
+
 
   return (
-    <div className={`pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px]`}>
+    <div className={`pt-[34px] bg-white rounded-lg min-h-[1100px] w-full border-[1px]`}>
       <div className="flex mb-[42px] pl-[24px]">
         <Tabs
           tabs={tabs}
@@ -202,7 +215,7 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
 
       {activeTab === "Document" && (
         <div className="w-full px-[24px]">
-          <DocumentsTable LoanRequest_Data={{ loan: { documents: loanData.documents } }} />
+          <DocumentsTable documents={loanData.documents} />
         </div>
       )}
     </div>

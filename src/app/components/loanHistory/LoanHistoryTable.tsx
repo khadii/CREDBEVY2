@@ -6,6 +6,7 @@ import TableWithPagination from '../table/tablewWthPagination';
 import { CustomCheckbox } from '../CheckboxForTable/TablecheckBox';
 import { FaCircle } from 'react-icons/fa';
 import StatusWithOptionsCustomers from './Statuschecker';
+import NoDataFound from '../NoDataFound';
 
 
 export interface CustomerLoanData {
@@ -136,21 +137,22 @@ export const HistoryTable = ({
     </>
   );
 
-  return (
-    <TableWithPagination
-      headers={customerHeaders}
-      data={loan_table_data_all}
-      titleProps={titleProps}
-      href="/dashboard/loan-history/details"
-      renderRow={renderRow}
-      renderHeader={renderHeader}
-      isHeaderChecked={isHeaderChecked}
-      handleHeaderToggle={handleHeaderToggle}
-      setCurrentPage={setCurrentPage}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      bulkAction={bulkAction}
-      showAddProductButton={false}
-    />
-  );
-};
+return loan_table_data_all?.length === 0 ? (
+  <NoDataFound />
+) : (
+  <TableWithPagination
+    headers={customerHeaders}
+    data={loan_table_data_all}
+    titleProps={titleProps}
+    href="/dashboard/loan-history/details"
+    renderRow={renderRow}
+    renderHeader={renderHeader}
+    isHeaderChecked={isHeaderChecked}
+    handleHeaderToggle={handleHeaderToggle}
+    setCurrentPage={setCurrentPage}
+    currentPage={currentPage}
+    totalPages={totalPages}
+    bulkAction={bulkAction}
+    showAddProductButton={false}
+  />
+)}

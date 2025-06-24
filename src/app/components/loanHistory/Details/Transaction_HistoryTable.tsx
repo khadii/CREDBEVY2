@@ -8,6 +8,7 @@ import { _single_loan_products_request } from "@/app/Redux/Loan_request/loan_req
 import Table from "../../TableThree/GeneralreuseableTable";
 import { formatDate } from "@/app/lib/formatdate";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
+import NoDataFound from "../../NoDataFound";
 
 interface TransactionData {
   transaction_type: string;
@@ -50,7 +51,9 @@ const Transaction_HistoryTable = ({
         return null;
     }
   };
-
+   if (formatTableData().length < 1) {
+      return <NoDataFound />;
+    }
   return (
     <>
       <Table
