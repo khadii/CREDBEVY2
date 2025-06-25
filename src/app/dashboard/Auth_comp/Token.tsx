@@ -10,38 +10,46 @@ import { AppDispatch } from "@/app/Redux/store";
 import toast from "react-hot-toast";
 
 import { useEffect, useRef, useState } from "react";
-import { clearOtpData, clearResendStatus, clearVerificationError } from "@/app/Redux/auth/AuthTwoSlice";
+import {
+  clearOtpData,
+  clearResendStatus,
+  clearVerificationError,
+} from "@/app/Redux/auth/AuthTwoSlice";
 import { loginUser, resendOtp, verifyTwoFa } from "@/app/Redux/auth/AuthTwo";
 import AnimatedLoader from "@/app/components/animation";
-import { FormField, PasswordFormField } from "@/app/components/Login/Formcomponents/InputField";
-
+import {
+  FormField,
+  PasswordFormField,
+} from "@/app/components/Login/Formcomponents/InputField";
 
 export default function LoginFlow() {
-const [resendCooldown, setResendCooldown] = useState<number>(0);
+  const [resendCooldown, setResendCooldown] = useState<number>(0);
 
-useEffect(() => {
-  if (resendCooldown > 0) {
-    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
-    return () => clearTimeout(timer);
-  }
-}, [resendCooldown]);
-
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(
+        () => setResendCooldown(resendCooldown - 1),
+        1000
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const logo = "/Image/cred.svg";
-  
+
   // Redux state
-  const { 
-    loading, 
-    error, 
+  const {
+    loading,
+    error,
     otpData,
     verificationLoading,
     verificationError,
     resendLoading,
     resendSuccess,
     isAuthenticated,
-    token
+    token,
   } = useSelector((state: any) => state.auth);
 
   // Local state
@@ -79,8 +87,12 @@ useEffect(() => {
   };
 
   const loginValidationSchema = Yup.object({
-    email: Yup.string().email("Invalid email address").required("Email is required"),
-    password: Yup.string().min(8, "Must be at least 8 characters").required("Password is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(8, "Must be at least 8 characters")
+      .required("Password is required"),
   });
 
   const handleLoginSubmit = async (values: typeof loginInitialValues) => {
@@ -104,7 +116,10 @@ useEffect(() => {
     }
   };
 
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Backspace" && !code[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -149,10 +164,12 @@ useEffect(() => {
       return;
     }
 
-    const result = await dispatch(verifyTwoFa({
-      partner_user_id: otpData.partnerUserId,
-      otp: otp
-    }));
+    const result = await dispatch(
+      verifyTwoFa({
+        partner_user_id: otpData.partnerUserId,
+        otp: otp,
+      })
+    );
 
     if (verifyTwoFa.fulfilled.match(result)) {
       toast.success("Login successful!");
@@ -165,28 +182,26 @@ useEffect(() => {
     }
   };
 
-const handleResendOtp = () => {
-  if (resendCooldown > 0) return; // Block if cooldown is active
+  const handleResendOtp = () => {
+    if (resendCooldown > 0) return; // Block if cooldown is active
 
-  if (!otpData?.partnerUserId) {
-    toast.error("Session expired. Please login again.");
-    setShowOtpScreen(false);
-    dispatch(clearOtpData());
-    return;
-  }
-
-  setResendCooldown(30); // Start 30-second delay
-
-  dispatch(resendOtp(otpData.partnerUserId)).then((result: any) => {
-    if (resendOtp.fulfilled.match(result)) {
-      toast.success("New OTP sent to your email.");
-    } else {
-      toast.error("Failed to resend OTP.");
+    if (!otpData?.partnerUserId) {
+      toast.error("Session expired. Please login again.");
+      setShowOtpScreen(false);
+      dispatch(clearOtpData());
+      return;
     }
-  });
-};
 
+    setResendCooldown(30); // Start 30-second delay
 
+    dispatch(resendOtp(otpData.partnerUserId)).then((result: any) => {
+      if (resendOtp.fulfilled.match(result)) {
+        toast.success("New OTP sent to your email.");
+      } else {
+        toast.error("Failed to resend OTP.");
+      }
+    });
+  };
 
   if (showOtpScreen) {
     return (
@@ -206,16 +221,24 @@ const handleResendOtp = () => {
                     Enter the 6-digit code sent to your email
                   </p>
                 </div>
-                <div className={`flex justify-center gap-3 mb-8 ${shake ? "animate-pulse" : ""}`}>
+                <div
+                  className={`flex justify-center gap-3 mb-8 ${
+                    shake ? "animate-pulse" : ""
+                  }`}
+                >
                   {code.map((digit, index) => (
                     <input
                       key={index}
-                      ref={(el) => { inputRefs.current[index] = el; }}
+                      ref={(el) => {
+                        inputRefs.current[index] = el;
+                      }}
                       type="text"
                       inputMode="numeric"
                       maxLength={1}
                       value={digit}
-                      onChange={(e) => handleOtpInputChange(index, e.target.value)}
+                      onChange={(e) =>
+                        handleOtpInputChange(index, e.target.value)
+                      }
                       onKeyDown={(e) => handleOtpKeyDown(index, e)}
                       onPaste={handleOtpPaste}
                       className={`w-10 h-12 rounded-[8px] focus:outline-none text-center text-[40px] font-bold mb-[48px] sm:w-[80px] sm:h-[80px] border-[4px] bg-[#FAFAFA] text-[#333333] ${
@@ -228,35 +251,37 @@ const handleResendOtp = () => {
                 </div>
 
                 {verificationError && (
-                  <p className="text-red-500 text-center mb-4">{verificationError}</p>
+                  <p className="text-red-500 text-center mb-4">
+                    {verificationError}
+                  </p>
                 )}
 
                 <div className="w-full mb-3 px-5 sm:px-24">
                   <button
                     onClick={handleVerifyOtp}
                     className="w-full rounded-[4px] bg-[#0F5959] h-[58px] text-center text-base font-bold text-white hover:bg-[#0F5959]/90 disabled:bg-gray-400"
-                    disabled={verificationLoading || code.some(d => !d)}
+                    disabled={verificationLoading || code.some((d) => !d)}
                   >
                     {verificationLoading ? "Verifying..." : "Verify"}
                   </button>
-                  
+
                   <div className="text-center mt-6">
                     <span className="font-medium text-sm text-[#333333] mt-[12px] text-center">
                       Didn't get the code?{" "}
                     </span>
-                <button
-  onClick={handleResendOtp}
-  disabled={resendCooldown > 0}
-  className={`font-semibold transition-colors duration-200 ${
-    resendCooldown > 0
-      ? "text-gray-400 cursor-not-allowed"
-      : "text-[#156064] hover:text-[#0F5959]/90 hover:underline"
-  }`}
->
-  {resendCooldown > 0 ? `Resend (${resendCooldown}s)` : "Resend"}
-</button>
-
-
+                    <button
+                      onClick={handleResendOtp}
+                      disabled={resendCooldown > 0}
+                      className={`font-semibold transition-colors duration-200 ${
+                        resendCooldown > 0
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-[#156064] hover:text-[#0F5959]/90 hover:underline"
+                      }`}
+                    >
+                      {resendCooldown > 0
+                        ? `Resend (${resendCooldown}s)`
+                        : "Resend"}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -291,7 +316,11 @@ const handleResendOtp = () => {
                       <FormField type="text" name="email" placeholder="Email" />
                     </div>
                     <div className="relative">
-                      <PasswordFormField type="password" name="password" placeholder="Password" />
+                      <PasswordFormField
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                      />
                     </div>
 
                     {error && (
