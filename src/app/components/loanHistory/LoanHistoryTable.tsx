@@ -7,6 +7,9 @@ import { CustomCheckbox } from '../CheckboxForTable/TablecheckBox';
 import { FaCircle } from 'react-icons/fa';
 import StatusWithOptionsCustomers from './Statuschecker';
 import NoDataFound from '../NoDataFound';
+import { revenue_vs_profit_trend } from '@/app/Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_thunk';
+import { AppDispatch } from '@/app/Redux/store';
+import { useDispatch } from 'react-redux';
 
 
 export interface CustomerLoanData {
@@ -24,6 +27,8 @@ export interface CustomerLoanData {
 
 
 export const HistoryTable = ({
+
+
   bulkAction,
   loan_table_data_all,
   setCurrentPage,
@@ -55,7 +60,7 @@ export const HistoryTable = ({
 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
   const { selectedIds, setSelectedIds } = useDashboard();
-
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     if (loan_table_data_all && loan_table_data_all.length > 0) {
       setSelectedIds([]);
@@ -137,6 +142,13 @@ export const HistoryTable = ({
     </>
   );
 
+ 
+
+
+
+
+
+  
 return loan_table_data_all?.length === 0 ? (
   <NoDataFound />
 ) : (

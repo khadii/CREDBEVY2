@@ -38,7 +38,7 @@ export const StatusWithOptionsCustomers= ({
     denied: "#E33A24",
   };
 
-  const statusKey = status.toLowerCase() as keyof typeof statusStyles;
+  const statusKey = status?.toLowerCase() as keyof typeof statusStyles;
 
   return (
     <div className="flex items-center space-x-[18px] relative">

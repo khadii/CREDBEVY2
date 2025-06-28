@@ -187,7 +187,7 @@ export default function Summary() {
           </p>
         </div>
       </div>
-      
+
       <YearDropdown
         years={[2023, 2024]}
         selectedYear={2024}
@@ -199,21 +199,25 @@ export default function Summary() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <Smallcard
-          balance={`₦ ${data?.wallet_balance}` || 'N/A'}
-          accountNumber={data?.account_number || 'N/A'}
+          balance={`₦ ${data?.wallet_balance}` || "N/A"}
+          accountNumber={data?.account_number || "N/A"}
           onFundClick={handleFundWallet}
         />
 
         <Card
           title="Total Revenue"
-          amount={dataStat?.totalRevenue.total_revenue || 'N/A'}
-          percentage={`${dataStat?.totalRevenue.percentage_difference}%` || 'N/A'}
+          amount={dataStat?.totalRevenue.total_revenue || "N/A"}
+          percentage={
+            `${dataStat?.totalRevenue.percentage_difference}%` || "N/A"
+          }
           icon={<TbCurrencyNaira size={"18px"} className="text-gray-500" />}
         />
         <Card
           title="Total Loan Volume"
-          amount={dataStat?.totalLoanVolume.total_loan_count || 'N/A'}
-          percentage={`${dataStat?.totalLoanVolume.percentage_difference}%` || 'N/A'}
+          amount={dataStat?.totalLoanVolume.total_loan_count || "N/A"}
+          percentage={
+            `${dataStat?.totalLoanVolume.percentage_difference}%` || "N/A"
+          }
           icon={<LuSquareActivity size={"18px"} className="text-gray-500" />}
         />
       </div>
@@ -224,9 +228,16 @@ export default function Summary() {
           title="Revenue VS Profit Trend"
           description="Trend comparing Revenue and profit"
           totalAmount={formatCurrency(
-            revenueProfitData.reduce((sum, item) => sum + item.firstDataset + item.secondDataset, 0)
+            revenueProfitData.reduce(
+              (sum, item) => sum + item.firstDataset + item.secondDataset,
+              0
+            )
           )}
-          comparisonData={revenueProfitData.length > 0 ? revenueProfitData : [{ name: 'No Data', firstDataset: 0, secondDataset: 0 }]}
+          comparisonData={
+            revenueProfitData.length > 0
+              ? revenueProfitData
+              : [{ name: "No Data", firstDataset: 0, secondDataset: 0 }]
+          }
           firstDatasetName="Revenue"
           secondDatasetName="Profit"
           selectedYear={selectedYear}
@@ -240,15 +251,22 @@ export default function Summary() {
         <EqualHeightContainer
           leftContent={
             <LineChartTwo
-            firstDatasetName="Repayment"
-            secondDatasetName="Trends"
+              firstDatasetName="Repayment"
+              secondDatasetName="Trends"
               title="Repayment VS Default Trends"
               description="Trend showing repayment vs default"
               totalAmount={formatCurrency(
-                repaymentDefaultLineData.reduce((sum, item) => sum + item.firstValue + item.secondValue, 0)
+                repaymentDefaultLineData.reduce(
+                  (sum, item) => sum + item.firstValue + item.secondValue,
+                  0
+                )
               )}
               data={color1}
-              lineData={repaymentDefaultLineData.length > 0 ? repaymentDefaultLineData : [{ month: 'No Data', firstValue: 0, secondValue: 0 }]}
+              lineData={
+                repaymentDefaultLineData.length > 0
+                  ? repaymentDefaultLineData
+                  : [{ month: "No Data", firstValue: 0, secondValue: 0 }]
+              }
               selectedYear={selectedYear}
               setSelectedYear={setSelectedYear}
             />
@@ -257,7 +275,10 @@ export default function Summary() {
             <LoanApprovalChart
               title="Loan Default Rate"
               description="Total unpaid loan metrics"
-              total={dataStat?.loanStats.loanDefaultRate?.total_defaulted_loans}
+              total={
+                dataStat?.loanStats.loanDefaultRate?.total_defaulted_loans ??
+                "N/A"
+              }
               data={datas}
             />
           }

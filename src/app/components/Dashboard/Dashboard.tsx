@@ -19,13 +19,12 @@ import {
   _loan_performance,
 } from "@/app/Redux/dashboard/dashboardThunk"
 import { clearWalletBalance } from "@/app/Redux/dashboard/dashboardSlice"
-import SpinningFaceExact from "../credbevyLoader"
 import Dashboardone from "./reuseabledashboaardone."
 import { formatToNaira } from "@/app/lib/Naira"
 import AnimatedLoader from "../animation"
 import { useRouter } from "next/navigation"
 
-// Helper function to format values to Naira
+
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>()

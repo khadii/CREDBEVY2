@@ -50,6 +50,7 @@ import customerpersoninfoReducer from '../Redux/customer/fetchSingleLoanRequest'
 import loanHistoryStatsReducer from './LoanHistory/LoanHistory_stat'
 import loanHistoryRequestsSliceReducer from './LoanHistory/loanRequestSlice'
 import historyloanDefaultRateReducer from './LoanHistory/loanDefaultRate'
+import invitationReducer from './invitation_slice'
 import historysingleLoanRequestReducere from './LoanHistory/singleLoanRequestSlice'
 
 export const store = configureStore({
@@ -104,7 +105,8 @@ export const store = configureStore({
        loanHistoryStats:loanHistoryStatsReducer,
        loanHistoryRequestsSlice:loanHistoryRequestsSliceReducer,
        historyloanDefaultRate:historyloanDefaultRateReducer,
-       historysingleLoanRequest:historysingleLoanRequestReducere
+       historysingleLoanRequest:historysingleLoanRequestReducere,
+           invitation: invitationReducer,
   },
 });
 

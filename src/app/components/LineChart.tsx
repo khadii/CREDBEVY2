@@ -43,7 +43,7 @@ const LineChartComponent = ({
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `${value}%`} // Format Y-axis labels as percentages
-       width={30}
+       width={35}
 
           tick={{ fill: "#858688", fontSize: 14 }}
         />

@@ -1,23 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/navigation";
-import { useDashboard } from "@/app/Context/DahboardContext";
+import React, { useState, useEffect } from "react";
 import TableWithPagination from "../../table/tablewWthPagination";
 import { CustomCheckbox } from "../../CheckboxForTable/TablecheckBox";
 import { StatusWithOptionsCustomers } from "./Status";
 
-
-
-
 interface CustomerLoanData {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
   credit_score: string;
   date_time: string;
   status: "Pending" | "Approved" | "Denied";
   uuid: string;
-  image?:string
+  image?: string;
 }
 
 export const CustomersTable = ({
@@ -51,8 +47,14 @@ export const CustomersTable = ({
   };
 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
-  const { selectedIds, setSelectedIds } = useDashboard();
-  
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  // Combine first and last name
+  const formatName = (customer: CustomerLoanData) => {
+    return `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'N/A';
+  };
+
   useEffect(() => {
     if (loan_table_data_all && loan_table_data_all.length > 0) {
       setSelectedIds([]);
@@ -71,7 +73,7 @@ export const CustomersTable = ({
   }, []);
   
   useEffect(() => {
-    if (selectedIds.length === loan_table_data_all.length) {
+    if (selectedIds.length === loan_table_data_all?.length) {
       setIsHeaderChecked(true);
     } else {
       setIsHeaderChecked(false);
@@ -79,12 +81,11 @@ export const CustomersTable = ({
   }, [selectedIds, loan_table_data_all]);
 
   const handleToggle = (id: string) => {
-    setSelectedIds((prevSelectedIds: any) => {
-      const currentIds = Array.isArray(prevSelectedIds) ? prevSelectedIds : [];
-      if (currentIds.includes(id)) {
-        return currentIds.filter(selectedId => selectedId !== id);
+    setSelectedIds((prevSelectedIds) => {
+      if (prevSelectedIds.includes(id)) {
+        return prevSelectedIds.filter(selectedId => selectedId !== id);
       } else {
-        return [...currentIds, id];
+        return [...prevSelectedIds, id];
       }
     });
   };
@@ -112,8 +113,6 @@ export const CustomersTable = ({
     />
   );
 
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
   const renderStatus = (status: string, uuid: string) => (
     <StatusWithOptionsCustomers 
       status={status} 
@@ -134,14 +133,14 @@ export const CustomersTable = ({
               onChange={() => handleToggle(item.uuid)}
             />
           </div>
-             {item.image && (
-              <img
-                src={item.image}
-                alt="avatar"
-                className="w-8 h-8 rounded-full"
-              />
-            )}
-          <p className="truncate max-w-[120px]">{item.name}</p>
+          {item.image && (
+            <img
+              src={item.image}
+              alt="avatar"
+              className="w-8 h-8 rounded-full"
+            />
+          )}
+          <p className="truncate max-w-[120px]">{formatName(item)}</p>
         </div>
       </td>
       <td className="truncate max-w-[200px] py-4 px-6">{item.email}</td>
@@ -159,7 +158,7 @@ export const CustomersTable = ({
       headers={customerHeaders}
       data={loan_table_data_all}
       titleProps={titleProps}
-      href="#"
+      href="/dashboard/customers/details"
       renderRow={renderRow}
       renderHeader={renderHeader}
       isHeaderChecked={isHeaderChecked}

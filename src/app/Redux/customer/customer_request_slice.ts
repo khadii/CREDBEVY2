@@ -2,41 +2,34 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-interface ElectionFilters {
+interface CustomerFilters {
   search?: string;
   sort_by?: 'ASC' | 'DESC';
   start_date?: string;
   end_date?: string;
-  single?: boolean | string;
-  limit?: number | string;
+  single?: string;
+  limit?: string;
   paginate?: boolean;
-  filter_by?: 'interested' | 'not_interested' | string;
-  approvalStatus?: 'pending' | 'approved' | 'declined' | string;
+  filter_by?: string;
+  approvalStatus?: string;
+  page?: number;
 }
 
-interface LoanRequest {
+interface Customer {
+  uuid: string;
   first_name: string;
   last_name: string;
-  average_income: number;
+  email: string;
+  telephone: string;
   credit_score: string;
-  interest_rate: number;
-  loan_duration: number;
-  amount_requested: number;
-  loan_name: string;
-  loan_purpose: string;
-  date_and_time: string;
-  loan_uuid: string;
-  info_status: string | null;
-  repayment_status: string;
-  image: string;
-  total_expense_fee: string;
-  indication_of_interest_expense_fee: number;
-  approval_expense_fee: number;
+  approval_status: string;
+  created_at: string;
+  loan_count: number;
 }
 
-interface LoanRequestsResponse {
+interface CustomersResponse {
   current_page: number;
-  data: LoanRequest[];
+  data: Customer[];
   first_page_url: string;
   from: number;
   last_page: number;
@@ -59,19 +52,19 @@ interface ApiResponse {
   message: string;
   data: {
     total_count: number;
-    loan_requests: LoanRequestsResponse;
+    customers: CustomersResponse;
   };
 }
 
-interface LoanRequestsState {
-  data: LoanRequestsResponse | null;
+interface CustomersState {
+  data: CustomersResponse | null;
   loading: boolean;
   error: string | null;
-  filters: ElectionFilters;
+  filters: CustomerFilters;
   totalCount: number;
 }
 
-const initialState: LoanRequestsState = {
+const initialState: CustomersState = {
   data: null,
   loading: false,
   error: null,
@@ -79,11 +72,11 @@ const initialState: LoanRequestsState = {
   totalCount: 0,
 };
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const fetchCustomerLoanRequests = createAsyncThunk(
-  'customers/loanRequests',
-  async (filters: ElectionFilters, { rejectWithValue }) => {
+  'customers/fetchCustomers',
+  async (filters: CustomerFilters, { rejectWithValue }) => {
     try {
       const token = Cookies.get('authToken');
       if (!token) {
@@ -91,7 +84,7 @@ export const fetchCustomerLoanRequests = createAsyncThunk(
       }
 
       const response = await axios.post<ApiResponse>(
-        `${BASE_URL}/api/partner/customers/all-loan-requests`,
+        `${BASE_URL}/api/partner/customers/all-customers`,
         filters,
         {
           headers: {
@@ -104,7 +97,7 @@ export const fetchCustomerLoanRequests = createAsyncThunk(
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message || 'Unauthorized');
       } else if (error.request) {
-        return rejectWithValue('No response from the server. Please check your network connection.');
+        return rejectWithValue('No response from server. Please check your network.');
       } else {
         return rejectWithValue('An unexpected error occurred. Please try again.');
       }
@@ -112,8 +105,8 @@ export const fetchCustomerLoanRequests = createAsyncThunk(
   }
 );
 
-const loanRequestsSlice = createSlice({
-  name: 'loanRequests',
+const customerRequestSlice = createSlice({
+  name: 'customerLoanRequests',
   initialState,
   reducers: {
     setFilters: (state, action) => {
@@ -122,7 +115,7 @@ const loanRequestsSlice = createSlice({
     resetFilters: (state) => {
       state.filters = {};
     },
-    clearLoanRequests: (state) => {
+    clearCustomers: (state) => {
       state.data = null;
       state.error = null;
       state.loading = false;
@@ -136,7 +129,7 @@ const loanRequestsSlice = createSlice({
       })
       .addCase(fetchCustomerLoanRequests.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data.loan_requests;
+        state.data = action.payload.data.customers;
         state.totalCount = action.payload.data.total_count;
       })
       .addCase(fetchCustomerLoanRequests.rejected, (state, action) => {
@@ -146,6 +139,6 @@ const loanRequestsSlice = createSlice({
   },
 });
 
-export const { setFilters, resetFilters, clearLoanRequests } = loanRequestsSlice.actions;
+export const { setFilters, resetFilters, clearCustomers } = customerRequestSlice.actions;
 
-export default loanRequestsSlice.reducer;
+export default customerRequestSlice.reducer;
