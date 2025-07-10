@@ -234,7 +234,7 @@ if(lhrloading){
   return (       <AnimatedLoader isLoading={loading||lhrloading}></AnimatedLoader>)
 }
   return (
-    <div className="w-full min-h-screen p-4 space-y-6">
+    <div className="w-full min-h-screen space-y-6">
       <LoanRequestHeaderWithTabs
         title="Loan History"
         tabs={tabs}

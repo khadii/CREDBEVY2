@@ -20,13 +20,13 @@ interface DateInputFieldProps {
   className?: string;
 }
 
-const InputField = ({ 
-  label, 
-  value, 
-  onChange, 
-  type = "text", 
-  placeholder = "", 
-  className = "" 
+const InputField = ({
+  label,
+  value,
+  onChange,
+  type = "text",
+  placeholder = "",
+  className = "",
 }: InputFieldProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Simple direct input handling without special formatting
@@ -35,7 +35,9 @@ const InputField = ({
 
   return (
     <div className={className}>
-      <label className="block text-[12px] text-[#333333] font-semibold mb-1">{label}</label>
+      <label className="block text-[12px] text-[#333333] font-semibold mb-1">
+        {label}
+      </label>
       <input
         type="text"
         value={value}
@@ -47,7 +49,12 @@ const InputField = ({
   );
 };
 
-const DateInputField = ({ label, selected, onChange, className = "" }: DateInputFieldProps) => {
+const DateInputField = ({
+  label,
+  selected,
+  onChange,
+  className = "",
+}: DateInputFieldProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const formatDate = (date: Date | null) => {
@@ -60,7 +67,9 @@ const DateInputField = ({ label, selected, onChange, className = "" }: DateInput
 
   return (
     <div className={className}>
-      <label className="block text-[12px] text-[#333333] font-semibold mb-1">{label}</label>
+      <label className="block text-[12px] text-[#333333] font-semibold mb-1">
+        {label}
+      </label>
       <div className="relative">
         <DatePicker
           selected={selected}
@@ -92,8 +101,8 @@ const DateInputField = ({ label, selected, onChange, className = "" }: DateInput
 };
 
 export default function FilterModal() {
-  // Initialize all state with empty values  
-  const { filter, setFilter} = useDashboard();
+  // Initialize all state with empty values
+  const { filter, setFilter } = useDashboard();
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [toDate, setToDate] = useState<Date | null>(null);
   const [minIncome, setMinIncome] = useState("");
@@ -106,7 +115,7 @@ export default function FilterModal() {
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Only close if clicking directly on the overlay, not its children
     if (e.target === e.currentTarget) {
-        setFilter(false)
+      setFilter(false);
     }
   };
 
@@ -120,15 +129,21 @@ export default function FilterModal() {
     setMaxRequested("");
     setMinCreditScore("");
     setMaxCreditScore("");
-    setFilter(false)
+    setFilter(false);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"onClick={handleOverlayClick}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]"
+      onClick={handleOverlayClick}
+    >
       <div className="bg-white rounded-lg w-full max-w-[343px]">
         <div className="flex justify-between bg-[#F1F6FB] items-center py-[13px] px-[15px] rounded-t-lg border-b">
           <h2 className="text-[14px] font-medium text-[#333333]">Filter</h2>
-          <button className="text-gray-500 hover:text-gray-700" onClick={()=>setFilter(false)}>
+          <button
+            className="text-gray-500 hover:text-gray-700"
+            onClick={() => setFilter(false)}
+          >
             <X size={18} />
           </button>
         </div>
@@ -136,7 +151,9 @@ export default function FilterModal() {
         <div className="px-[15px] py-5 space-y-[20px]">
           {/* Date Selection */}
           <div>
-            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">Select Date</h3>
+            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">
+              Select Date
+            </h3>
             <div className="flex gap-4">
               <DateInputField
                 label="From:"
@@ -155,7 +172,9 @@ export default function FilterModal() {
 
           {/* Average Income */}
           <div>
-            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">Average Income</h3>
+            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">
+              Average Income
+            </h3>
             <div className="flex gap-4">
               <InputField
                 label="Min Amount:"
@@ -176,13 +195,15 @@ export default function FilterModal() {
 
           {/* Amount Requested */}
           <div>
-            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">Amount Requested</h3>
+            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">
+              Amount Requested
+            </h3>
             <div className="flex gap-4">
               <InputField
                 label="Min Amount:"
                 value={minRequested}
                 onChange={setMinRequested}
-                placeholder="₦200,000.00" 
+                placeholder="₦200,000.00"
                 className="w-1/2"
               />
               <InputField
@@ -197,7 +218,9 @@ export default function FilterModal() {
 
           {/* Credit Score */}
           <div>
-            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">Credit Score</h3>
+            <h3 className="text-sm font-semibold text-[#8A8B9F] mb-[12px]">
+              Credit Score
+            </h3>
             <div className="flex gap-4">
               <InputField
                 label="Min Amount:"
@@ -219,13 +242,16 @@ export default function FilterModal() {
 
         {/* Buttons */}
         <div className="flex px-4 py-[30px]">
-          <button 
+          <button
             className="flex-1 h-[36px] mr-2 border border-gray-300 rounded-[4px] text-[12px] font-semibold"
             onClick={handleClearFilter}
           >
             Cancel
           </button>
-          <button className="flex-1 h-[36px] ml-2 bg-[#156064] text-white text-[12px] rounded-[4px] font-semibold"  onClick={()=>setFilter(false)}>
+          <button
+            className="flex-1 h-[36px] ml-2 bg-[#156064] text-white text-[12px] rounded-[4px] font-semibold"
+            onClick={() => setFilter(false)}
+          >
             Apply Filter
           </button>
         </div>

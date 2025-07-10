@@ -17,8 +17,11 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [currentAction, setCurrentAction] = useState<'interest' | 'accept'>('interest');
   const [logout,setLogout]=useState(false)
    const [PrivacyPolicy,setPrivacyPolicy]=useState(true)
+      const [FundWallet,setFundWallet]=useState(false)
+            const [withdrawal,setWithdrawal]=useState(false)
   const [authPin, setAuhPin] = useState();
   const [pendingRequestCount, setPendingRequestCount] = useState<number>(0);
+
   
   const tabs = [
     { name: "All Request" },
@@ -107,6 +110,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setLogout={setLogout}
         privacyPolicy={PrivacyPolicy}
         setPrivacyPolicy={setPrivacyPolicy}
+        isFundWallet={FundWallet}
+        setFundWallet={setFundWallet}
+        withdrawal={withdrawal}
+        setWithdrawal={setWithdrawal}
       />
     </Provider>
   );

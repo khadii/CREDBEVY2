@@ -159,9 +159,9 @@ export default function ProfileCard({ id }: { id: any }) {
       />
       
       {/* Name */}
-      <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">
-        {fullName}
-      </h2>
+ <h2 className="text-2xl font-semibold text-[#333333] max-w-72 break-words">
+  {fullName}
+</h2>
 
       {/* Buttons */}
       <div className="mt-6 grid justify-center gap-2">

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Sidebar } from "./SideBar/SIdeBar";
+import { MobileNav, Sidebar } from "./SideBar/SIdeBar";
 import TopBar from "./navBar/NavBar";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,8 @@ import AnimatedLoader from "../animation";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import LogoutModal from "../Modals/LogoutModal";
 import PrivacyPolicy from "../Modals/Privacy_policy";
+import FundWallet from "../Modals/wallet/fundWallet";
+import { WithdrawModal } from "../Modals/wallet/WithdrawModal";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, error } = useSelector(
@@ -36,7 +38,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     dispatch(checkTokenConsistency());
   }, [dispatch]);
 
-  const { logout, setLogout } = useDashboard();
+  const {
+    logout,
+    setLogout,
+    isFundWallet,
+    setFundWallet,
+    withdrawal,
+    setWithdrawal,
+  } = useDashboard();
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
   useEffect(() => {
@@ -50,7 +59,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="w-full">
       <div className="flex  flex-col w-full">
         <div className=" flex flex-row">
-          <div className=" bg-[#24262D] md:max-w-64 min-h-screen ">
+          <div className=" bg-[#24262D] md:max-w-64 min-h-screen  hidden md:block">
             <Sidebar />
           </div>
 
@@ -58,18 +67,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="sticky top-0 bg-white z-50">
               <TopBar />
             </div>
-            <div className="px-[27px]  pt-[48px] bg-[#FAFAFA] h-full">
+            <div className="md:px-[27px] px-[12px] pt-[48px] bg-[#FAFAFA] h-full">
               {children}
               {logout && <LogoutModal onClose={() => setLogout(false)} />}
               {showPrivacyPolicy && (
-                <PrivacyPolicy
-                  onClose={() => setShowPrivacyPolicy(false)}
-                />
+                <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
               )}
             </div>
           </div>
         </div>
       </div>
+      <MobileNav />
+      {isFundWallet && (
+        <FundWallet
+          isModalOpen={isFundWallet}
+          closeModal={() => setFundWallet(false)}
+        /> )}
+   
+      {withdrawal && (
+        <WithdrawModal
+          isModalOpen={withdrawal}
+          closeModal={() => setWithdrawal(false)}
+        />
+      )}
     </div>
   );
 }

@@ -112,13 +112,10 @@ export default function ProfileCard({ loanUuid }: ProfileCardProps) {
             "https://ui-avatars.com/api/?name=User&background=random";
         }}
       />
-      
-      {/* Name */}
-      <h2 className="text-2xl font-bold text-[#333333] truncate max-w-72">
-        {fullName}
-      </h2>
+  <h2 className="text-2xl font-semibold text-[#333333] max-w-72 break-words">
+  {fullName}
+</h2>
 
-    
       {/* Credit Score */}
       <p className="mt-[32px] text-[12px] font-bold text-[#8A8B9F]">
         Credit Score

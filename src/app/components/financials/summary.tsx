@@ -16,6 +16,7 @@ import { Financial_stats } from "@/app/Redux/Financials/stat/stat_thunk";
 import { repayment_vs_default_trend } from "@/app/Redux/Financials/repayment_vs_default_trend/repayment_vs_default_trend_thunk";
 import { revenue_vs_profit_trend } from "@/app/Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_thunk";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
+import { useDashboard } from "@/app/Context/DahboardContext";
 
 export default function Summary() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +41,10 @@ export default function Summary() {
     dispatch(repayment_vs_default_trend());
     dispatch(revenue_vs_profit_trend(Year));
   }, [dispatch]);
+ const {
 
+    setWithdrawal,
+  } = useDashboard();
   // Utility functions moved inside component to access state
   const safeNumber = (value: any, fallback = 0): number => {
     const num = Number(value);
@@ -194,7 +198,7 @@ export default function Summary() {
         setSelectedYear={(year: any) => console.log(year)}
         withdrawal={2}
         optionalButtonText="Withdraw"
-        onOptionalButtonClick={() => alert("Button clicked!")}
+        onOptionalButtonClick={() => {setWithdrawal(true)}}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">

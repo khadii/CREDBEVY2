@@ -43,9 +43,10 @@ const Card = ({ title, amount, percentage, icon }: CardProps) => {
               ) : (
                 <BsArrowUpRightCircle className="h-3 w-3 text-[#42BE65]" />
               )}
-              <p className={`text-[10px] font-bold ${isNegative ? "text-[#FF4D4F]" : "text-[#42BE65]"}`}>
-                {Math.abs(numericPercentage)}%
-              </p>
+          <p className={`text-[10px] font-bold ${isNegative ? "text-[#FF4D4F]" : "text-[#42BE65]"}`}>
+  {Math.abs(numericPercentage).toFixed(2)}%
+</p>
+
             </div>
           )}
         </div>
