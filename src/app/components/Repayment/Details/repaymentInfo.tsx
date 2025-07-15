@@ -75,22 +75,18 @@ export default function RepaymentInfo({ id }: RepaymentDetailsProps) {
     [summary]
   );
 
-  // if (loading) {
-  //   return (
-  //     <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
-  //       <div className="flex mb-[42px] pl-[24px]">
-  //         {tabs.map((tab) => (
-  //           <Skeleton key={tab.name} className="h-10 w-32 mr-4" />
-  //         ))}
-  //       </div>
-  //       <div className="space-y-4">
-  //         {Array.from({ length: 6 }).map((_, index) => (
-  //           <Skeleton key={index} className="h-6 w-full" />
-  //         ))}
-  //       </div>
-  //     </div>
-  //   );
-  // }
+   if (loading || !data)  {
+    return (
+      <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
+       
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-6 w-full bg-gray-200 animate-pulse rounded"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (

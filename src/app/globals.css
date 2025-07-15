@@ -1,8 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@plugin 'tailwind-scrollbar';
 
 /* Inter Font Setup - Recommended to put fonts in public/fonts */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 @font-face {
   font-family: 'Inter';
   src: url('/fonts/Inter-Thin-BETA.otf') format('opentype');

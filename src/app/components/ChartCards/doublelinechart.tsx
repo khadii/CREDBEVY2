@@ -123,7 +123,7 @@ const LineChartTwo = ({
       </div>
 
       {/* Chart */}
-      <div className="w-full -mx-2 sm:mx-0">
+      <div className="w-full -mx-2 sm:mx-0 overflow-x-auto  scrollbar-hide">
         <DoubleLineChartComponent
           data={lineData}
           firstLineColor={firstLineColor}

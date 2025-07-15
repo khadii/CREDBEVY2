@@ -56,10 +56,15 @@ export default function ProfileCard({ id }: { id: any }) {
 
   const userData = getUserData();
 
-  if (loading) {
+   if (loading || !userData)  {
     return (
-      <div className="bg-[#FFFFFF] flex flex-col items-center rounded-lg text-center h-[1100px] border-[1px] justify-center">
-        <div>Loading user data...</div>
+      <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
+       
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-6 w-full bg-gray-200 animate-pulse rounded"></div>
+          ))}
+        </div>
       </div>
     );
   }

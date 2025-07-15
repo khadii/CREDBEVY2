@@ -1,5 +1,3 @@
-"use client";
-
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -7,9 +5,9 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
   Legend,
 } from "recharts";
+import { useState, useEffect } from "react";
 
 type LineDataItem = {
   month: string;
@@ -26,6 +24,8 @@ type DoubleLineChartComponentProps = {
   secondLineName?: string;
   yAxisFormatter?: (value: number) => string;
   showLegend?: boolean;
+  width?: number;
+  height?: number;
 };
 
 const DoubleLineChartComponent = ({
@@ -37,56 +37,83 @@ const DoubleLineChartComponent = ({
   secondLineName = "Previous",
   yAxisFormatter = (value) => `${value}%`,
   showLegend = true,
+  width = 800,
+  height = 270,
 }: DoubleLineChartComponentProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setIsMobile(window.innerWidth < 768);
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const axisFontSize = isMobile ? 10 : 14;
+
+  if (!isMounted) return null;
+
   return (
-    <ResponsiveContainer width="100%" height={260}>
-      <RechartsLineChart
-        data={data}
-        margin={{ top: 20, right: 10, bottom: 5 }}
-      >
-        {showGrid && <CartesianGrid vertical={false} stroke="#E5E7EB" />}
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)} // Shorten month names to 3 letters
-          tick={{ fill: "#858688", fontSize: 14 }}
+    <RechartsLineChart
+      width={width}
+      height={height}
+      data={data}
+      margin={{ top: 20, right: 10, bottom: 5 }}
+    >
+      {showGrid && <CartesianGrid vertical={false} stroke="#E5E7EB" />}
+      <XAxis
+        dataKey="month"
+        tickLine={false}
+        axisLine={false}
+        tickMargin={8}
+        tickFormatter={(value) => value.slice(0, 3)}
+        tick={{ fill: "#858688", fontSize: axisFontSize }}
+          padding={{ left: 30, right: 20 }}
+        interval={isMobile ? "preserveStartEnd" : 0}
+      />
+      <YAxis
+        tickLine={false}
+        axisLine={false}
+        tickFormatter={yAxisFormatter}
+        width={isMobile ? 30 : 40}
+        tick={{ fill: "#858688", fontSize: axisFontSize }}
+      />
+      <Tooltip content={<CustomTooltip />} />
+      {/* {showLegend && (
+        <Legend 
+          wrapperStyle={{ paddingTop: '20px' }}
+          iconSize={isMobile ? 10 : 12}
+          iconType="plainline"
         />
-        <YAxis
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={yAxisFormatter}
-          width={30}
-          tick={{ fill: "#858688", fontSize: 14 }}
-        />
-        <Tooltip content={<CustomTooltip  />} />
-        {/* {showLegend && <Legend />} */}
-        <Line
-          name={firstLineName}
-          dataKey="firstValue"
-          type="linear"
-          stroke={firstLineColor}
-          strokeWidth={2}
-          dot={false}
-          activeDot={{ r: 6 }}
-        />
-        <Line
-          name={secondLineName}
-          dataKey="secondValue"
-          type="linear"
-          stroke={secondLineColor}
-          strokeWidth={2}
-          dot={false}
-          activeDot={{ r: 6 }}
-          // strokeDasharray="5 5" // Optional: makes the second line dashed for better distinction
-        />
-      </RechartsLineChart>
-    </ResponsiveContainer>
+      )} */}
+      <Line
+        name={firstLineName}
+        dataKey="firstValue"
+        type="linear"
+        stroke={firstLineColor}
+        strokeWidth={2}
+        dot={false}
+        activeDot={{ r: 6 }}
+      />
+      <Line
+        name={secondLineName}
+        dataKey="secondValue"
+        type="linear"
+        stroke={secondLineColor}
+        strokeWidth={2}
+        dot={false}
+        activeDot={{ r: 6 }}
+      />
+    </RechartsLineChart>
   );
 };
 
-// Custom Tooltip Component
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload || !payload.length) return null;
 

@@ -4,6 +4,7 @@ import TableWithPagination from '../table/tablewWthPagination';
 import { CustomCheckbox } from '../CheckboxForTable/TablecheckBox';
 import { StatusWithOptions } from './StatusWithOptions';
 import { formatCurrency } from '@/app/lib/utillity/formatCurrency';
+import NoDataFound from '../NoDataFound';
 
 
 interface StatusWithOptionsProps {
@@ -158,8 +159,10 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
     </>
   );
 
-  return (
-    <div>
+    
+  return laon_table_data_all?.length === 0 ? (
+    <NoDataFound />
+  ) : (
       <TableWithPagination
         headers={loanHeaders}
         data={laon_table_data_all}
@@ -175,8 +178,6 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
         bulkAction={bulkAction}
         showAddProductButton = {false}
       />
-    </div>
-  );
-};
+    )}
 
 export default FinancialTable;

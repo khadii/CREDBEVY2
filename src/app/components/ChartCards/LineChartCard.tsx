@@ -60,7 +60,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
   }, []);
 
   return (
-    <div className="bg-white border rounded-lg pl-[20px] pr-[24px] pb-[38px] pt-[22px] w-full">
+    <div className="bg-white border rounded-lg pl-[20px] pr-[24px] pb-[38px] pt-[22px] w-full ">
       {/* Header */}
       <div className="flex justify-between items-center mb-[33px]">
         <div className="w-full ">
@@ -103,7 +103,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
       </div>
 
       {/* Chart */}
-      <div className="">
+      <div className=" w-full overflow-x-auto  scrollbar-hide">
       <LineChartComponent data={chartData} lineColor={lineColor} />
       </div>
     </div>

@@ -28,7 +28,7 @@ export const Tabs = ({ tabs, activeTab, setActiveTab }: TabsProps) => {
           {tab.name}
 
           {typeof tab.count === 'number' && (
-            <span className={`flex items-center justify-center p-1 text-xs font-bold rounded-full ${
+            <span className={`flex items-center justify-center px-2 py-1 text-xs font-bold rounded-full ${
               tab.count > 0 
                 ? 'bg-[#42BE65] text-white' 
                 : 'bg-[#E0E0E0] text-[#8A8B9F]'

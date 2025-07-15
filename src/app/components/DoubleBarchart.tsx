@@ -6,10 +6,9 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
-  LabelList,
   Legend,
 } from "recharts";
+import { useState, useEffect } from "react";
 
 type ComparisonDataItem = {
   name: string;
@@ -30,6 +29,8 @@ type DoubleBarChartComponentProps = {
   firstDatasetName?: string;
   secondDatasetName?: string;
   yAxisFormatter?: (value: number) => string;
+  width?: number;
+  height?: number;
 };
 
 const DoubleBarChartComponent = ({
@@ -45,7 +46,26 @@ const DoubleBarChartComponent = ({
   firstDatasetName = "Current",
   secondDatasetName = "Previous",
   yAxisFormatter = (value) => `${value.toFixed(2)}M`,
+  width = 800,
+  height = 280,
 }: DoubleBarChartComponentProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setIsMobile(window.innerWidth < 768);
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const axisFontSize = isMobile ? 10 : 14;
+  const yAxisWidth = isMobile ? 40 : 50;
 
   const renderFirstBar = (props: any) => {
     const { x, y, width, height, name } = props;
@@ -73,78 +93,68 @@ const DoubleBarChartComponent = ({
         width={width}
         height={height}
         fill={fillColor}
-        rx={10} // Rounded corners
+        rx={10}
         ry={10}
       />
     );
   };
 
+  if (!isMounted) return null;
+
   return (
-    <ResponsiveContainer width="100%" height={280}>
-      <RechartsBarChart
-        data={comparisonData}
-        barGap={2}
-        barCategoryGap={10}
-        margin={{ top: 20, right: 10, bottom: 5 }}
-      >
-        <XAxis
-          dataKey="name"
-          axisLine={false}
-          tickLine={false}
-          width={10}
-          tick={{ fill: "#858688", fontSize: 14 }}
+    <RechartsBarChart
+      width={width}
+      height={height}
+      data={comparisonData}
+      barGap={2}
+      barCategoryGap={10}
+      margin={{ top: 20, right: 10, bottom: 5 }}
+    >
+      <XAxis
+        dataKey="name"
+        axisLine={false}
+        tickLine={false}
+        tick={{ fill: "#858688", fontSize: axisFontSize }}
+        interval={isMobile ? "preserveStartEnd" : 0}
+        height={isMobile ? 50 : 60}
+            padding={{ left: 30, right: 20 }}
+      />
+      <YAxis
+        tickFormatter={yAxisFormatter}
+        axisLine={false}
+        tickLine={false}
+        width={yAxisWidth}
+        tick={{ fill: "#858688", fontSize: axisFontSize }}
+      />
+      {tooltip && (
+        <Tooltip 
+          content={<CustomTooltip />}
+          wrapperStyle={{ backgroundColor: 'transparent', border: 'none', height: 257 }}
+          cursor={false}
         />
-        <YAxis
-          tickFormatter={yAxisFormatter}
-          axisLine={false}
-          tickLine={false}
-          width={50}
-          tick={{ fill: "#858688", fontSize: 14 }}
-        />
-        {tooltip && (
-          <Tooltip 
-            content={<CustomTooltip />}
-            wrapperStyle={{ backgroundColor: 'transparent', border: 'none', height: 257 }}
-            cursor={false}
-          />
-        )}
-        {/* <Legend /> */}
-        <Bar
-          name={firstDatasetName}
-          dataKey="firstDataset"
-          fill={firstDatasetColor}
-          shape={renderFirstBar}
-          barSize={barSize}
-        >
-          {/* {showValues && (
-            <LabelList
-              dataKey="firstDataset"
-              position="top"
-              formatter={yAxisFormatter}
-            />
-          )} */}
-        </Bar>
-        <Bar
-          name={secondDatasetName}
-          dataKey="secondDataset"
-          fill={secondDatasetColor}
-          shape={renderSecondBar}
-          barSize={barSize}
-        >
-          {/* {showValues && (
-            <LabelList
-              dataKey="secondDataset"
-              position="top"
-              formatter={yAxisFormatter}
-            />
-          )} */}
-        </Bar>
-      </RechartsBarChart>
-    </ResponsiveContainer>
+      )}
+      {/* <Legend 
+        wrapperStyle={{ paddingTop: '10px' }}
+        iconSize={isMobile ? 10 : 12}
+      /> */}
+      <Bar
+        name={firstDatasetName}
+        dataKey="firstDataset"
+        fill={firstDatasetColor}
+        shape={renderFirstBar}
+        barSize={barSize}
+      />
+      <Bar
+        name={secondDatasetName}
+        dataKey="secondDataset"
+        fill={secondDatasetColor}
+        shape={renderSecondBar}
+        barSize={barSize}
+      />
+    </RechartsBarChart>
   );
 };
 
-// Custom Tooltip Component matching original design
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload || !payload.length) return null;
 

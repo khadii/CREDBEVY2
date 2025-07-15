@@ -100,7 +100,7 @@ const CardChart = ({
       </div>
 
       {/* Chart */}
-      <div className="w-full ">
+   <div className=" w-full overflow-x-auto  scrollbar-hide">
         <BarChartComponent
           data={data}
           highlightBar={highlightBar}
