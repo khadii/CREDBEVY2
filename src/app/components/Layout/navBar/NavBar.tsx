@@ -13,16 +13,16 @@ import { useDashboard } from "@/app/Context/DahboardContext";
 import { useRouter } from "next/navigation";
 
 export default function TopBar() {
+    const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, data } = useSelector(
     (state: RootState) => state.user
   );
-  const router=useRouter()
-    useEffect(() => {
-    if (error) {
-      router.push("/")
+  useEffect(() => {
+    if (error === "Unauthorized") {
+      router.push("/");
     }
-  }, [error, router])
+  }, [error, router]);
 
   const user = data?.data;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -54,7 +54,7 @@ export default function TopBar() {
   }, [user]);
 
   if (loading && !user) {
-    return <div className="flex justify-center p-4">Loading user data...</div>;
+    return <div className="flex justify-center p-4">Getting Information...</div>;
   }
 
   // if (error) {
@@ -118,9 +118,12 @@ export default function TopBar() {
             />
 
             <div className="hidden sm:block">
-              <p className="text-[10px] font-semibold text-[#333333]">
-                {user ? `${user.first_name} ${user.last_name}` : "User Name"}
-              </p>
+            <p className="text-[10px] font-bold text-[#333333]">
+  {user
+    ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
+    : "User Name"}
+</p>
+
               <p className="text-[8px] text-[#A1A6B0]">
                 {user?.email || "user@example.com"}
               </p>
@@ -144,11 +147,12 @@ export default function TopBar() {
                   height={32}
                 />
                 <div>
-                  <p className="text-[10px] font-bold text-[#333333]">
-                    {user
-                      ? `${user.first_name} ${user.last_name}`
-                      : "User Name"}
-                  </p>
+                 <p className="text-[10px] font-bold text-[#333333]">
+  {user
+    ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
+    : "User Name"}
+</p>
+
                   <p className="text-[8px] font-semibold text-[#A1A6B0] truncate mt-[8px]">
                     {user?.email || "user@example.com"}
                   </p>

@@ -12,7 +12,7 @@ interface ChartCardProps {
   chartData: ChartData[];
   title: string;
   description: string;
-  totalRevenue: string;
+  totalRevenue: any;
   revenueChange: string;
   lineColor: string;
   defaultSelectedYear: string;

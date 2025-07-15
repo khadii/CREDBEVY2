@@ -251,7 +251,7 @@ export default function Dashboard() {
       }));
     } else if (period === "This Month" && data.loan_requests_by_month) {
       transformedData = Object.keys(data.loan_requests_by_month).map((key) => ({
-        name: `Day ${key}`,
+        name: `${key}`,
         revenue: formatAmount(data.loan_requests_by_month[key].total_amount),
       }));
     } else if (period === "This Week" && data.loan_requests_by_week) {
@@ -276,7 +276,7 @@ export default function Dashboard() {
   const pieChartData = [
     { name: "Approved", value: loan_approval_rate ?? 0, color: "#156064" },
     { name: "Unapproved", value: loan_pending_rate ?? 0, color: "#EC7910" },
-    { name: "declined", value: loan_disapproval_rate, color: "#FA4D56" },
+    { name: "Declined", value: loan_disapproval_rate, color: "#FA4D56" },
   ];
 
   const renderContent = () => {
@@ -347,7 +347,12 @@ export default function Dashboard() {
           />
         );
       case "Canceled Requests":
-        return <CanceledRequests />;
+        return <CanceledRequests 
+          tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            handleYearChange={handleYearChange}
+            years={years}/>;
       default:
         return (
           <AllRequest

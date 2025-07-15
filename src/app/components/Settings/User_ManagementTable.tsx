@@ -65,10 +65,10 @@ const User_managementTable = () => {
   // Debug logging
   useEffect(() => {
     if (success) {
-      toast.success(data.message);
+      // toast.success(data.message);
     }
     if (error) {
-      toast.error(error);
+      // toast.error(error);
     }
   }, [success, error]);
 

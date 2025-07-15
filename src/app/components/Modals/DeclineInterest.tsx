@@ -157,8 +157,77 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
-      <div className="relative bg-white rounded-lg">
+    <><div className="hidden md:block">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
+        <div className="relative bg-white rounded-lg">
+          {rejectLoading || pinLoading ? (
+            <AnimatedLoader isLoading={rejectLoading || pinLoading} />
+          ) : (
+            <>
+              <div className="flex pl-[24px] pt-[24px] pr-[15px] justify-between w-full items-center">
+                <h2 className="text-[24px] font-bold text-[#333333]">
+                  Decline Request
+                </h2>
+                <button
+                  onClick={handleClose}
+                  className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-[24px] mt-[127px]">
+                <div className="w-full justify-center items-center flex">
+                  <div className="w-full">
+                    <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
+                      Input your transaction PIN to process request
+                    </p>
+
+                    <div className="flex justify-center space-x-6">
+                      {pin.map((digit, index) => (
+                        <input
+                          key={index}
+                          ref={(el) => {
+                            if (el) {
+                              inputRefs.current[index] = el;
+                            }
+                          } }
+                          type="password"
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) => handleChange(index, e.target.value)}
+                          className={`w-[80px] h-[80px] border-[4px] ${errors.pin && digit === ""
+                              ? "border-red-500 focus:ring-red-500"
+                              : "border-[#156064] focus:ring-[#156064]"} rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                {errors.pin && (
+                  <p className="text-red-500 mb-4 text-center">{errors.pin}</p>
+                )}
+
+                <div className="flex space-x-[96px] justify-center">
+                  <button
+                    onClick={handleClose}
+                    className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+                    onClick={handleSubmit}
+                    disabled={pinLoading || rejectLoading}
+                  >
+                    {pinLoading || rejectLoading ? "Processing..." : "Done"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div></div><div className="md:hidden block">
+ <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA] p-4">
+      <div className="relative bg-white rounded-lg w-full max-w-md">
         {rejectLoading || pinLoading ? (
           <AnimatedLoader isLoading={rejectLoading || pinLoading} />
         ) : (
@@ -174,14 +243,14 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 ✕
               </button>
             </div>
-            <div className="p-[24px] mt-[127px]">
+            <div className="p-[24px] mt-[40px] sm:mt-[127px]">
               <div className="w-full justify-center items-center flex">
                 <div className="w-full">
                   <p className="text-[16px] font-bold text-[#333333] mb-[24px] text-center">
                     Input your transaction PIN to process request
                   </p>
 
-                  <div className="flex justify-center space-x-6">
+                  <div className="flex justify-center space-x-2 sm:space-x-6">
                     {pin.map((digit, index) => (
                       <input
                         key={index}
@@ -194,11 +263,11 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleChange(index, e.target.value)}
-                        className={`w-[80px] h-[80px] border-[4px] ${
+                        className={`w-[60px] h-[60px] sm:w-[80px] sm:h-[80px] border-[4px] ${
                           errors.pin && digit === ""
                             ? "border-red-500 focus:ring-red-500"
                             : "border-[#156064] focus:ring-[#156064]"
-                        } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[40px] font-bold mb-[134px]`}
+                        } rounded-[8px] focus:outline-none focus:ring-2 text-center text-[32px] sm:text-[40px] font-bold mb-[40px] sm:mb-[134px]`}
                       />
                     ))}
                   </div>
@@ -208,15 +277,15 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 <p className="text-red-500 mb-4 text-center">{errors.pin}</p>
               )}
 
-              <div className="flex space-x-[96px] justify-center">
+              <div className="flex flex-col sm:flex-row sm:space-x-[96px] space-y-4 sm:space-y-0 justify-center">
                 <button
                   onClick={handleClose}
-                  className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
+                  className="px-4 py-[10px] sm:px-[81px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-[81px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+                  className="px-4 py-[10px] sm:px-[81px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
                   onClick={handleSubmit}
                   disabled={pinLoading || rejectLoading}
                 >
@@ -228,6 +297,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         )}
       </div>
     </div>
+      </div></>
   );
 };
 

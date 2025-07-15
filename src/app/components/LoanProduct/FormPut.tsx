@@ -10,7 +10,6 @@ import AmountInput from "../FormInputs/Input";
 import { formatNaira } from "@/app/lib/utillity/nairaFormat";
 import CustomizedButton from "../CustomizedButton";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   loan_products_single,
   update_loan,
@@ -20,6 +19,7 @@ import { AppDispatch } from "@/app/Redux/store";
 import { useRouter, useParams } from "next/navigation";
 import { resetLoanProductStateFormUpdate } from "@/app/Redux/Loan_Product/updateLoanProductSlice";
 import AnimatedLoader from "../animation";
+import { LuPercent } from "react-icons/lu";
 
 export default function UpdateLoanForm({ product_id }: { product_id: any }) {
   const [unsecured, setUnsecured] = useState(false);
@@ -124,10 +124,6 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
     duration: Yup.string().required("Duration is required"),
     interestRate: Yup.string().required("Interest Rate is required"),
     category: Yup.string().required("Category is required"),
-    // selectedCollaterals: Yup.array().min(
-    //   1,
-    //   "At least one collateral is required"
-    // ),
     minCreditScore: Yup.string()
       .max(3, "Minimum Credit Score should not exceed three digits")
       .required("Minimum Credit Score is required")
@@ -235,21 +231,22 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
   }, [success, error, dispatch]);
 
   return (
-    <>
-      <p className="font-semibold text-4xl text-[#333333] mb-3 bg-[#FAFAFA]">
+    <div className="px-4 md:px-0">
+      <p className="font-semibold text-2xl md:text-4xl text-[#333333] mb-3 bg-[#FAFAFA]">
         Loan Products
       </p>
-      <h1 className="font-bold text-[#8A8B9F] text-[14px] mb-[36px] flex flex-row items-center gap-2">
+      <h1 className="font-bold text-[#8A8B9F] text-[12px] md:text-[14px] mb-6 md:mb-[36px] flex flex-row items-center gap-2">
         Fill in the details below to update a loan product{" "}
         <CircleAlert size={14} />
       </h1>
-      <form onSubmit={formik.handleSubmit} className="space-y-[24px] pb-[76px]">
-        <div className="w-full max-w-[822px] h-full min-h-[528px] px-[24px] pt-[24px]  pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+      <form onSubmit={formik.handleSubmit} className="space-y-6 md:space-y-[24px] pb-10 md:pb-[76px]">
+        {/* Product Info Section */}
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Product Info
           </p>
 
-          <div className="mb-[24px] w-full">
+          <div className="mb-4 md:mb-[24px] w-full">
             <InputField
               label="Product Name"
               placeholder="Enter Product Name"
@@ -259,7 +256,8 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
               required
             />
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <AmountInput
                 label="Maximum Amount"
@@ -302,7 +300,7 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Loan Type"
@@ -332,7 +330,7 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Duration"
@@ -354,11 +352,7 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
               }
               onChange={(e) => {
                 let newValue = e.target.value;
-
-                // Remove the % symbol before validation
                 newValue = newValue.replace(/%/g, "");
-
-                // Validate the input (allow up to 2 digits and optional decimal)
                 if (/^\d{0,2}(\.\d{0,1})?$/.test(newValue)) {
                   formik.setFieldValue("interestRate", newValue);
                 }
@@ -367,7 +361,8 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
               required
             />
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Category"
@@ -406,11 +401,11 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
         </div>
 
         {/* Eligibility Criteria Section */}
-        <div className="w-full max-w-[822px] h-full min-h-[262px] px-[24px] pt-[24px]  pb-[46px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[46px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Eligibility Criteria
           </p>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <InputField
                 label="Minimum Credit Score"
@@ -446,7 +441,7 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
               />
             </div>
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <AmountInput
                 label="Minimum Income"
@@ -484,31 +479,29 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
         </div>
 
         {/* Discount Section */}
-        <div className="w-full max-w-[822px] h-full max-h-[193px] px-[24px] pt-[24px]  pb-[61px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[61px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Discount
           </p>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
-            <div>
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
+            <div className="relative">
+              <div className="absolute top-9 z-10 right-3">
+                <LuPercent />
+              </div>
               <InputField
                 label="Percentage"
                 placeholder="Enter Percentage"
                 value={
-                  formik.values.percentage ? `${formik.values.percentage}%` : ""
+                  formik.values.percentage ? `${formik.values.percentage}` : ""
                 }
                 onChange={(e) => {
                   let newValue = e.target.value;
-
-                  // Remove the % symbol before validation
                   newValue = newValue.replace(/%/g, "");
-
-                  // Validate the input (allow up to 2 digits)
                   if (/^\d{0,2}$/.test(newValue)) {
                     formik.setFieldValue("percentage", newValue);
                   }
                 }}
                 error={formik.touched.percentage && formik.errors.percentage}
-                required
               />
             </div>
             <div>
@@ -522,7 +515,6 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
                   formik.touched.Discountduration &&
                   formik.errors.Discountduration
                 }
-                required
                 options={DiscountdurationOptions}
                 placeholder="Select Discount Duration"
               />
@@ -532,7 +524,7 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
 
         {/* Submit Button */}
         <div
-          className={`w-full max-w-[822px]  pt-[24px]  flex justify-end ${
+          className={`w-full md:max-w-[822px] pt-4 md:pt-[24px] flex justify-end ${
             loading && "cursor-not-allowed"
           }`}
         >
@@ -543,6 +535,6 @@ export default function UpdateLoanForm({ product_id }: { product_id: any }) {
       </form>
       {error && <p className="text-red-500">{error}</p>}
       <AnimatedLoader isLoading={productLoading} />
-    </>
+    </div>
   );
 }

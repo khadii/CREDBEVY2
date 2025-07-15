@@ -17,22 +17,29 @@ import { repayment_vs_default_trend } from "@/app/Redux/Financials/repayment_vs_
 import { revenue_vs_profit_trend } from "@/app/Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_thunk";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
 import { useDashboard } from "@/app/Context/DahboardContext";
+import ErrorDisplay from "../ErrorDisplay";
 
 export default function Summary() {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedYear, setSelectedYear] = useState("This Year");
-  
+
   const { loading, error, data } = useSelector((state: any) => state.account);
-  const { loading: loadinStat, error: errorStat, data: dataStat } = useSelector((state: any) => state.financialStats);
-  const { data: dataRD = {} } = useSelector((state: any) => state.repaymentVsDefaultTrend) || {};
-  const { data: dataTP = {} } = useSelector((state: any) => state.revenueVsProfitTrend) || {};
+  const {
+    loading: loadinStat,
+    error: errorStat,
+    data: dataStat,
+  } = useSelector((state: any) => state.financialStats);
+  const { data: dataRD = {} } =
+    useSelector((state: any) => state.repaymentVsDefaultTrend) || {};
+  const { data: dataTP = {} } =
+    useSelector((state: any) => state.revenueVsProfitTrend) || {};
 
   const handleFundWallet = () => {
     alert("Redirecting to funding page...");
   };
 
   const Year = {
-    year: "2025"
+    year: "2025",
   };
 
   useEffect(() => {
@@ -41,11 +48,8 @@ export default function Summary() {
     dispatch(repayment_vs_default_trend());
     dispatch(revenue_vs_profit_trend(Year));
   }, [dispatch]);
- const {
-
-    setWithdrawal,
-  } = useDashboard();
-  // Utility functions moved inside component to access state
+  const { setWithdrawal } = useDashboard();
+  const [selectedTIME, setSelectedTIME] = useState("This Year");
   const safeNumber = (value: any, fallback = 0): number => {
     const num = Number(value);
     return isNaN(num) ? fallback : num;
@@ -54,60 +58,81 @@ export default function Summary() {
   const getTimeLabel = (item: any, timePeriod: string) => {
     if (timePeriod === "This Year") {
       return item.month && item.month >= 1 && item.month <= 12
-        ? new Date(2025, item.month - 1).toLocaleString('default', { month: 'short' })
-        : 'Unknown Month';
+        ? new Date(2025, item.month - 1).toLocaleString("default", {
+            month: "short",
+          })
+        : "Unknown Month";
     } else if (timePeriod === "This Month") {
-      return typeof item.day === 'number' && item.day >= 1 && item.day <= 31
+      return typeof item.day === "number" && item.day >= 1 && item.day <= 31
         ? item.day.toString()
-        : 'Unknown Day';
+        : "Unknown Day";
     } else {
-      return typeof item.day === 'string'
-        ? item.day
-        : 'Unknown Day';
+      return typeof item.day === "string" ? item.day : "Unknown Day";
     }
   };
-      const color1 = [
-    { 
-      color: "#156064", 
-   
-      name: "Repayment" 
-    },
-    { 
-      color: "#EC7910", 
-      name: " Default Trends" 
-    },
-  ];
 
-
-      const color2 = [
-    { 
-      color: "#156064", 
-   
-      name: "Revenue" 
+  const color1 = [
+    {
+      color: "#156064",
+      name: "Repayment",
     },
-    { 
-      color: "#EC7910", 
-      name: " Profit" 
+    {
+      color: "#EC7910",
+      name: "Default Trends",
     },
   ];
 
+  const color2 = [
+    {
+      color: "#156064",
+      name: "Revenue",
+    },
+    {
+      color: "#EC7910",
+      name: "Profit",
+    },
+  ];
 
-
-  // Data transformation functions
   const transformRepaymentDefaultData = () => {
     const timeData = dataRD?.data || {
       yearly: [],
       monthly: [],
-      weekly: []
+      weekly: [],
+    };
+
+    const generateDefaultTimePeriods = () => {
+      if (selectedTIME === "This Year") {
+        return Array.from({ length: 12 }, (_, i) => ({
+          month: new Date(2025, i).toLocaleString("default", { month: "short" }),
+          firstValue: 0,
+          secondValue: 0
+        }));
+      } else if (selectedTIME === "This Month") {
+        // Get actual number of days in current month
+        const daysInMonth = new Date(2025, new Date().getMonth() + 1, 0).getDate();
+        return Array.from({ length: daysInMonth }, (_, i) => ({
+          month: (i + 1).toString(),
+          firstValue: 0,
+          secondValue: 0
+        }));
+      } else {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
+          month: day,
+          firstValue: 0,
+          secondValue: 0
+        }));
+      }
     };
 
     const generateData = (dataArray: any[]) => {
-      if (!Array.isArray(dataArray)) return [];
-      
+      if (!Array.isArray(dataArray) || dataArray.length === 0) {
+        return generateDefaultTimePeriods();
+      }
+
       return dataArray.map((item: any) => ({
         month: getTimeLabel(item, selectedYear),
         firstValue: safeNumber(item?.repayments),
-        secondValue: safeNumber(item?.defaults)
+        secondValue: safeNumber(item?.defaults),
       }));
     };
 
@@ -124,16 +149,40 @@ export default function Summary() {
     const revenueData = dataTP?.data || {
       by_year: [],
       by_month: [],
-      by_week: []
+      by_week: [],
+    };
+
+    const generateDefaultTimePeriods = () => {
+      if (selectedYear === "This Year") {
+        return Array.from({ length: 12 }, (_, i) => ({
+          name: new Date(2025, i).toLocaleString("default", { month: "short" }),
+          firstDataset: 0,
+          secondDataset: 0
+        }));
+      } else if (selectedYear === "This Month") {
+        const daysInMonth = new Date(2025, new Date().getMonth() + 1, 0).getDate();
+        return Array.from({ length: daysInMonth }, (_, i) => ({
+          name: (i + 1).toString(),
+          firstDataset: 0,
+          secondDataset: 0
+        }));
+      } else {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
+          name: day,
+          firstDataset: 0,
+          secondDataset: 0
+        }));
+      }
     };
 
     const generateData = (dataArray: any[]) => {
-      if (!Array.isArray(dataArray)) return [];
-      
+      if (!Array.isArray(dataArray)) return generateDefaultTimePeriods();
+      if (dataArray.length === 0) return generateDefaultTimePeriods();
+
       return dataArray.map((item: any) => ({
         name: getTimeLabel(item, selectedYear),
         firstDataset: safeNumber(item?.revenue),
-        secondDataset: safeNumber(item?.profit)
+        secondDataset: safeNumber(item?.profit),
       }));
     };
 
@@ -146,16 +195,27 @@ export default function Summary() {
     }
   };
 
-  // Chart data
   const datas = [
-    { color: "#156064", value: safeNumber(dataStat?.loanStats?.loanDefaultRate?.defaulted_percentage), name: "defualt" },
-    { color: "#EC7910", value: safeNumber(dataStat?.loanStats?.loanDefaultRate?.non_defaulted_percentage, 100), name: "no defualt" },
+    {
+      color: "#156064",
+      value: safeNumber(
+        dataStat?.loanStats?.loanDefaultRate?.defaulted_percentage
+      ),
+      name: "Default",
+    },
+    {
+      color: "#EC7910",
+      value: safeNumber(
+        dataStat?.loanStats?.loanDefaultRate?.non_defaulted_percentage,
+        100
+      ),
+      name: "No Default",
+    },
   ];
 
   const repaymentDefaultLineData = transformRepaymentDefaultData();
   const revenueProfitData = transformRevenueProfitData();
 
-  // Rest of your original component
   const stats = [
     {
       title: "Total Revenue generated",
@@ -178,6 +238,8 @@ export default function Summary() {
   ];
 
   return (
+     <>
+    {error ? <ErrorDisplay error={error}/> : (
     <div>
       <div className="w-full pl-[16px] py-4 md:py-0 md:h-[59px] min-w-[#FFFFFF] gap-1 mb-6 flex items-center bg-white rounded-[4px]">
         <div>
@@ -198,7 +260,9 @@ export default function Summary() {
         setSelectedYear={(year: any) => console.log(year)}
         withdrawal={2}
         optionalButtonText="Withdraw"
-        onOptionalButtonClick={() => {setWithdrawal(true)}}
+        onOptionalButtonClick={() => {
+          setWithdrawal(true);
+        }}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -226,7 +290,6 @@ export default function Summary() {
         />
       </div>
 
-      {/* Revenue VS Profit Trend Chart */}
       <div className="mb-6">
         <CardChart
           title="Revenue VS Profit Trend"
@@ -237,20 +300,15 @@ export default function Summary() {
               0
             )
           )}
-          comparisonData={
-            revenueProfitData.length > 0
-              ? revenueProfitData
-              : [{ name: "No Data", firstDataset: 0, secondDataset: 0 }]
-          }
+          comparisonData={revenueProfitData}
           firstDatasetName="Revenue"
           secondDatasetName="Profit"
-          selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
+       selectedYear={selectedTIME}
+              setSelectedYear={setSelectedTIME}
           data={color2}
         />
       </div>
 
-      {/* Repayment VS Default Trends Chart */}
       <div className="mb-[107px]">
         <EqualHeightContainer
           leftContent={
@@ -266,13 +324,9 @@ export default function Summary() {
                 )
               )}
               data={color1}
-              lineData={
-                repaymentDefaultLineData.length > 0
-                  ? repaymentDefaultLineData
-                  : [{ month: "No Data", firstValue: 0, secondValue: 0 }]
-              }
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
+              lineData={repaymentDefaultLineData}
+              selectedYear={selectedTIME}
+              setSelectedYear={setSelectedTIME}
             />
           }
           rightContent={
@@ -284,10 +338,14 @@ export default function Summary() {
                 "N/A"
               }
               data={datas}
+              
             />
           }
         />
       </div>
     </div>
+    )}
+  </>
+   
   );
 }

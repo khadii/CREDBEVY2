@@ -9,28 +9,25 @@ import { AppDispatch } from "@/app/Redux/store";
 import { revenue_vs_profit_trend } from "@/app/Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_thunk";
 import ChartCard from "../DefaultRate";
 import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
+import ErrorDisplay from "../ErrorDisplay";
 
 // Utility function to safely convert to number
 const safeNumber = (value: any, fallback = 0): number => {
   const num = Number(value);
   return isNaN(num) ? fallback : num;
 };
+
 // Updated helper function to get time period labels
 const getTimeLabel = (item: any, timePeriod: string) => {
   if (timePeriod === "This Year") {
-    // For yearly data, use the month name (e.g., Jan, Feb)
     return item.month && item.month >= 1 && item.month <= 12
       ? new Date(2025, item.month - 1).toLocaleString('default', { month: 'short' })
       : 'Unknown Month';
-
   } else if (timePeriod === "This Month") {
-    // Return just the day number as a string (e.g., "1", "2", ..., "30")
     return typeof item.day === 'number' && item.day >= 1 && item.day <= 31
       ? item.day.toString()
       : 'Unknown Day';
-
   } else {
-    // For weekly data, return day name (e.g., Mon, Tue)
     return typeof item.day === 'string'
       ? item.day
       : 'Unknown Day';
@@ -47,7 +44,7 @@ export default function Trends() {
   const { data: dataRD = {} } = useSelector((state: any) => state.repaymentVsDefaultTrend) || {};
   const { data: dataCus = {} } = useSelector((state: any) => state.customer) || {};
   const { data: dataTP = {} } = useSelector((state: any) => state.revenueVsProfitTrend) || {};
-
+ const { loading, error } = useSelector((state: any) => state.revenueVsProfitTrend);
   // Safe data access with nested fallbacks
   const loanStats = dataStat?.loanStats || {};
   const customerCount = dataStat?.customerCount || {};
@@ -71,7 +68,7 @@ export default function Trends() {
     },
   ];
 
-    const color1 = [
+  const color1 = [
     { 
       color: "#156064", 
       value: safeNumber(loanDefaultRate.defaulted_percentage), 
@@ -80,11 +77,11 @@ export default function Trends() {
     { 
       color: "#EC7910", 
       value: safeNumber(loanDefaultRate.non_defaulted_percentage, 100), 
-      name: " Default Trends" 
+      name: "Default Trends" 
     },
   ];
 
-    const color2 = [
+  const color2 = [
     { 
       color: "#156064", 
       value: safeNumber(loanDefaultRate.defaulted_percentage), 
@@ -96,6 +93,7 @@ export default function Trends() {
       name: "Profit" 
     },
   ];
+
   const customerStatusData = [
     { 
       color: "#156064", 
@@ -115,6 +113,30 @@ export default function Trends() {
     secondValue: safeNumber(item.defaults)
   });
 
+  // Generate default time periods for empty data
+  const generateDefaultTimePeriods = (timePeriod: string) => {
+    if (timePeriod === "This Year") {
+      return Array.from({ length: 12 }, (_, i) => ({
+        month: new Date(2025, i).toLocaleString('default', { month: 'short' }),
+        firstValue: 0,
+        secondValue: 0
+      }));
+    } else if (timePeriod === "This Month") {
+      const daysInMonth = new Date(2025, new Date().getMonth() + 1, 0).getDate();
+      return Array.from({ length: daysInMonth }, (_, i) => ({
+        month: (i + 1).toString(),
+        firstValue: 0,
+        secondValue: 0
+      }));
+    } else {
+      return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
+        month: day,
+        firstValue: 0,
+        secondValue: 0
+      }));
+    }
+  };
+
   // Repayment vs Default line data
   const repaymentDefaultLineData = useMemo(() => {
     const timeData = dataRD?.data || {
@@ -123,109 +145,83 @@ export default function Trends() {
       weekly: []
     };
 
-    const generateData = (dataArray: any[]) => {
+    const generateData = (dataArray: any[], timePeriod: string) => {
       if (!Array.isArray(dataArray) || dataArray.length === 0) {
-        return [];
+        return generateDefaultTimePeriods(timePeriod);
       }
       
-      return dataArray.map((item: any) => {
-        if (!item || typeof item !== 'object') {
-          return {
-            month: 'Unknown',
-            firstValue: 0,
-            secondValue: 0
-          };
-        }
-        
-        return {
-          month: getTimeLabel(item, selectedTIME),
-          ...transformLineData(item)
-        };
-      });
+      return dataArray.map((item: any) => ({
+        month: getTimeLabel(item, timePeriod),
+        ...transformLineData(item)
+      }));
     };
 
     if (selectedTIME === "This Year") {
-      return generateData(timeData.yearly);
+      return generateData(timeData.yearly, selectedTIME);
     } else if (selectedTIME === "This Month") {
-      return generateData(timeData.monthly);
+      return generateData(timeData.monthly, selectedTIME);
     } else {
-      return generateData(timeData.weekly);
+      return generateData(timeData.weekly, selectedTIME);
     }
   }, [dataRD, selectedTIME]);
 
   // Calculate total repayment + default
   const repaymentDefaultTotal = useMemo(() => {
-    const timeData = dataRD?.data || {
-      yearly: [],
-      monthly: [],
-      weekly: []
+    return formatCurrency(
+      repaymentDefaultLineData.reduce(
+        (sum, item) => sum + item.firstValue + item.secondValue,
+        0
+      )
+    );
+  }, [repaymentDefaultLineData]);
+
+  // Customer growth data with default time periods
+  const customerGrowthData = useMemo(() => {
+    const growthData = dataCus || {
+      customer_growth_by_year: [],
+      customer_growth_by_month: [],
+      customer_growth_by_week: [],
+      total_customers_by_year: 0,
+      total_customers_by_month: 0,
+      total_customers_by_week: 0
     };
 
-    let total = 0;
-    const sumReducer = (sum: number, item: any) => {
-      if (!item || typeof item !== 'object') return sum;
-      return sum + safeNumber(item.repayments) + safeNumber(item.defaults);
+    const generateData = (dataArray: any[], timePeriod: string) => {
+      if (!Array.isArray(dataArray) || dataArray.length === 0) {
+        return generateDefaultTimePeriods(timePeriod).map(item => ({
+          month: item.month,
+          value: 0
+        }));
+      }
+      
+      return dataArray.map((item: any) => ({
+        month: getTimeLabel(item, timePeriod),
+        value: safeNumber(item?.customer_count)
+      }));
     };
 
-    if (selectedTIME === "This Year" && Array.isArray(timeData.yearly)) {
-      total = timeData.yearly.reduce(sumReducer, 0);
-    } else if (selectedTIME === "This Month" && Array.isArray(timeData.monthly)) {
-      total = timeData.monthly.reduce(sumReducer, 0);
-    } else if (Array.isArray(timeData.weekly)) {
-      total = timeData.weekly.reduce(sumReducer, 0);
-    }
+    const chartData = 
+      selectedYear === "This Year" ? generateData(growthData.customer_growth_by_year, selectedYear) :
+      selectedYear === "This Month" ? generateData(growthData.customer_growth_by_month, selectedYear) :
+      generateData(growthData.customer_growth_by_week, selectedYear);
 
-    return formatCurrency(total)
-  }, [dataRD, selectedTIME]);
+    const totalCustomers = 
+      selectedYear === "This Year" ? growthData.total_customers_by_year :
+      selectedYear === "This Month" ? growthData.total_customers_by_month :
+      growthData.total_customers_by_week;
 
-  // Customer growth data formatted for ChartCard
-  // Customer growth data formatted for ChartCard
-const customerGrowthData = useMemo(() => {
-  const growthData = dataCus || {
-    customer_growth_by_year: [],
-    customer_growth_by_month: [],
-    customer_growth_by_week: [],
-    total_customers_by_year: 0,
-    total_customers_by_month: 0,
-    total_customers_by_week: 0
-  };
-
-  const transformGrowthItem = (item: any) => ({
-    month: getTimeLabel(item, selectedYear),
-    value: safeNumber(item?.customer_count)
-  });
-
-  const generateData = (dataArray: any[]) => {
-    if (!Array.isArray(dataArray) || dataArray.length === 0) {
-      return [{ month: 'No Data', value: 0 }];
-    }
-    
-    return dataArray.map((item: any) => ({
-      ...transformGrowthItem(item)
-    }));
-  };
-
-  // Calculate total customers based on the selected time period
-  const totalCustomers = 
-    selectedYear === "This Year" ? growthData.total_customers_by_year :
-    selectedYear === "This Month" ? growthData.total_customers_by_month :
-    growthData.total_customers_by_week;
-
-  return {
-    chartData: 
-      selectedYear === "This Year" ? generateData(growthData.customer_growth_by_year) :
-      selectedYear === "This Month" ? generateData(growthData.customer_growth_by_month) :
-      generateData(growthData.customer_growth_by_week),
-    totalCustomers
-  };
-}, [dataCus, selectedYear]);
+    return {
+      chartData,
+      totalCustomers: safeNumber(totalCustomers)
+    };
+  }, [dataCus, selectedYear]);
 
   // Total customers
   const totalCustomers = useMemo(() => {
     return safeNumber(customerCount.total_customers).toLocaleString();
   }, [customerCount.total_customers]);
 
-  // Revenue vs Profit data
+  // Revenue vs Profit data with default time periods
   const comparisonData = useMemo(() => {
     const revenueData = dataTP?.data || {
       by_year: [],
@@ -233,68 +229,40 @@ const customerGrowthData = useMemo(() => {
       by_week: []
     };
 
-    const transformRevenueItem = (item: any) => ({
-      firstDataset: safeNumber(item?.revenue),
-      secondDataset: safeNumber(item?.profit)
-    });
-
-    const generateData = (dataArray: any[]) => {
+    const generateData = (dataArray: any[], timePeriod: string) => {
       if (!Array.isArray(dataArray) || dataArray.length === 0) {
-        return [];
+        return generateDefaultTimePeriods(timePeriod).map(item => ({
+          name: item.month,
+          firstDataset: 0,
+          secondDataset: 0
+        }));
       }
       
-      return dataArray.map((item: any, index: number) => {
-        if (!item || typeof item !== 'object') {
-          return {
-            name: `Item ${index + 1}`,
-            firstDataset: 0,
-            secondDataset: 0
-          };
-        }
-        
-        return {
-          name: getTimeLabel(item, selectedYear),
-          ...transformRevenueItem(item)
-        };
-      });
+      return dataArray.map((item: any) => ({
+        name: getTimeLabel(item, timePeriod),
+        firstDataset: safeNumber(item?.revenue),
+        secondDataset: safeNumber(item?.profit)
+      }));
     };
 
     if (selectedYear === "This Year") {
-      return generateData(revenueData.by_year);
+      return generateData(revenueData.by_year, selectedYear);
     } else if (selectedYear === "This Month") {
-      return generateData(revenueData.by_month);
+      return generateData(revenueData.by_month, selectedYear);
     } else {
-      return generateData(revenueData.by_week);
+      return generateData(revenueData.by_week, selectedYear);
     }
   }, [dataTP, selectedYear]);
 
   // Total revenue + profit
   const totalAmount = useMemo(() => {
-    const revenueData = dataTP?.data || {
-      by_year: [],
-      by_month: [],
-      by_week: []
-    };
-
-    let total = 0;
-    const sumReducer = (sum: number, item: any) => {
-      if (!item || typeof item !== 'object') return sum;
-      return sum + safeNumber(item.revenue) + safeNumber(item.profit);
-    };
-
-    if (selectedYear === "This Year" && Array.isArray(revenueData.by_year)) {
-      total = revenueData.by_year.reduce(sumReducer, 0);
-    } else if (selectedYear === "This Month" && Array.isArray(revenueData.by_month)) {
-      total = revenueData.by_month.reduce(sumReducer, 0);
-    } else if (Array.isArray(revenueData.by_week)) {
-      total = revenueData.by_week.reduce(sumReducer, 0);
-    }
-
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN'
-    }).format(total);
-  }, [dataTP, selectedYear]);
+    return formatCurrency(
+      comparisonData.reduce(
+        (sum, item) => sum + item.firstDataset + item.secondDataset,
+        0
+      )
+    );
+  }, [comparisonData]);
 
   // Fetch data
   useEffect(() => {
@@ -302,28 +270,22 @@ const customerGrowthData = useMemo(() => {
     dispatch(revenue_vs_profit_trend({ year: "2025" }));
   }, [dispatch]);
 
-  // Provide empty data fallbacks for charts
-  const ensureNonEmptyData = (data: any) => {
-    if (!Array.isArray(data) || data.length === 0) {
-      return [{ name: 'No Data', value: 0 }];
-    }
-    return data;
-  };
-
   return (
-    <div className="pb-[227px]">
+      <>
+    {error ? <ErrorDisplay error={error}/> : (
+     <div className="pb-[227px]">
       {/* Revenue vs Profit Trend */}
       <div className="mb-6">
         <CardChart
           title="Revenue VS Profit Trend"
           description="Trend comparing Revenue and profit"
           totalAmount={totalAmount}
-          comparisonData={comparisonData.length > 0 ? comparisonData : [{ name: 'No Data', firstDataset: 0, secondDataset: 0 }]}
+          comparisonData={comparisonData}
           firstDatasetName="Revenue"
           secondDatasetName="Profit"
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
-          data={ensureNonEmptyData(color2)}
+          data={color2}
         />
       </div>
 
@@ -333,12 +295,12 @@ const customerGrowthData = useMemo(() => {
           leftContent={
             <LineChartTwo
               firstDatasetName="Repayment"
-            secondDatasetName="Trends"
+              secondDatasetName="Trends"
               title="Repayment VS Default Trends"
               description="Trend showing repayment vs default"
               totalAmount={repaymentDefaultTotal}
-              data={ensureNonEmptyData(color1)}
-              lineData={repaymentDefaultLineData.length > 0 ? repaymentDefaultLineData : [{ month: 'No Data', firstValue: 0, secondValue: 0 }]}
+              data={color1}
+              lineData={repaymentDefaultLineData}
               selectedYear={selectedTIME}
               setSelectedYear={setSelectedTIME}
             />
@@ -348,7 +310,7 @@ const customerGrowthData = useMemo(() => {
               title="Loan Default Rate"
               description="Total unpaid loan metrics"
               total={safeNumber(loanDefaultRate.total_defaulted_loans)}
-              data={ensureNonEmptyData(defaultRateData)}
+              data={defaultRateData}
             />
           }
         />
@@ -358,28 +320,31 @@ const customerGrowthData = useMemo(() => {
       <div>
         <EqualHeightContainer
           leftContent={
-             <ChartCard
-      chartData={customerGrowthData.chartData}
-      title={"All Customers"}
-      description={"Number of Customers"}
-      totalRevenue={customerGrowthData.totalCustomers}
-      revenueChange={"30.00"} // You should calculate this dynamically based on your data
-      lineColor={"#0F4C5C"}
-      defaultSelectedYear={selectedYear}
-      selectedYear={selectedYear}
-      setSelectedYear={setSelectedYear}
-    />
+            <ChartCard
+              chartData={customerGrowthData.chartData}
+              title={"All Customers"}
+              description={"Number of Customers"}
+              totalRevenue={customerGrowthData.totalCustomers}
+              revenueChange={"30.00"} // You should calculate this dynamically based on your data
+              lineColor={"#0F4C5C"}
+              defaultSelectedYear={selectedYear}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+            />
           }
           rightContent={
             <LoanApprovalChart
               title="Customer Status"
               description="Active vs inactive customers"
               total={totalCustomers}
-              data={ensureNonEmptyData(customerStatusData)}
+              data={customerStatusData}
             />
           }
         />
       </div>
     </div>
+    )}
+  </>
+   
   );
 }

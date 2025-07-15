@@ -1,5 +1,4 @@
-'use client'
-
+"use client";
 import { useDashboard } from '@/app/Context/DahboardContext';
 import { _single_loan_products_request } from '@/app/Redux/Loan_request/loan_request_thunk';
 import { AppDispatch, RootState } from '@/app/Redux/store';
@@ -47,11 +46,6 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
     });
   };
 
-  // Get user full name
-  // const getFullName = () => {
-  //   if (!LoanRequest_Data?.loan?.user) return 'N/A';
-  //   return `${first_name}`;
-  // };
   const getCreditRating = (score: number) => {
     if (score >= 800) return { text: "Excellent", color: "text-emerald-500" };
     if (score >= 740) return { text: "Very Good", color: "text-emerald-400" };
@@ -118,49 +112,50 @@ export default function LoanModal({open, setOpen, setState,titleName,buttonName}
         ?<span className='text-base text-[#156064] font-semibold'>{( formatCurrency(LoanRequest_Data?.loan?.partner_info?.indication_of_interest_expense_fee || 0))}</span> 
         :<span className='text-base text-[#156064] font-semibold'>{ ( formatCurrency(LoanRequest_Data?.loan?.partner_info?.approval_expense_fee || 0))}</span>
     }
-    
   ];
 
   return (
-    <div className="w-full max-w-[544px] max-h-[675px] overflow-hidden bg-white rounded-[8px] px-6 pt-[28px] pb-[40px]">
-      <div className="flex items-center justify-between mb-[50px]">
-        <h2 className="text-2xl font-semibold text-[#333333]">{titleName}</h2>
-        <button
-          onClick={() => setOpen(false)}
-          className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
-        >
-          ✕
-        </button>
-      </div>
-
-      {LoanRequest_loading ? (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading loan details...</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-0">
+      <div className="w-full max-w-[544px] max-h-[80vh] sm:max-h-[675px] overflow-y-auto bg-white rounded-[8px] px-6 pt-[28px] pb-[40px]">
+        <div className="flex items-center justify-between mb-[50px]">
+          <h2 className="text-2xl font-semibold text-[#333333]">{titleName}</h2>
+          <button
+            onClick={() => setOpen(false)}
+            className="text-[#333333] px-2 rounded-[4px] border font-bold text-xs"
+          >
+            ✕
+          </button>
         </div>
-      ) : (
-        <div className="xl:space-y-4 space-y-2">
-          {dataRows.map((row, idx) => (
-            <div key={idx} className="grid grid-cols-2 gap-[186px]">
-              <div className="text-[#8A8B9F] text-sm text-left">{row.label}</div>
-              <div className="text-sm text-[#8A8B9F] text-right">{row.value}</div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      <div className="flex space-x-[px] justify-between gap-12 mt-[44px]">
-        <button
-          onClick={() => setOpen(false)}
-          className="px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => setState(2)}
-          className="px-[50px] py-[10px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
-        >
-       {buttonName}
-        </button>
+        {LoanRequest_loading ? (
+          <div className="flex justify-center items-center h-64">
+            <p>Loading loan details...</p>
+          </div>
+        ) : (
+          <div className="xl:space-y-4 space-y-2">
+            {dataRows.map((row, idx) => (
+              <div key={idx} className="grid grid-cols-2 gap-4 sm:gap-[186px]">
+                <div className="text-[#8A8B9F] text-sm text-left">{row.label}</div>
+                <div className="text-sm text-[#8A8B9F] text-right sm:text-right">{row.value}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:gap-12 gap-4 mt-[44px]">
+          <button
+            onClick={() => setOpen(false)}
+            className="px-4 py-[10px] sm:px-[81px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => setState(2)}
+            className="px-4 py-[10px] sm:px-[50px] border border-[#156064] bg-[#156064] rounded-[4px] text-[12px] font-bold text-white"
+          >
+            {buttonName}
+          </button>
+        </div>
       </div>
     </div>
   );

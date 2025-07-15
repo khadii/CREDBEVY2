@@ -10,6 +10,8 @@ import {
 } from "@/app/Redux/company_info/company_info_thunk";
 import toast from "react-hot-toast";
 import { clearNotificationError, resetNotificationSuccess } from "@/app/Redux/company_info/notificationSlice";
+import ErrorDisplay from "../ErrorDisplay";
+import AnimatedLoader from "../animation";
 
 export default function NotificationSettings() {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,22 +44,22 @@ export default function NotificationSettings() {
 
   // Show error/success messages
   useEffect(() => {
-    if (error) {
-      toast.error(error);
-      dispatch(clearNotificationError());
-    }
+    // if (error) {
+    //   // toast.error(error);
+    //   dispatch(clearNotificationError());
+    // }
     if (success) {
       toast.success("Notification settings updated successfully");
       dispatch(resetNotificationSuccess());
     }
   }, [error, success, dispatch]);
 
-  if (loading && !notificationSettings) {
-    return <div className="max-w-[700px] h-screen">Loading notification settings...</div>;
-  }
+ 
 
   return (
-    <div className="max-w-[700px] h-screen">
+     <>
+    {error ? <ErrorDisplay error={error} title={error}/> : (
+     <div className="max-w-[700px] h-screen">
       <div className="space-y-8">
         {/* Desktop Notification */}
         <div className="flex items-center justify-between">
@@ -134,6 +136,10 @@ export default function NotificationSettings() {
           />
         </div>
       </div>
+       <AnimatedLoader isLoading={loading}/>
     </div>
+    )}
+  </>
+    
   );
 }

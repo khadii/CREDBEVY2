@@ -11,6 +11,7 @@ import Layout from "../../Layout/Layout";
 import AnimatedLoader from "../../animation";
 import { single_loan_repayments } from "@/app/Redux/Repayment/repayment_thunk";
 import RepaymentInfo from "./CustomersInfo";
+import ErrorDisplay from "../../ErrorDisplay";
 
 
 
@@ -35,6 +36,7 @@ export default function RepaymentDetails({id}: RepaymentDetailsProps) {
   
   return (
     <Layout>
+      {error?<ErrorDisplay error={error}/>:
       <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col h-full">
         <div><p className="mb-[32px] text-[34px] font-bold">Customers</p></div>
         <div className="w-full flex gap-6">
@@ -46,7 +48,7 @@ export default function RepaymentDetails({id}: RepaymentDetailsProps) {
           </div>
         </div>
         <AnimatedLoader isLoading={LoanRequest_loading || loading} />
-      </div>
+      </div>}
     </Layout>
   );
 }

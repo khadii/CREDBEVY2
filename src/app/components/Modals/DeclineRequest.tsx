@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import AnimatedLoader from "../animation";
+import { _pending_loans } from "@/app/Redux/dashboard/dashboardThunk";
 
 interface ModalProps {
   isOpen: boolean;
@@ -45,6 +46,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       refreshData();
       setInterested(false);
       handleClose();
+        dispatch(_pending_loans());
     }
     if (declineError) {
       toast.error(declineError);
@@ -53,7 +55,6 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   }, [declineSuccess, declineError, declineData]);
 
   const handleClose = () => {
-    // Add any state reset logic here if needed in the future
     onClose();
   };
 
@@ -68,6 +69,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       const notinterestResult = await dispatch(decline_interest(currentRequestParams));
       
       if (notinterestResult.meta.requestStatus === 'fulfilled') {
+      
         // Success handling moved to useEffect to ensure consistent behavior
       }
     } catch (error) {
@@ -86,8 +88,8 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
-      <div className="relative bg-white rounded-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA] p-4 sm:p-0">
+      <div className="relative bg-white rounded-lg w-full max-w-[500px] sm:w-auto sm:max-w-none">
         {LoanRequest_loading ? (
           <AnimatedLoader isLoading={LoanRequest_loading}></AnimatedLoader>
         ) : (
@@ -124,7 +126,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="flex space-x-[96px]">
+              <div className="flex flex-col sm:flex-row sm:space-x-[96px] space-y-4 sm:space-y-0">
                 <button
                   onClick={handleClose}
                   disabled={LoanRequest_loading || declineLoading}

@@ -176,7 +176,7 @@ export function MobileNav() {
       {isOpen && (
         <div className="md:hidden fixed inset-0 z-40 bg-black bg-opacity-50">
           <div className="absolute bottom-0 left-0 right-0 bg-[#24262D] rounded-t-2xl p-4">
-            <div className="grid grid-cols-4 gap-4 py-4">
+            <div className="grid grid-cols-3 gap-4 py-4">
               {menuItems.map((item) => {
                 const isActive =
                   pathname === item.href ||

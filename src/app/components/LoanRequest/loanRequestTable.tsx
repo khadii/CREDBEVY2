@@ -178,10 +178,11 @@ export const LoanRequest= ({ bulkAction, laon_table_data_all, total_count }: { l
           </button>
         )}
         {item.info_status === "NOT_INTERESTED" && (
-          <div className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold">
+                    <button className="flex items-center border   border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold">
+          {/* <div className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold"> */}
             <FaCircle className="text-[#E33A24] w-2 h-2 mr-1" />
             Not interested
-          </div>
+          </button>
         )}
         {!item.info_status && (
           <div className="flex w-full gap-[27px] loan-request-actions">

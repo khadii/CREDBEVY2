@@ -137,12 +137,12 @@ export default function Dashboard() {
       color: "#156064",
       value: dataStat?.loanStats?.loanDefaultRate?.defaulted_percentage,
 
-      name: "defualt",
+      name: "Defualt",
     },
     {
       color: "#EC7910",
       value: dataStat?.loanStats?.loanDefaultRate?.non_defaulted_percentage,
-      name: "no defualt",
+      name: "No Defualt",
     },
   ];
   const stats = [

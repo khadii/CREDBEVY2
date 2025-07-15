@@ -58,7 +58,7 @@ export const YearDropdown = ({
         {selectedYear} <LucideChevronDown size={20} />
       </button>
       {isOpen && (
-        <div ref={modalRef} className="right-0 top-10 absolute">
+        <div ref={modalRef} className="right-0 top-10 absolute z-50">
           <div className="bg-white py-6 px-2 rounded-lg w-[134px] shadow-lg">
             <h3 className="text-[13px] font-semibold text-gray-900 text-center">Select Year</h3>
             <div className="mt-4 space-y-2">

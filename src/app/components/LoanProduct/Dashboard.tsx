@@ -136,7 +136,7 @@ export default function Dashboard() {
       title: "Total Loan Product",
       amount: loanProductsStats?.data?.totalLoanProducts,
       percentage: loanProductsStats?.data?.totalLoanProductPercentage,
-      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
+      icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Revenue Generated",
@@ -148,7 +148,7 @@ export default function Dashboard() {
       title: "Total Amount Disbursed",
       amount: formatToNaira(loanProductsStats?.data?.totalAmountDisbursed),
       percentage: loanProductsStats?.data?.totalAmountDisbursedPercentage,
-      icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
+      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
   ];
 
@@ -207,18 +207,18 @@ export default function Dashboard() {
       color: "#EC7910",
     },
     {
-      name: "declined",
+      name: "Declined",
       value: loanProductsStats?.data?.loanApprovalRate?.declined_percentage,
       color: "#FA4D56" 
     },
   ];
-
+// percentage
   const progressBarData =
     loanProductsStats?.data?.loanPerformingProducts?.top_products.map(
       (item: any) => ({
         label: item.product_name,
         value: item.total_loans,
-        maxValue: item.percentage,
+        maxValue: item.total_loans,
       })
     ) || [];
 
@@ -322,7 +322,7 @@ export default function Dashboard() {
       <div className="">
         {/* title */}
 
-        <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
+        <p className="font-semibold lg:text-4xl text-2xl text-[#333333] mb-6 bg-[#FAFAFA]">
           Loan Products List
         </p>
         {/* notification */}

@@ -16,6 +16,7 @@ import { customer_growth_trend } from "@/app/Redux/Financials/customer_growth_tr
 import { revenue_vs_profit_trend } from "@/app/Redux/Financials/revenue_vs_profit_trend/revenue_vs_profit_trend_thunk";
 import { repayment_vs_default_trend } from "@/app/Redux/Financials/repayment_vs_default_trend/repayment_vs_default_trend_thunk";
 import CardChart from "../ChartCards/DoubleBatchart";
+import ErrorDisplay from "../ErrorDisplay";
 
 // Utility functions
 const safeNumber = (value: any, fallback = 0): number => {
@@ -43,6 +44,7 @@ export default function TransactionHistory() {
   const dispatch = useDispatch<AppDispatch>();
   const [selectedYear, setSelectedYear] = useState("This Year");
   const [currentPage, setCurrentPage] = useState(1);
+   const [selectedTIME, setSelectedTIME] = useState("This Year");
 
   // Fetch data
   useEffect(() => {
@@ -64,37 +66,87 @@ export default function TransactionHistory() {
   }, [dispatch, currentPage]);
 
   // Redux selectors
-  const { data: dataStat = {} } = useSelector((state: any) => state.financialStats) || {};
-  const { data: dataRD = {} } = useSelector((state: any) => state.repaymentVsDefaultTrend) || {};
-  const { data: dataTP = {} } = useSelector((state: any) => state.revenueVsProfitTrend) || {};
-  const { data: dataTra } = useSelector((state: any) => state.Transaction);
+// Redux selectors
+const {
+  data: dataStat = {},
+  loading: loadingStats,
+  error: errorStats
+} = useSelector((state: any) => state.financialStats) || {};
 
-  // Data transformation functions
-  const transformRepaymentDefaultData = () => {
-    const timeData = dataRD?.data || {
-      yearly: [],
-      monthly: [],
-      weekly: []
-    };
+const {
+  data: dataRD = {},
+  loading: loadingRepayment,
+  error: errorRepayment
+} = useSelector((state: any) => state.repaymentVsDefaultTrend) || {};
 
-    const generateData = (dataArray: any[]) => {
-      if (!Array.isArray(dataArray)) return [];
-      
-      return dataArray.map((item: any) => ({
-        month: getTimeLabel(item, selectedYear),
-        firstValue: safeNumber(item?.repayments),
-        secondValue: safeNumber(item?.defaults)
-      }));
-    };
+const {
+  data: dataTP = {},
+  loading: loadingRevenue,
+  error: errorRevenue
+} = useSelector((state: any) => state.revenueVsProfitTrend) || {};
 
-    if (selectedYear === "This Year") {
-      return generateData(timeData.yearly);
-    } else if (selectedYear === "This Month") {
-      return generateData(timeData.monthly);
-    } else {
-      return generateData(timeData.weekly);
-    }
+const {
+  data: dataTra,
+  loading: loadingTransaction,
+  error: errorTransaction
+} = useSelector((state: any) => state.Transaction) || {};
+
+
+  const generateDefaultTimePeriods = (timePeriod: string) => {
+  if (timePeriod === "This Year") {
+    // Generate all months of the year
+    return Array.from({ length: 12 }, (_, i) => ({
+      month: new Date(2025, i).toLocaleString('default', { month: 'short' }),
+      firstValue: 0,
+      secondValue: 0
+    }));
+  } else if (timePeriod === "This Month") {
+    // Generate all days of current month (using 31 as max for simplicity)
+    const daysInMonth = new Date(2025, new Date().getMonth() + 1, 0).getDate();
+    return Array.from({ length: daysInMonth }, (_, i) => ({
+      month: (i + 1).toString(),
+      firstValue: 0,
+      secondValue: 0
+    }));
+  } else {
+    // Generate days of week
+    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => ({
+      month: day,
+      firstValue: 0,
+      secondValue: 0
+    }));
+  }
+};
+
+// Update the transformRepaymentDefaultData function
+const transformRepaymentDefaultData = () => {
+  const timeData = dataRD?.data || {
+    yearly: [],
+    monthly: [],
+    weekly: []
   };
+
+  const generateData = (dataArray: any[]) => {
+    if (!Array.isArray(dataArray) || dataArray.length === 0) {
+      return generateDefaultTimePeriods(selectedTIME);
+    }
+    
+    return dataArray.map((item: any) => ({
+      month: getTimeLabel(item, selectedTIME),
+      firstValue: safeNumber(item?.repayments),
+      secondValue: safeNumber(item?.defaults)
+    }));
+  };
+
+  if (selectedTIME === "This Year") {
+    return generateData(timeData.yearly);
+  } else if (selectedTIME === "This Month") {
+    return generateData(timeData.monthly);
+  } else {
+    return generateData(timeData.weekly);
+  }
+};
+
 
   const transformRevenueProfitData = () => {
     const revenueData = dataTP?.data || {
@@ -107,15 +159,15 @@ export default function TransactionHistory() {
       if (!Array.isArray(dataArray)) return [];
       
       return dataArray.map((item: any) => ({
-        name: getTimeLabel(item, selectedYear),
+        name: getTimeLabel(item, selectedTIME),
         firstDataset: safeNumber(item?.revenue),
         secondDataset: safeNumber(item?.profit)
       }));
     };
 
-    if (selectedYear === "This Year") {
+    if (selectedTIME === "This Year") {
       return generateData(revenueData.by_year);
-    } else if (selectedYear === "This Month") {
+    } else if (selectedTIME === "This Month") {
       return generateData(revenueData.by_month);
     } else {
       return generateData(revenueData.by_week);
@@ -188,6 +240,9 @@ export default function TransactionHistory() {
   ];
 
   return (
+      <>
+    {errorStats || errorRepayment || errorRevenue || errorTransaction? <ErrorDisplay error={errorStats || errorRepayment || errorRevenue || errorTransaction}/> : (
+      <div>
     <div className="pb-[115px]">
       <YearDropdown
         years={[2023, 2024]}
@@ -246,6 +301,8 @@ export default function TransactionHistory() {
           leftContent={
 
             <LineChartTwo
+              selectedYear={selectedTIME}
+              setSelectedYear={setSelectedTIME}
               firstDatasetName="Repayment"
             secondDatasetName="Trends"
               title="Repayment VS Default Trends"
@@ -254,9 +311,10 @@ export default function TransactionHistory() {
                 repaymentDefaultLineData.reduce((sum, item) => sum + item.firstValue + item.secondValue, 0)
               )}
               data={repaymentDefaultDatas}
-              lineData={repaymentDefaultLineData.length > 0 ? repaymentDefaultLineData : [{ month: 'No Data', firstValue: 0, secondValue: 0 }]}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
+              lineData={ repaymentDefaultLineData }
+             
+              
+             
             />
           }
           rightContent={
@@ -291,5 +349,9 @@ export default function TransactionHistory() {
         />
       )}
     </div>
+      </div>
+    )}
+  </>
+   
   );
 }

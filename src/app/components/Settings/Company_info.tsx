@@ -13,6 +13,8 @@ import toast from 'react-hot-toast';
 import { AppDispatch, RootState } from '@/app/Redux/store';
 import AnimatedLoader from '../animation';
 import { useRouter } from 'next/navigation';
+import ErrorDisplay from '../ErrorDisplay';
+import { error } from 'console';
 
 
 // Yup validation schema (for form submission)
@@ -206,7 +208,10 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
   const handleCompanyWebsiteChange = handleURLChange('Company_Website');
 
   return (
-    <div>
+     <>
+    {comperror ? <ErrorDisplay error={comperror} title={comperror}/>: (
+      <div>
+       <div>
       <form onSubmit={formik.handleSubmit} className="space-y-[24px] pb-[76px]">
         <div className="w-full max-w-[822px] h-full min-h-[528px] px-[24px] pt-[24px]  pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
           <p className="text-[#333333] text-[20px] font-bold mb-[24px]">Company Info</p>
@@ -304,5 +309,9 @@ const {loading}= useSelector((state: any) => state.CompanyInfoForm);
 
       <AnimatedLoader isLoading={comploading}/>
     </div>
+      </div>
+    )}
+  </>
+    
   );
 }

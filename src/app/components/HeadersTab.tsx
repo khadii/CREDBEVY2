@@ -47,7 +47,7 @@ export const HeaderWithTabs = ({
 
   return (
     <div className="bg-[#FAFAFA]">
-      <h2 className="text-[34px] font-bold text-gray-900 pb-[32px]">{title}</h2>
+      <h2 className="md:text-[34px] text-2xl font-bold text-gray-900 pb-[32px]">{title}</h2>
       <div className="mt-8 space-y-6 items-center justify-between">
         <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={handleTabChange} />
         <YearDropdown

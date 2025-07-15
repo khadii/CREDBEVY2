@@ -71,7 +71,7 @@ const CardChart = ({
           <div className="relative justify-end flex">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#F8F8F8] rounded-md py-[10px] text-sm pl-[20px] pr-[15px] text-[#333333] flex gap-[27px] font-bold  items-center justify-center w-full"
+            className="bg-[#F8F8F8] rounded-md py-[10px] text-sm pl-[20px] pr-[15px] text-[#333333] flex gap-[27px] font-bold  items-center justify-center w-full whitespace-nowrap"
           >
          <div>
          {selectedYear}

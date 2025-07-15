@@ -1,3 +1,4 @@
+// LineChartComponent.tsx
 "use client";
 
 import {
@@ -9,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import useIsMobile from "./useIsMobile";
 
 type LineChartComponentProps = {
   data: { month: string; value: number }[];
@@ -21,31 +23,32 @@ const LineChartComponent = ({
   lineColor = "#0F4C5C",
   showGrid = true,
 }: LineChartComponentProps) => {
+  const isMobile = useIsMobile();
+  const axisFontSize = isMobile ? 10 : 14;
+
   return (
-    <ResponsiveContainer width="100%" height={260}>
-      <RechartsLineChart
-        data={data}
-        // margin={{ top: 20, right: 20, left: 60, bottom: 0 }}
-      >
+    <ResponsiveContainer width="100%" height={275}>
+      <RechartsLineChart data={data}>
         {showGrid && <CartesianGrid vertical={false} stroke="#E5E7EB" />}
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={2}
-           padding={{ left: 20, right: 20 }} 
-          //  tickFormatter={(value) => value} 
-          // tickFormatter={(value) => value.slice(0, 3)} // Shorten month names to 3 letters
-          tick={{ fill: "#858688", fontSize: 14 }}
-                    interval={0} 
-        />
+    <XAxis
+  dataKey="month"
+  scale="point"
+  tickLine={false}
+  axisLine={false}
+  tickMargin={2}
+  padding={{ left: 20, right: 20 }}
+  tick={{ fill: "#858688", fontSize: axisFontSize }}
+  interval={isMobile ? "preserveStartEnd" : 0}
+  tickFormatter={(value) => value.slice(0, 3)}
+  height={isMobile ? 50 : 60}
+/>
+
         <YAxis
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}%`} // Format Y-axis labels as percentages
-       width={35}
-
-          tick={{ fill: "#858688", fontSize: 14 }}
+          tickFormatter={(value) => `${value}%`}
+          width={35}
+          tick={{ fill: "#858688", fontSize: axisFontSize }}
         />
         <Tooltip content={<CustomTooltip />} />
         <Line
@@ -54,13 +57,11 @@ const LineChartComponent = ({
           stroke={lineColor}
           strokeWidth={2}
           dot={false}
-
         />
       </RechartsLineChart>
     </ResponsiveContainer>
   );
 };
-
 // Custom Tooltip Component
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {

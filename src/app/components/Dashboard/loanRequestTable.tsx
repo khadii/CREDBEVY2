@@ -17,6 +17,7 @@ import DeclineRequest from "../Modals/DeclineRequest";
 import Modal from "../Modals/indicateInterest";
 import TableWithOutPagination from "../table/tableWithOutPagination";
 import { formatToNaira } from "@/app/lib/Naira";
+import NoDataFound from "../NoDataFound";
 
 // Add this CSS to your global styles or component
 const responsiveStyles = `
@@ -71,6 +72,26 @@ interface LoanData {
   loan_uuid: string;
   info_status: any;
 }
+
+// SVG for no profile picture
+const NoProfilePictureSVG = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="lucide lucide-circle-user-round text-gray-400"
+  >
+    <path d="M18 20a6 6 0 0 0-12 0" />
+    <circle cx="12" cy="10" r="4" />
+    <circle cx="12" cy="12" r="10" />
+  </svg>
+);
 
 export const LoanRequest = ({
   bulkAction,
@@ -171,12 +192,14 @@ export const LoanRequest = ({
                 />
               </div>
             </div>
-            {item.image && (
+            {item.image ? (
               <img
                 src={item.image}
                 alt="avatar"
                 className="w-8 h-8 rounded-full"
               />
+            ) : (
+              <NoProfilePictureSVG />
             )}
             <p className="truncate max-w-[140px]">{`${item.first_name} ${item.last_name}`}</p>
           </div>
@@ -199,16 +222,17 @@ export const LoanRequest = ({
           onClick={(e) => e.stopPropagation()}
         >
           {item.info_status === "INTERESTED" && (
-            <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold">
+            <button className="flex items-center border border-[#BFFFD1] text-[#42BE65] bg-[#EFFAF2] px-2 h-[23px] rounded-full text-xs font-semibold w-fit">
               <FaCircle className="text-[#42BE65] w-2 h-2 mr-1" />
               Interested
             </button>
           )}
           {item.info_status === "NOT_INTERESTED" && (
-            <div className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold">
+            // <div className="flex items-center gap-2 border border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1] px-2 h-[23px] rounded-full text-xs font-semibold w-fit">
+                          <button className="flex items-center border-[#FFBAB1] text-[#E33A24] bg-[#FFF3F1]  px-2 h-[23px] rounded-full text-xs font-semibold w-fit">
               <FaCircle className="text-[#E33A24] w-2 h-2 mr-1" />
               Not interested
-            </div>
+            </button>
           )}
           {!item.info_status && (
             <div className="flex w-full gap-[27px] loan-request-actions">
@@ -242,7 +266,9 @@ export const LoanRequest = ({
     ]
   );
 
-  return (
+  return laon_table_data_all?.length === 0 || !laon_table_data_all ? (
+    <NoDataFound />
+  ) : (
     <>
       {/* <style>{responsiveStyles}</style> */}
       <div className="loan-request-container">

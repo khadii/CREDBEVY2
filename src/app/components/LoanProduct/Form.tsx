@@ -41,7 +41,7 @@ export default function Form() {
     "4 weeks",
     "5 weeks",
   ];
-  const employmentStatus = ["Employed", "Unemployed","Selfemployed", "Student"];
+  const employmentStatus = ["Employed", "Unemployed", "Selfemployed", "Student"];
 
   const validationSchema = Yup.object({
     Product_Name: Yup.string().required("Product Name is required"),
@@ -80,14 +80,13 @@ export default function Form() {
       1,
       "At least one collateral is required"
     ),
-
     minCreditScore: Yup.string()
       .max(3, "Minimum Credit Score should not exceed three digits")
       .required("Minimum Credit Score is required")
       .test(
         "min-credit-limit",
         "Minimum Credit Score should not be below 300",
-        (value) => !value || parseInt(value) >= 300 // Ensure minCreditScore is at least 300
+        (value) => !value || parseInt(value) >= 300
       )
       .test(
         "min-max-credit",
@@ -107,7 +106,7 @@ export default function Form() {
       .test(
         "max-credit-limit",
         "Maximum Credit Score should be between 300 and 850",
-        (value) => !value || (parseInt(value) >= 300 && parseInt(value) <= 850) // Ensure maxCreditScore is between 300 and 850
+        (value) => !value || (parseInt(value) >= 300 && parseInt(value) <= 850)
       )
       .test(
         "max-min-credit",
@@ -184,21 +183,22 @@ export default function Form() {
   }, [success, error, dispatch]);
 
   return (
-    <>
-      <p className="font-semibold text-4xl text-[#333333] mb-3 bg-[#FAFAFA]">
+    <div className="px-4 md:px-0">
+      <p className="font-semibold text-2xl md:text-4xl text-[#333333] mb-3 bg-[#FAFAFA]">
         Loan Products
       </p>
-      <h1 className="font-bold text-[#8A8B9F] text-[14px] mb-[36px] flex flex-row items-center gap-2">
+      <h1 className="font-bold text-[#8A8B9F] text-[12px] md:text-[14px] mb-6 md:mb-[36px] flex flex-row items-center gap-2">
         Fill in the details below to add a loan product{" "}
         <CircleAlert size={14} />
       </h1>
-      <form onSubmit={formik.handleSubmit} className="space-y-[24px] pb-[76px]">
-        <div className="w-full max-w-[822px] h-full min-h-[528px] px-[24px] pt-[24px]  pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+      <form onSubmit={formik.handleSubmit} className="space-y-6 md:space-y-[24px] pb-10 md:pb-[76px]">
+        {/* Product Info Section */}
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[60px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Product Info
           </p>
 
-          <div className="mb-[24px] w-full">
+          <div className="mb-4 md:mb-[24px] w-full">
             <InputField
               label="Product Name"
               placeholder="Enter Product Name"
@@ -208,7 +208,8 @@ export default function Form() {
               required
             />
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <AmountInput
                 label="Minimum Amount"
@@ -217,13 +218,7 @@ export default function Form() {
                 onChange={(e) => {
                   let newValue = e.target.value.replace(/,/g, "");
                   if (/^\d{0,9}$/.test(newValue)) {
-                    // if (
-                    //   newValue <= formik.values.maxAmount ||
-                    //   formik.values.maxAmount === ""
-                    // )
-                    {
-                      formik.setFieldValue("minAmount", newValue);
-                    }
+                    formik.setFieldValue("minAmount", newValue);
                   }
                 }}
                 error={formik.touched.minAmount && formik.errors.minAmount}
@@ -238,13 +233,7 @@ export default function Form() {
                 onChange={(e) => {
                   let newValue = e.target.value.replace(/,/g, "");
                   if (/^\d{0,9}$/.test(newValue)) {
-                    // if (
-                    //   newValue >= formik.values.minAmount ||
-                    //   formik.values.minAmount === ""
-                    // )
-                    {
-                      formik.setFieldValue("maxAmount", newValue);
-                    }
+                    formik.setFieldValue("maxAmount", newValue);
                   }
                 }}
                 error={formik.touched.maxAmount && formik.errors.maxAmount}
@@ -253,7 +242,7 @@ export default function Form() {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Loan Type"
@@ -263,7 +252,7 @@ export default function Form() {
                 required
                 options={loanOption}
                 placeholder="Select Loan Type"
-                disabledOptions={["Business Loan", "Mortgage Loan"]} // Add this line
+                disabledOptions={["Business Loan", "Mortgage Loan"]}
               />
             </div>
             <div>
@@ -284,7 +273,7 @@ export default function Form() {
             </div>
           </div>
 
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Duration"
@@ -310,11 +299,7 @@ export default function Form() {
                 }
                 onChange={(e) => {
                   let newValue = e.target.value;
-
-                  // Remove the % symbol before validation
                   newValue = newValue.replace(/%/g, "");
-
-                  // Validate the input (allow up to 2 digits and optional decimal)
                   if (/^\d{0,2}(\.\d{0,1})?$/.test(newValue)) {
                     formik.setFieldValue("interestRate", newValue);
                   }
@@ -326,7 +311,8 @@ export default function Form() {
               />
             </div>
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <OptionInput
                 label="Category"
@@ -365,11 +351,11 @@ export default function Form() {
         </div>
 
         {/* Eligibility Criteria Section */}
-        <div className="w-full max-w-[822px] h-full min-h-[262px] px-[24px] pt-[24px]  pb-[46px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[46px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Eligibility Criteria
           </p>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <InputField
                 label="Minimum Credit Score"
@@ -405,7 +391,7 @@ export default function Form() {
               />
             </div>
           </div>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div>
               <AmountInput
                 label="Minimum Income"
@@ -443,11 +429,11 @@ export default function Form() {
         </div>
 
         {/* Discount Section */}
-        <div className="w-full max-w-[822px] h-full max-h-[193px] px-[24px] pt-[24px]  pb-[61px] bg-white border-[#E5EAEF] rounded-lg border">
-          <p className="text-[#333333] text-[20px] font-bold mb-[24px]">
+        <div className="w-full md:max-w-[822px] px-4 md:px-[24px] py-4 md:pt-[24px] md:pb-[61px] bg-white border-[#E5EAEF] rounded-lg border">
+          <p className="text-[#333333] text-lg md:text-[20px] font-bold mb-4 md:mb-[24px]">
             Discount
           </p>
-          <div className="w-full grid grid-cols-2 space-x-[24px] mb-[24px]">
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-[24px] mb-4 md:mb-[24px]">
             <div className="relative">
               <div className="absolute top-9 z-10 right-3">
                 <LuPercent />
@@ -460,11 +446,7 @@ export default function Form() {
                 }
                 onChange={(e) => {
                   let newValue = e.target.value;
-
-                  // Remove the % symbol before validation
                   newValue = newValue.replace(/%/g, "");
-
-                  // Validate the input (allow up to 2 digits)
                   if (/^\d{0,2}$/.test(newValue)) {
                     formik.setFieldValue("percentage", newValue);
                   }
@@ -492,7 +474,7 @@ export default function Form() {
 
         {/* Submit Button */}
         <div
-          className={`w-full max-w-[822px]  pt-[24px]  flex justify-end ${
+          className={`w-full md:max-w-[822px] pt-4 md:pt-[24px] flex justify-end ${
             loading && "cursor-not-allowed"
           }`}
         >
@@ -502,8 +484,6 @@ export default function Form() {
         </div>
       </form>
       {error && <p className="text-red-500">{error}</p>}
-    </>
+    </div>
   );
 }
-
-

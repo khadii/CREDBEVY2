@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
+      <p className="font-semibold md:text-4xl text-2xl text-[#333333] mb-6 bg-[#FAFAFA]">
         Financials
       </p>
       <div className="mb-[26px]">

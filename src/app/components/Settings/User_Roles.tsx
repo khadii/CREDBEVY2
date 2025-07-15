@@ -15,6 +15,7 @@ import { clearDeleteUserState } from "@/app/Redux/user_management/delete_user";
 import toast from "react-hot-toast";
 import AnimatedLoader from "../animation";
 import { formatDate } from "@/app/lib/formatdate";
+import ErrorDisplay from "../ErrorDisplay";
 // import { clearDeleteUserRoleState } from "@/app/Redux/Userr_Role/delete_user_role_slice";
 
 interface RoleData {
@@ -191,51 +192,61 @@ useEffect(() => {
     </>
   );
 
-  if (error) return <div>Error: {error}</div>;
+  
 
-  return (
-    <div className="w-full min-h-screen">
-      <SettingsTable
-        headers={headers}
-        data={data.roles}
-        titleProps={{
-          mainTitle: "User Roles",
-          count: `${data.total_roles} Roles`,
-          subtitle: "List of all user roles on the dashboard",
-        }}
-        href=""
-        showAddUserButton={false}
-        renderRow={renderRow}
-        currentPage={currentPage}
-        totalPages={data.last_page} 
-        setCurrentPage={(page: number) => dispatch(setCurrentPage(page))}
-        isHeaderChecked={isHeaderChecked}
-        handleHeaderToggle={handleHeaderToggle}
-        renderHeader={renderHeader}
-      />
-      <DeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          dispatch(clearDeleteUserRoleState());
-        }}
-        onConfirm={() => {
-          if (roleToDelete !== null) {
-            handleDelete(roleToDelete);
-          }
-        }}
-        isLoading={deleteStateloading}
-        error={deleteStateerror}
-      />
-      <EditRoleModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        
-      />
+return (
+  <>
+    {error ? (
+      <ErrorDisplay error={error} title={error} />
+    ) : (
+      <>
+        <div className="w-full min-h-screen">
+          <SettingsTable
+            headers={headers}
+            data={data.roles}
+            titleProps={{
+              mainTitle: "User Roles",
+              count: `${data.total_roles} Roles`,
+              subtitle: "List of all user roles on the dashboard",
+            }}
+            href=""
+            showAddUserButton={false}
+            renderRow={renderRow}
+            currentPage={currentPage}
+            totalPages={data.last_page}
+            setCurrentPage={(page: number) => dispatch(setCurrentPage(page))}
+            isHeaderChecked={isHeaderChecked}
+            handleHeaderToggle={handleHeaderToggle}
+            renderHeader={renderHeader}
+          />
 
-      <AnimatedLoader isLoading={loading ||deleteStateloading}/>
-    </div>
-  );
+          <DeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              dispatch(clearDeleteUserRoleState());
+            }}
+            onConfirm={() => {
+              if (roleToDelete !== null) {
+                handleDelete(roleToDelete);
+              }
+            }}
+            isLoading={deleteStateloading}
+            error={deleteStateerror}
+          />
+        </div>
+      </>
+    )}
+
+    <EditRoleModal
+      isOpen={isEditModalOpen}
+      onClose={() => setIsEditModalOpen(false)}
+    />
+
+    <AnimatedLoader isLoading={loading || deleteStateloading} />
+  </>
+);
+
 };
 
 export default User_Roles;

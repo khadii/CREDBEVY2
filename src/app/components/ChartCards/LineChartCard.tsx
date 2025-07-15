@@ -94,10 +94,10 @@ const RevenueChart: React.FC<RevenueChartProps> = ({
           <p className="font-medium text-sm text-[#333333] mb-3">
             {description}
           </p>
-          <p className="text-2xl font-bold text-[#333333]">{totalRevenue}</p>
-          <p className="text-xs font-semibold text-green-800 mt-1">
+          <p className="text-2xl font-bold text-[#333333] ">{totalRevenue}</p>
+          {/* <p className="text-xs font-semibold text-green-800 pt-1">
               {revenueChange}
-            </p>
+            </p> */}
         </div>
       
       </div>

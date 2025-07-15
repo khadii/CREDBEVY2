@@ -16,6 +16,7 @@ import { SquareActivity } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { LuSquareActivity } from 'react-icons/lu';
 import { SlOptionsVertical } from 'react-icons/sl';
 import { TbCurrencyNaira } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,27 +94,27 @@ export default function LoanPerformance({params}:{params:any}) {
   const stats = [
     {
       title: "Total Defaults Product",
-      amount:formatCurrency( data?.data?.totalLoanProducts),
+      amount:data?.data?.totalLoanProducts ??'N/A',
       percentage: data?.data?.totalLoanProductPercentage + "%",
-      icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
+      icon: <LuSquareActivity size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Revenue Generated",
-      amount: formatCurrency(data?.data?.totalRevenueGenerated),
+      amount: formatCurrency(data?.data?.totalRevenueGenerated??"N/A")??'N/A',
       percentage: data?.data?.totalRevenueGeneratedPercentage + "%",
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
     {
       title: "Total Amount Disbursed",
-      amount:formatCurrency( data?.data?.totalAmountDisbursed),
+      amount:formatCurrency( data?.data?.totalAmountDisbursed??"N/A")??'N/A',
       percentage: data?.data?.totalAmountDisbursedPercentage + "%",
       icon: <TbCurrencyNaira size={"18px"} className="text-gray-500" />,
     },
   ];
 
   const pieChartData = [
-    { name: "active", value: data?.data?.loanDefaultRate.defaulted_percentage, color: "#156064" },
-    { name: "overdue",  value: data?.data?.loanDefaultRate.non_defaulted_percentage,  color: "#EC7910" },
+    { name: "Active", value: data?.data?.loanDefaultRate.defaulted_percentage, color: "#156064" },
+    { name: "Overdue",  value: data?.data?.loanDefaultRate.non_defaulted_percentage,  color: "#EC7910" },
   ];
   const pieChartData2 = [
     { name: "Approved", value: data?.data?.loanApprovalRate.approval_percentage, color: "#156064" },
