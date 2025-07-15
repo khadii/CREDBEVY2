@@ -128,7 +128,7 @@ const CardChart = ({
       </div>
 
       {/* Chart */}
-      <div className="w-full -mx-2 sm:mx-0">
+      <div className="w-full -mx-2 sm:mx-0 overflow-auto scrollbar-hide">
         <DoubleBarChartComponent
           comparisonData={comparisonData}
           firstDatasetName={firstDatasetName}
