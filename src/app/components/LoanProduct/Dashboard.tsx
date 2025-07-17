@@ -24,6 +24,7 @@ import AnimatedLoader from "../animation";
 import { resetLoanProductState } from "@/app/Redux/Loan_Product/loan_product_slice";
 import { resetBulkAction } from "@/app/Redux/Loan_Product/Bulkslice";
 import { DropdownMenu } from "../Modals/activateDeActivateBulk";
+import ErrorDisplay from "../ErrorDisplay";
 
 
 export default function Dashboard() {
@@ -217,8 +218,8 @@ export default function Dashboard() {
     loanProductsStats?.data?.loanPerformingProducts?.top_products.map(
       (item: any) => ({
         label: item.product_name,
-        value: item.total_loans,
-        maxValue: item.total_loans,
+        value: item.percentage,
+        // maxValue: item.total_loans,
       })
     ) || [];
 
@@ -319,6 +320,9 @@ export default function Dashboard() {
   };
   return (
     <section className="  bg-[#FAFAFA]   ">
+        {error ? (
+                    <ErrorDisplay error={error} />
+                  ) :(
       <div className="">
         {/* title */}
 
@@ -397,7 +401,7 @@ export default function Dashboard() {
             />
           </div>
         </div>
-      </div>
+      </div>)}
       {/* <Deactivate
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}

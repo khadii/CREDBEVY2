@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatToNaira } from "@/app/lib/Naira";
 import AnimatedLoader from "../animation";
 import { useRouter } from "next/navigation";
+import ErrorDisplay from "../ErrorDisplay";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -127,23 +128,23 @@ export default function Dashboard() {
   ];
 
 
-  useEffect(() => {
-    if (LoanRequestAll_SuccessError) {
-      toast.error(LoanRequestAll_SuccessError || "Network request failed!");
-    }
-  });
+  // useEffect(() => {
+  //   if (LoanRequestAll_SuccessError) {
+  //     toast.error(LoanRequestAll_SuccessError || "Network request failed!");
+  //   }
+  // });
 
-  useEffect(() => {
-    if (LoanRequestStat_error) {
-      toast.error(LoanRequestStat_error || "Network request failed!");
-    }
-  });
+  // useEffect(() => {
+  //   if (LoanRequestStat_error) {
+  //     // toast.error(LoanRequestStat_error || "Network request failed!");
+  //   }
+  // });
 
-  useEffect(() => {
-    if (loan_request_trend_error) {
-      toast.error(loan_request_trend_error || "Network request failed!");
-    }
-  }, [loan_request_trend_error]);
+  // useEffect(() => {
+  //   if (loan_request_trend_error) {
+  //     toast.error(loan_request_trend_error || "Network request failed!");
+  //   }
+  // }, [loan_request_trend_error]);
 
   const handleYearChange = (year: string) => {
     setSelectedYear(year);
@@ -408,9 +409,14 @@ export default function Dashboard() {
 
   return (
     <Layout>
+
+      
+            {error || LoanRequestAll_SuccessError || LoanRequestStat_error || loan_request_trend_error ? (
+              <ErrorDisplay error={error || LoanRequestAll_SuccessError || LoanRequestStat_error || loan_request_trend_error} />
+            ) : (
     <div className="">{renderContent()}
       <AnimatedLoader isLoading={LoanRequestAll_loading}/>
-    </div>
+    </div> )}
   </Layout>
   );
 }

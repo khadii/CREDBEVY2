@@ -164,8 +164,8 @@ export default function Dashboard() {
   const progressBarData =
     loan_performance?.map((item: any) => ({
       label: item.product_name,
-      value: item.approved_loans_count,
-      maxValue: item.total_count,
+      value: item.percentage,
+      // maxValue: item.total_count,
     })) || [];
 
   const tableHeaders = [
