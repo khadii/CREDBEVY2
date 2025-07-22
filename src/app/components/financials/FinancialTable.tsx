@@ -160,9 +160,7 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
   );
 
     
-  return laon_table_data_all?.length === 0 ? (
-    <NoDataFound />
-  ) : (
+  return (
       <TableWithPagination
         headers={loanHeaders}
         data={laon_table_data_all}

@@ -31,6 +31,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
 
   const isLoanProductsPage = pathname === "/dashboard/loan-products";
   const isLoanRequestPage = pathname === "/dashboard/loan-request";
+    const dashboard = pathname === "/dashboard";
 
   const isRepaymentFilterModal = pathname === "/dashboard/repayment";
   const isLoanHistoryFilterModal = pathname === "/dashboard/loan-history";
@@ -71,7 +72,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         />
       )}
 
-      {isLoanRequestPage && (
+      {isLoanRequestPage ||dashboard && (
         <LoanRequestFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}

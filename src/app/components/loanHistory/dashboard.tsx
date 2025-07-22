@@ -68,6 +68,7 @@ export default function Dashboard() {
     loading: lhrloading,
     error: lhrerror,
     pagination,
+    totalCount
   } = useSelector((state: RootState) => state.loanHistoryRequestsSlice);
   const {
     loading: loadinStat,
@@ -120,7 +121,7 @@ export default function Dashboard() {
   const filteredLoanData =
     activeTab === "All Loans"
       ? transformedLoanData
-      : transformedLoanData.filter((loan) => loan.status === activeTab);
+      : transformedLoanData?.filter((loan) => loan.status === activeTab);
 
   const activeCount = transformedLoanData?.filter(
     (loan) => loan.status === "Active"
@@ -128,7 +129,7 @@ export default function Dashboard() {
 
   const tabs = [
     { name: "All Loans" },
-    { name: "Active", count: activeCount.length },
+    { name: "Active", count: activeCount?.length },
     { name: "Repaid" },
     { name: "Overdue" },
   ];
@@ -303,7 +304,7 @@ if(lhrloading){
         currentPage={pagination?.currentPage || 1}
         setCurrentPage={handlePageChange}
         totalPages={pagination?.totalPages || 1}
-        total_count={filteredLoanData.length}
+        total_count={totalCount}
         bulkAction={bulkAction}
       />
 

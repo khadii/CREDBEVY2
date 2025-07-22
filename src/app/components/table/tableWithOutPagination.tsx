@@ -3,12 +3,10 @@ import { useRouter } from "next/navigation";
 import { LucideChevronDown, Plus } from "lucide-react";
 
 import TableRow from "../TableTwo/TableRow";
-import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
 import TableHeader from "../TableTwo/modifiedTabletwo/TableHeader";
-
+import NoDataFound from "../NoDataFound";
 
 interface TableProps<T> {
-  
   headers: string[];
   data: T[];
   titleProps: {
@@ -21,7 +19,7 @@ interface TableProps<T> {
   renderHeader?: (isHeaderChecked: boolean, handleHeaderToggle: () => void) => React.ReactNode;
   isHeaderChecked?: boolean;
   handleHeaderToggle?: () => void;
-  bulkAction:()=>void
+  bulkAction:()=>void;
   showAddProductButton?: boolean; 
 }
 
@@ -45,7 +43,7 @@ const TableWithOutPagination = <T,>({
   };
 
   return (
-    <><div className="rounded-lg mt-3 w-full bg-white">
+    <div className="rounded-lg mt-3 w-full bg-white">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 py-6 px-4 sm:px-6 border rounded-lg border-b-0 rounded-b-none gap-4 sm:gap-0">
         <div className="bg-white w-full sm:w-auto">
           <div className="flex flex-row sm:flex-row sm:items-center w-full gap-2 sm:gap-3 bg-white">
@@ -79,28 +77,36 @@ const TableWithOutPagination = <T,>({
       </div>
 
       <div className="w-full overflow-x-auto">
-        {/* <div className="min-w-[800px] md:min-w-0"> */}
         <table className="w-full">
           <TableHeader
             headers={headers}
             renderHeader={renderHeader}
             isHeaderChecked={isHeaderChecked}
-            handleHeaderToggle={handleHeaderToggle} />
+            handleHeaderToggle={handleHeaderToggle} 
+          />
           <tbody className="text-[#333333] font-semibold text-xs">
-            {data?.map((item: any, index: any) => (
-              <TableRow
-                key={index}
-                item={item}
-                index={index}
-                onClick={() => handleRowClick(item.uuid || item.loan_uuid)}
-                renderRow={renderRow} />
-            ))}
+            {(!data || data?.length === 0) ? (
+              <tr>
+                <td colSpan={headers.length} className="py-8">
+                  <NoDataFound />
+                </td>
+              </tr>
+            ) : (
+              data?.map((item: any, index: any) => (
+                <TableRow
+                  key={index}
+                  item={item}
+                  index={index}
+                  onClick={() => handleRowClick(item.uuid || item.loan_uuid)}
+                  renderRow={renderRow} 
+                />
+              ))
+            )}
           </tbody>
         </table>
-
-
-        {/* </div> */}
-      </div>    </div><div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg  rounded-t-none w-full border-t"></div></>
+      </div>
+      <div className="flex justify-between items-center pb-6 py-2 px-6 border rounded-lg rounded-t-none w-full border-t"></div>
+    </div>
   );
 };
 

@@ -68,7 +68,7 @@ export const HistoryTable = ({
   }, [loan_table_data_all]);
 
   useEffect(() => {
-    if (selectedIds.length === loan_table_data_all.length) {
+    if (selectedIds.length === loan_table_data_all?.length) {
       setIsHeaderChecked(true);
     } else {
       setIsHeaderChecked(false);
@@ -149,9 +149,7 @@ export const HistoryTable = ({
 
 
   
-return loan_table_data_all?.length === 0 ? (
-  <NoDataFound />
-) : (
+return (
   <TableWithPagination
     headers={customerHeaders}
     data={loan_table_data_all}

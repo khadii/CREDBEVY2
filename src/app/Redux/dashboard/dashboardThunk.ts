@@ -159,16 +159,42 @@ export const _Loan_volume = createAsyncThunk(
 
 export const _pending_loans = createAsyncThunk(
   "dashboard/pending-loans",
-  async (_, { rejectWithValue }) => {
+  async (
+    params: {
+      search?: string;
+      min_amount?: number | string;
+      max_amount?: number | string;
+      min_credit_score?: number | string;
+      max_credit_score?: number | string;
+      start_date?: string;
+      min_user_income?: number | string;
+      max_user_income?: number | string;
+    }, 
+    { rejectWithValue }
+  ) => {
     try {
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
+
+      // Build query parameters object, excluding empty values
+      const queryParams: Record<string, string> = {};
+      
+      if (params.search && params.search !== "") queryParams.search = params.search;
+      if (params.min_amount && params.min_amount !== "") queryParams.min_amount = params.min_amount.toString();
+      if (params.max_amount && params.max_amount !== "") queryParams.max_amount = params.max_amount.toString();
+      if (params.min_credit_score && params.min_credit_score !== "") queryParams.min_credit_score = params.min_credit_score.toString();
+      if (params.max_credit_score && params.max_credit_score !== "") queryParams.max_credit_score = params.max_credit_score.toString();
+      if (params.start_date && params.start_date !== "") queryParams.start_date = params.start_date;
+      if (params.min_user_income && params.min_user_income !== "") queryParams.min_user_income = params.min_user_income.toString();
+      if (params.max_user_income && params.max_user_income !== "") queryParams.max_user_income = params.max_user_income.toString();
 
       const response = await axios.get(`${BASE_URL}/api/partner/pending-loans`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: queryParams
       });
+      
       return response.data;
     } catch (error: any) {
       if (error.response) {

@@ -5,6 +5,7 @@ import { LucideChevronDown, Plus } from "lucide-react";
 import TableRow from "../TableTwo/TableRow";
 import Pagination from "../TableTwo/modifiedTabletwo/tablePagination";
 import TableHeader from "../TableTwo/modifiedTabletwo/TableHeader";
+import NoDataFound from "../NoDataFound";
 
 interface TableProps<T> {
   headers: string[];
@@ -92,26 +93,36 @@ const TableWithPagination = <T,>({
             handleHeaderToggle={handleHeaderToggle}
           />
           <tbody className="text-[#333333] font-semibold text-xs">
-            {data?.map((item: any, index: any) => (
-              <TableRow
-                key={index}
-                item={item}
-                index={index}
-                onClick={() => handleRowClick(item.uuid || item.loan_uuid)}
-                renderRow={renderRow}
-              />
-            ))}
+            {(!data || data?.length === 0) ? (
+              <tr>
+                <td colSpan={headers.length} className="py-8">
+                  <NoDataFound />
+                </td>
+              </tr>
+            ) : (
+              data?.map((item: any, index: any) => (
+                <TableRow
+                  key={index}
+                  item={item}
+                  index={index}
+                  onClick={() => handleRowClick(item.uuid || item.loan_uuid)}
+                  renderRow={renderRow}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
-      <div className="">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
-        />
-      </div>
+      {data && data.length > 0 && (
+        <div className="">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 };

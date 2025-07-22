@@ -266,9 +266,7 @@ export const LoanRequest = ({
     ]
   );
 
-  return laon_table_data_all?.length === 0 || !laon_table_data_all ? (
-    <NoDataFound />
-  ) : (
+  return (
     <>
       {/* <style>{responsiveStyles}</style> */}
       <div className="loan-request-container">

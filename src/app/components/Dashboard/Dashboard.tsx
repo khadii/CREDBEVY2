@@ -29,6 +29,11 @@ import Dashboardone from "./reuseabledashboaardone.";
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+interface LoanPerformanceItem {
+  product_name: string;
+  percentage: number;
+  total_count: number;
+}
 
   const {
     balance,
@@ -68,7 +73,13 @@ export default function Dashboard() {
     dispatch(_revenue());
     dispatch(_Loan_Disbursed());
     dispatch(_Loan_volume());
-    dispatch(_pending_loans());
+  dispatch(_pending_loans({
+  search: "",
+  min_amount: "",
+  max_amount: "",
+  start_date: ""
+}));
+
     dispatch(_Default_Rate());
     dispatch(_loan_performance());
     dispatch(total_revenue_perer_time());
@@ -161,12 +172,13 @@ export default function Dashboard() {
     { name: "Declined", value: loan_disapproval_rate, color: "#FA4D56" },
   ];
 
-  const progressBarData =
-    loan_performance?.map((item: any) => ({
+const progressBarData = Array.isArray(loan_performance)
+  ? (loan_performance as LoanPerformanceItem[]).map(item => ({
       label: item.product_name,
       value: item.percentage,
-      // maxValue: item.total_count,
-    })) || [];
+      maxValue: item.total_count,
+    }))
+  : [];
 
   const tableHeaders = [
     "Name",
