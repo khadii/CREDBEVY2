@@ -19,7 +19,7 @@ import CardChart from "../ChartCards/DoubleBatchart";
 import ErrorDisplay from "../ErrorDisplay";
 
 // Utility functions
-const safeNumber = (value: any, fallback = 0): number => {
+const safeNumber = (value: any, fallback = 0): any => {
   const num = Number(value);
   return isNaN(num) ? fallback : num;
 };

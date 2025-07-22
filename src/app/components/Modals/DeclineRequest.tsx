@@ -46,7 +46,12 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       refreshData();
       setInterested(false);
       handleClose();
-        dispatch(_pending_loans());
+         dispatch(_pending_loans({
+  search: "",
+  min_amount: "",
+  max_amount: "",
+  start_date: ""
+}));
     }
     if (declineError) {
       toast.error(declineError);

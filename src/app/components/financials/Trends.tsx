@@ -12,7 +12,7 @@ import { formatCurrency } from "@/app/lib/utillity/formatCurrency";
 import ErrorDisplay from "../ErrorDisplay";
 
 // Utility function to safely convert to number
-const safeNumber = (value: any, fallback = 0): number => {
+const safeNumber = (value: any, fallback = 0): any => {
   const num = Number(value);
   return isNaN(num) ? fallback : num;
 };
