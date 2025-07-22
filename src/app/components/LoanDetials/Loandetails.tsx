@@ -11,36 +11,39 @@ import SpinningFaceExact from "../credbevyLoader";
 import AnimatedLoader from "../animation";
 import ErrorDisplay from "../ErrorDisplay";
 import { useRouter } from "next/navigation";
+import { useDashboard } from "@/app/Context/DahboardContext";
 
 export default function LoanDetails({ id }: { id: string }) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  
-  const {
-    loading: LoanRequest_loading,
-    error: LoanRequest_error,
-    data: LoanRequest_Data
-  } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
+    const { interested, setInterested, setSelectedIds } = useDashboard();
+  // const {
+  //   loading: LoanRequest_loading,
+  //   error: LoanRequest_error,
+  //   data: LoanRequest_Data
+  // } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
 
-  useEffect(() => {
-    if (id) {
-      dispatch(_single_loan_products_request({ id }));
-    }
-  }, [dispatch, id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     dispatch(_single_loan_products_request({ id }));
+  //      setSelectedIds(id);
+  //   }
+  // }, [dispatch, id]);
 
-  useEffect(() => {
-    if (LoanRequest_error === 'Unauthorized') {
-      router.push("/");
-    }
-  }, [LoanRequest_error, router]);
+  // useEffect(() => {
+  //   if (LoanRequest_error === 'Unauthorized') {
+  //     router.push("/");
+
+  //   }
+  // }, [LoanRequest_error, router]);
 
   return (
     <Layout>
-      {LoanRequest_error ? (
+      {/* {LoanRequest_error ? (
         <ErrorDisplay error={LoanRequest_error} />
       ) : LoanRequest_loading ? (
         <AnimatedLoader isLoading={LoanRequest_loading} />
-      ) : (
+      ) : ( */}
         <div className="w-full bg-[#FAFAFA] pb-[60px] flex flex-col h-full">
           <div>
             <p className="mb-[32px] text-[34px] font-bold">Loan Request Details</p>
@@ -54,7 +57,7 @@ export default function LoanDetails({ id }: { id: string }) {
             </div>
           </div>
         </div>
-      )}
+      {/* )} */}
     </Layout>
   );
 }

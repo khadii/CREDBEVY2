@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 import AnimatedLoader from "../animation";
 import LoanModal from "./indicateInteresteDetails";
 import IndicateSuccessModal from "./indicateSuccessModal";
+import { _pending_loans } from "@/app/Redux/dashboard/dashboardThunk";
+import { resetSingleLoanProductsRequestSuccess } from "@/app/Redux/Loan_request/loan_request_slice.";
 
 interface ModalProps {
   isOpen: boolean;
@@ -81,15 +83,15 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       dispatch(resetPinState());
     }
   }, [pinSuccess, pinError, pinMessage, dispatch]);
-
   useEffect(() => {
     if (acceptSuccess) {
       setState(3);
+  resetSingleLoanProductsRequestSuccess()
     }
-      if (acceptError) {
-  toast.error(acceptError)
+    if (acceptError) {
+      toast.error(acceptError);
     }
-  }, [acceptSuccess,acceptError,dispatch]);
+  }, [acceptSuccess, acceptError, dispatch]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
@@ -151,8 +153,14 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           const productData = getProductCookie();
           dispatch(_single_loan_products_request({ id: productData }));
+              dispatch(_pending_loans({
+        search: "",
+        min_amount: "",
+        max_amount: "",
+        start_date: ""
+      }));
           refreshData();
-
+       
           if (response.error) {
             toast.error(response.message || "Loan approval failed");
             handleClose();
@@ -170,6 +178,12 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           const productData = getProductCookie();
           // toast.error(errorResponse.message);
+              dispatch(_pending_loans({
+        search: "",
+        min_amount: "",
+        max_amount: "",
+        start_date: ""
+      }));
           refreshData();
           dispatch(_single_loan_products_request({ id: productData }));
           setInterested(true);

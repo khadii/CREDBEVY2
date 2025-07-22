@@ -43,11 +43,11 @@ export default function FinancialInfo({ id }: { id: any }) {
   );
   const { interested, setInterested, setSelectedIds } = useDashboard();
 
-  // Main data fetch effect - runs only when id changes
-  // useEffect(() => {
-  //   dispatch(_single_loan_products_request(product_id));
-  //   setSelectedIds(product_id);
-  // }, [dispatch, product_id]);
+  // // Main data fetch effect - runs only when id changes
+  useEffect(() => {
+    dispatch(_single_loan_products_request(product_id));
+    setSelectedIds(product_id);
+  }, [dispatch, product_id]);
 
   // Set cookies only when data is available
   useEffect(() => {

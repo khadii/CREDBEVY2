@@ -63,7 +63,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Sidebar />
           </div>
 
-          <div className="flex flex-col   w-full">
+          <div className="flex flex-col  w-full">
             <div className="sticky top-0 bg-white z-50">
               <TopBar />
             </div>

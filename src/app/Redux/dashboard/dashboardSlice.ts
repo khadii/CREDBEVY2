@@ -231,10 +231,10 @@ const walletSlice = createSlice({
       .addCase(_pending_loans.fulfilled, (state, action) => {
         state.loading = false;
         const { error, data, message } = action.payload;
-        console.log({ action: action.payload });
+        console.log({ action: action.payload }); // This console.log is very useful for debugging!
         if (!error) {
           state.total_count = data.total_count;
-          state.pending_loans = data.pending_loans;
+          state.pending_loans = data.pending_loans; // This line correctly updates the state
         } else {
           state.error = message;
         }

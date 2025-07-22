@@ -164,7 +164,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#17191CBA]">
-      <div className="relative bg-white rounded-lg w-full max-w-md mx-4 md:mx-0">
+      <div className="relative bg-white rounded-lg">
         {approveLoading || pinLoading ? (
           <AnimatedLoader isLoading={approveLoading || pinLoading} />
         ) : (
