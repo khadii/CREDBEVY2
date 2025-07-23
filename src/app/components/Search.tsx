@@ -38,7 +38,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   const isFinancialFilterModal = pathname === "/dashboard/financials";
 
   return (
-    <div className="justify-between items-center mt-6 mb-3 bg-[#FAFAFA] hidden md:flex lg:flex">
+    <div className="justify-between items-center mt-6 mb-3 bg-[#FAFAFA] ">
       <div className="flex gap-4">
         <button
           onClick={onSearchClick}

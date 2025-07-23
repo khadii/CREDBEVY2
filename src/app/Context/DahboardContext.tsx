@@ -13,6 +13,15 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [LoanApproved, setLoanApproved] = useState<boolean>(false);
   const [LoanDeclined, setLoanDeclined] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>('');
+  const [minAmount, setMinAmount] = useState<number | string>('');
+  const [maxAmount, setMaxAmount] = useState<number | string>('');
+  const [minCreditScore, setMinCreditScore] = useState<number | string>('');
+  const [maxCreditScore, setMaxCreditScore] = useState<number | string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [minUserIncome, setMinUserIncome] = useState<number | string>('');
+  const [maxUserIncome, setMaxUserIncome] = useState<number | string>('');
+
   const [filter, setFilter]= useState<boolean>(false);
   const [currentAction, setCurrentAction] = useState<'interest' | 'accept'>('interest');
   const [logout,setLogout]=useState(false)
@@ -114,6 +123,22 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setFundWallet={setFundWallet}
         withdrawal={withdrawal}
         setWithdrawal={setWithdrawal}
+         search={search}
+  setSearch={setSearch}
+  minAmount={minAmount}
+  setMinAmount={setMinAmount}
+  maxAmount={maxAmount}
+  setMaxAmount={setMaxAmount}
+  minCreditScore={minCreditScore}
+  setMinCreditScore={setMinCreditScore}
+  maxCreditScore={maxCreditScore}
+  setMaxCreditScore={setMaxCreditScore}
+  startDate={startDate}
+  setStartDate={setStartDate}
+  minUserIncome={minUserIncome}
+  setMinUserIncome={setMinUserIncome}
+  maxUserIncome={maxUserIncome}
+  setMaxUserIncome={setMaxUserIncome}
       />
     </Provider>
   );

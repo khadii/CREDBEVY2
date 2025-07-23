@@ -3,6 +3,9 @@ import Modal from "../wallet/modal";
 import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { _loan_products_all } from "@/app/Redux/Loan_Product/loan_product_thunk";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/Redux/store";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -117,6 +120,7 @@ const statusOptions = [
 ];
 
 export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
+    const dispatch = useDispatch<AppDispatch>();
   const formik = useFormik<FormValues>({
     initialValues: {
       loanType: "",
@@ -127,16 +131,24 @@ export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
       status: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form submitted with values:", {
-        ...values,
-        minAmount: parseNaira(values.minAmount),
-        maxAmount: parseNaira(values.maxAmount),
-        shortestDuration: parseDuration(values.shortestDuration),
-        longestDuration: parseDuration(values.longestDuration),
-      });
-      onClose();
-    },
+   onSubmit: (values, { resetForm }) => {
+  const filters = {
+    search: values.loanType,
+    filter_by: values.status,
+    start_date: "", 
+    end_date: "",  
+    paginate: true,
+    page: 1,
+    max_amount: parseNaira(values.maxAmount),
+    shortest_duration: values.shortestDuration,
+    longest_duration: values.longestDuration,
+  };
+
+  dispatch(_loan_products_all(filters));
+  resetForm(); // Reset form after submit
+  onClose();   // Close the modal
+},
+
   });
 
   const handleDurationChange = (

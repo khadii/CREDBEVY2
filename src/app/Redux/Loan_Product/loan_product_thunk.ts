@@ -74,27 +74,40 @@ interface FiltersProps {
   end_date?: string;
   single?: boolean;
   limit?: string;
-  pagina?: any;
+  paginate?: boolean; // Added from image
   page?: number;
+  filter_by?: string; // Added from image
 }
 
 export const _loan_products_all = createAsyncThunk(
   "loanProducts/_loan_products_all",
   async (filters: FiltersProps, { rejectWithValue }) => {
-    const { page } = filters;
     try {
       const token = Cookies.get("authToken");
-      if (!token) { // Added check for missing token before API call
+      if (!token) {
         handleUnauthorizedError();
         return rejectWithValue("Authentication token is missing. Please log in again.");
       }
-      const response = await axios.post(
-        `${BASE_URL}/api/partner/loan-products/all?page=${page}`,
-        filters,
+      const queryParams: Record<string, string> = {};
+
+      if (filters.search && filters.search !== "") queryParams.search = filters.search;
+      if (filters.sort_by && filters.sort_by !== "") queryParams.sort_by = filters.sort_by;
+      if (filters.start_date && filters.start_date !== "") queryParams.start_date = filters.start_date;
+      if (filters.end_date && filters.end_date !== "") queryParams.end_date = filters.end_date;
+      if (typeof filters.single === 'boolean') queryParams.single = filters.single.toString();
+      if (filters.limit && filters.limit !== "") queryParams.limit = filters.limit.toString();
+      if (typeof filters.paginate === 'boolean') queryParams.paginate = filters.paginate.toString();
+      if (filters.filter_by && filters.filter_by !== "") queryParams.filter_by = filters.filter_by;
+      if (filters.page !== undefined) queryParams.page = filters.page.toString();
+
+
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/loan-products/all`, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: queryParams // Pass queryParams here
         }
       );
       return response.data;

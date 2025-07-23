@@ -25,9 +25,20 @@ import AnimatedLoader from "../animation";
 import { useRouter } from "next/navigation";
 import ErrorDisplay from "../ErrorDisplay";
 import Dashboardone from "./reuseabledashboaardone.";
+import { useDashboard } from "@/app/Context/DahboardContext";
 
 export default function Dashboard() {
   const dispatch = useDispatch<AppDispatch>();
+     const {
+    search,
+    minAmount,
+    maxAmount,
+    minCreditScore,
+    maxCreditScore,
+    startDate,
+    minUserIncome,
+    maxUserIncome,
+  } = useDashboard();
   const router = useRouter();
 interface LoanPerformanceItem {
   product_name: string;
@@ -73,12 +84,17 @@ interface LoanPerformanceItem {
     dispatch(_revenue());
     dispatch(_Loan_Disbursed());
     dispatch(_Loan_volume());
-  dispatch(_pending_loans({
-  search: "",
-  min_amount: "",
-  max_amount: "",
-  start_date: ""
+dispatch(_pending_loans({
+  search,
+  min_amount: minAmount,
+  max_amount: maxAmount,
+  start_date:startDate,
+  min_credit_score: minCreditScore,
+  max_credit_score: maxCreditScore,
+  min_user_income: minUserIncome,
+  max_user_income: maxUserIncome,
 }));
+
 
     dispatch(_Default_Rate());
     dispatch(_loan_performance());

@@ -43,7 +43,7 @@ export default function FinancialInfo({ id }: { id: any }) {
   );
   const { interested, setInterested, setSelectedIds } = useDashboard();
 
-  // // Main data fetch effect - runs only when id changes
+  // Main data fetch effect - runs only when id changes
   useEffect(() => {
     dispatch(_single_loan_products_request(product_id));
     setSelectedIds(product_id);

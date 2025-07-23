@@ -3,6 +3,9 @@ import Modal from "../wallet/modal"; // Assuming this path is correct
 import { InputField, Label, Title } from "../wallet/fundWallet"; // Assuming these paths are correct
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { _pending_loans } from "@/app/Redux/dashboard/dashboardThunk";
+import { AppDispatch } from "@/app/Redux/store";
+import { useDispatch } from "react-redux";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -146,6 +149,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const formik = useFormik<FormValues>({
     initialValues: {
       dateFrom: "",
@@ -158,16 +163,24 @@ export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalPro
       maxCreditScore: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Filter submitted with values:", {
-        ...values,
-        minAverageIncome: parseNaira(values.minAverageIncome),
-        maxAverageIncome: parseNaira(values.maxAverageIncome),
-        minAmountRequested: parseNaira(values.minAmountRequested),
-        maxAmountRequested: parseNaira(values.maxAmountRequested),
-      });
-      onClose();
-    },
+   onSubmit: (values, { resetForm }) => {
+  const filterPayload = {
+    start_date: values.dateFrom,
+    min_amount: parseNaira(values.minAmountRequested),
+    max_amount: parseNaira(values.maxAmountRequested),
+    min_credit_score: values.minCreditScore,
+    max_credit_score: values.maxCreditScore,
+    min_user_income: parseNaira(values.minAverageIncome),
+    max_user_income: parseNaira(values.maxAverageIncome),
+  };
+
+  dispatch(_pending_loans(filterPayload));
+
+  console.log("Filter submitted with values:", filterPayload);
+  onClose();
+   resetForm();
+}
+
   });
 
   const handleAmountChange = (field: keyof FormValues, value: string) => {

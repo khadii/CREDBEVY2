@@ -72,7 +72,7 @@ export const LoanProduct = ({
 
   // Effect to update the header checkbox state based on selectedIds
   useEffect(() => {
-    if (selectedIds.length === laon_table_data_all.length) {
+    if (selectedIds.length === laon_table_data_all?.length) {
       setIsHeaderChecked(true);
     } else {
       setIsHeaderChecked(false);
