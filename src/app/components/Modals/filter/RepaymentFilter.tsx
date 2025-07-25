@@ -3,10 +3,15 @@ import Modal from "../wallet/modal"; // Assuming this path is correct
 import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet"; // Assuming these paths are correct
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { AppDispatch } from "@/app/Redux/store"; // Adjust path as necessary for AppDispatch
+import { loan_repayment } from "@/app/Redux/Repayment/repayment_thunk";
+
 
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setHasActiveFilter: (hasActive: boolean) => void; // Add this prop
 }
 
 interface FormValues {
@@ -40,28 +45,30 @@ const validationSchema = Yup.object().shape({
 
   minDuration: Yup.number()
     .typeError("Min duration must be a number")
-    .positive("Min duration must be positive")
-    .test(
-      "is-less-than-max",
-      "Min duration cannot be greater than max duration",
-      function (value) {
-        const maxDuration = this.parent.maxDuration;
-        if (value === undefined || maxDuration === undefined) return true;
-        return value <= maxDuration;
-      }
-    ),
+    .positive("Min duration must be positive"),
+    // .nullable(true), // Allow null for empty input
+    // .test(
+    //   "is-less-than-max",
+    //   "Min duration cannot be greater than max duration",
+    //   function (value) {
+    //     const maxDuration = this.parent.maxDuration;
+    //     if (value === undefined || value === null || maxDuration === undefined || maxDuration === null) return true;
+    //     return value <= maxDuration;
+    //   }
+    // ),
   maxDuration: Yup.number()
     .typeError("Max duration must be a number")
-    .positive("Max duration must be positive")
-    .test(
-      "is-greater-than-min",
-      "Max duration cannot be less than min duration",
-      function (value) {
-        const minDuration = this.parent.minDuration;
-        if (value === undefined || minDuration === undefined) return true;
-        return value >= minDuration;
-      }
-    ),
+    .positive("Max duration must be positive"),
+    // .nullable(true), // Allow null for empty input
+    // .test(
+    //   "is-greater-than-min",
+    //   "Max duration cannot be less than min duration",
+    //   function (value) {
+    //     const minDuration = this.parent.minDuration;
+    //     if (value === undefined || value === null || minDuration === undefined || minDuration === null) return true;
+    //     return value >= minDuration;
+    //   }
+    // ),
 
   status: Yup.string().nullable(), // Optional filter
 });
@@ -73,7 +80,9 @@ const statusOptions = [
   // Add other status options as needed
 ];
 
-export default function RepaymentFilterModal({ isOpen, onClose }: ModalProps) {
+export default function RepaymentFilterModal({ isOpen, onClose, setHasActiveFilter }: ModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const formik = useFormik<FormValues>({
     initialValues: {
       dateDueFrom: "",
@@ -85,8 +94,22 @@ export default function RepaymentFilterModal({ isOpen, onClose }: ModalProps) {
       status: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Filter submitted with values:", values);
+    onSubmit: (values, { resetForm }) => {
+      const filters = {
+        start_due_date: values.dateDueFrom || undefined,
+        end_due_date: values.dateDueTo || undefined,
+        start_disbursal_date: values.disbursalDateFrom || undefined,
+        end_disbursal_date: values.disbursalDateTo || undefined,
+        min_loan_duration: values.minDuration ? Number(values.minDuration) : undefined,
+        max_loan_duration: values.maxDuration ? Number(values.maxDuration) : undefined,
+        status: values.status || undefined,
+        paginate: true, // Assuming pagination is always true for filtering
+        page: 1,      // Always reset to page 1 on new filter
+      };
+
+      dispatch(loan_repayment(filters));
+      setHasActiveFilter(true); // Indicate that a filter is active
+      resetForm();
       onClose();
     },
   });
@@ -183,7 +206,7 @@ export default function RepaymentFilterModal({ isOpen, onClose }: ModalProps) {
                   onChange={formik.handleChange}
                   placeholder="1"
                 />
-                <span className="ml-2 text-gray-600">months</span>
+                {/* <span className="ml-2 text-gray-600">months</span> */}
               </div>
               {formik.touched.minDuration && formik.errors.minDuration && (
                 <div className="text-red-500 text-xs mt-1">
@@ -202,7 +225,7 @@ export default function RepaymentFilterModal({ isOpen, onClose }: ModalProps) {
                   onChange={formik.handleChange}
                   placeholder="12"
                 />
-                <span className="ml-2 text-gray-600">months</span>
+                {/* <span className="ml-2 text-gray-600">months</span> */}
               </div>
               {formik.touched.maxDuration && formik.errors.maxDuration && (
                 <div className="text-red-500 text-xs mt-1">

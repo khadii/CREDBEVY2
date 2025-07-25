@@ -19,11 +19,14 @@ export const dashboard_wallet = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/wallet-balance`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/wallet-balance`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -33,9 +36,13 @@ export const dashboard_wallet = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -48,11 +55,14 @@ export const _revenue = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/total-revenue`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/total-revenue`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -62,9 +72,13 @@ export const _revenue = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -77,11 +91,14 @@ export const loan_approval_rates = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/loan-approval-rate`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/loan-approval-rate`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -91,9 +108,13 @@ export const loan_approval_rates = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -106,11 +127,14 @@ export const _Loan_Disbursed = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/total-loan-disbursed`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/total-loan-disbursed`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -120,9 +144,13 @@ export const _Loan_Disbursed = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -135,11 +163,14 @@ export const _Loan_volume = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/total-loan-volume`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/total-loan-volume`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -149,9 +180,13 @@ export const _Loan_volume = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -167,9 +202,10 @@ export const _pending_loans = createAsyncThunk(
       min_credit_score?: number | string;
       max_credit_score?: number | string;
       start_date?: string;
+      end_date?: string;
       min_user_income?: number | string;
       max_user_income?: number | string;
-    }, 
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -178,23 +214,36 @@ export const _pending_loans = createAsyncThunk(
 
       // Build query parameters object, excluding empty values
       const queryParams: Record<string, string> = {};
-      
-      if (params.search && params.search !== "") queryParams.search = params.search;
-      if (params.min_amount && params.min_amount !== "") queryParams.min_amount = params.min_amount.toString();
-      if (params.max_amount && params.max_amount !== "") queryParams.max_amount = params.max_amount.toString();
-      if (params.min_credit_score && params.min_credit_score !== "") queryParams.min_credit_score = params.min_credit_score.toString();
-      if (params.max_credit_score && params.max_credit_score !== "") queryParams.max_credit_score = params.max_credit_score.toString();
-      if (params.start_date && params.start_date !== "") queryParams.start_date = params.start_date;
-      if (params.min_user_income && params.min_user_income !== "") queryParams.min_user_income = params.min_user_income.toString();
-      if (params.max_user_income && params.max_user_income !== "") queryParams.max_user_income = params.max_user_income.toString();
 
-      const response = await axios.get(`${BASE_URL}/api/partner/pending-loans`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: queryParams
-      });
-      
+      if (params.search && params.search !== "")
+        queryParams.search = params.search;
+      if (params.min_amount && params.min_amount !== "")
+        queryParams.min_amount = params.min_amount.toString();
+      if (params.max_amount && params.max_amount !== "")
+        queryParams.max_amount = params.max_amount.toString();
+      if (params.min_credit_score && params.min_credit_score !== "")
+        queryParams.min_credit_score = params.min_credit_score.toString();
+      if (params.max_credit_score && params.max_credit_score !== "")
+        queryParams.max_credit_score = params.max_credit_score.toString();
+      if (params.start_date && params.start_date !== "")
+        queryParams.start_date = params.start_date;
+      if (params.end_date && params.end_date !== "")
+        queryParams.end_date = params.end_date;
+      if (params.min_user_income && params.min_user_income !== "")
+        queryParams.min_user_income = params.min_user_income.toString();
+      if (params.max_user_income && params.max_user_income !== "")
+        queryParams.max_user_income = params.max_user_income.toString();
+
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/pending-loans`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: queryParams,
+        }
+      );
+
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -204,9 +253,13 @@ export const _pending_loans = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -233,9 +286,13 @@ export const _Default_Rate = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -248,11 +305,14 @@ export const total_revenue_perer_time = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/total-revenue-per-time`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/total-revenue-per-time`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -262,9 +322,13 @@ export const total_revenue_perer_time = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }
@@ -277,11 +341,14 @@ export const _loan_performance = createAsyncThunk(
       const token = Cookies.get("authToken");
       console.log("Token from cookies:", token);
 
-      const response = await axios.get(`${BASE_URL}/api/partner/loan-performance`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/loan-performance`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -291,9 +358,13 @@ export const _loan_performance = createAsyncThunk(
         }
         return rejectWithValue(error.response.data.message || "Unauthorized");
       } else if (error.request) {
-        return rejectWithValue("No response from the server. Please check your network connection.");
+        return rejectWithValue(
+          "No response from the server. Please check your network connection."
+        );
       } else {
-        return rejectWithValue("An unexpected error occurred. Please try again.");
+        return rejectWithValue(
+          "An unexpected error occurred. Please try again."
+        );
       }
     }
   }

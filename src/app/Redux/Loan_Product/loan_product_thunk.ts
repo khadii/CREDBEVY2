@@ -69,14 +69,17 @@ export const _create_loan_product = createAsyncThunk(
 
 interface FiltersProps {
   search?: string;
+  type?: string; // Added for loan product type
   sort_by?: string;
   start_date?: string;
   end_date?: string;
+  min_loan_duration?: number | string; // Added for duration filtering
+  max_loan_duration?: number | string; // Added for duration filtering
   single?: boolean;
   limit?: string;
-  paginate?: boolean; // Added from image
+  paginate?: boolean;
   page?: number;
-  filter_by?: string; // Added from image
+  filter_by?: string;
 }
 
 export const _loan_products_all = createAsyncThunk(
@@ -88,18 +91,31 @@ export const _loan_products_all = createAsyncThunk(
         handleUnauthorizedError();
         return rejectWithValue("Authentication token is missing. Please log in again.");
       }
+
+      // Build query parameters object
       const queryParams: Record<string, string> = {};
 
+      // Add all filter parameters if they exist
       if (filters.search && filters.search !== "") queryParams.search = filters.search;
+      if (filters.type && filters.type !== "") queryParams.type = filters.type; // Added type filter
       if (filters.sort_by && filters.sort_by !== "") queryParams.sort_by = filters.sort_by;
       if (filters.start_date && filters.start_date !== "") queryParams.start_date = filters.start_date;
       if (filters.end_date && filters.end_date !== "") queryParams.end_date = filters.end_date;
+      
+      // Handle loan duration filters
+      if (filters.min_loan_duration !== undefined && filters.min_loan_duration !== "") 
+        queryParams.min_loan_duration = filters.min_loan_duration.toString();
+      if (filters.max_loan_duration !== undefined && filters.max_loan_duration !== "") 
+        queryParams.max_loan_duration = filters.max_loan_duration.toString();
+      
+      // Handle boolean parameters
       if (typeof filters.single === 'boolean') queryParams.single = filters.single.toString();
-      if (filters.limit && filters.limit !== "") queryParams.limit = filters.limit.toString();
       if (typeof filters.paginate === 'boolean') queryParams.paginate = filters.paginate.toString();
+      
+      // Other parameters
+      if (filters.limit && filters.limit !== "") queryParams.limit = filters.limit.toString();
       if (filters.filter_by && filters.filter_by !== "") queryParams.filter_by = filters.filter_by;
       if (filters.page !== undefined) queryParams.page = filters.page.toString();
-
 
       const response = await axios.get(
         `${BASE_URL}/api/partner/loan-products/all`, 
@@ -107,7 +123,7 @@ export const _loan_products_all = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          params: queryParams // Pass queryParams here
+          params: queryParams
         }
       );
       return response.data;

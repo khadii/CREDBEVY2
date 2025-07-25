@@ -10,16 +10,18 @@ import { AppDispatch } from "@/app/Redux/store";
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+    setHasActiveFilter: (hasActiveFilter:boolean) => void;
 }
 
 interface FormValues {
   loanType: string;
-  minAmount: string;
-  maxAmount: string;
+  dateFrom: string;
+  dateTo: string;
   shortestDuration: string;
   longestDuration: string;
   status: string;
 }
+
 
 const formatDuration = (value: string) => {
   if (!value) return "";
@@ -49,62 +51,27 @@ const parseNaira = (value: string) => {
 
 const validationSchema = Yup.object().shape({
   loanType: Yup.string().required("Loan type is required"),
-  minAmount: Yup.string()
-    .required("Minimum amount is required")
-    .test("is-number", "Must be a number", (value) => {
-      return !value || !isNaN(Number(parseNaira(value)));
-    })
-    .test("is-positive", "Must be positive", (value) => {
-      return !value || Number(parseNaira(value)) > 0;
-    })
-    .test(
-      "is-less-than-max",
-      "Minimum amount cannot be greater than maximum amount",
-      function (value) {
-        const maxAmount = this.parent.maxAmount;
-        if (!maxAmount || !value) return true;
-        return Number(parseNaira(value)) <= Number(parseNaira(maxAmount));
-      }
-    ),
-  maxAmount: Yup.string()
-    .required("Maximum amount is required")
-    .test("is-number", "Must be a number", (value) => {
-      return !value || !isNaN(Number(parseNaira(value)));
-    })
-    .test("is-positive", "Must be positive", (value) => {
-      return !value || Number(parseNaira(value)) > 0;
-    })
-    .test(
-      "is-greater-than-min",
-      "Maximum amount cannot be less than minimum amount",
-      function (value) {
-        const minAmount = this.parent.minAmount;
-        if (!minAmount || !value) return true;
-        return Number(parseNaira(value)) >= Number(parseNaira(minAmount));
-      }
-    ),
+  dateFrom: Yup.string().required("Start date is required"),
+  dateTo: Yup.string()
+    .required("End date is required")
+    .test("is-after-start", "End date must be after start date", function (value) {
+      const { dateFrom } = this.parent;
+      return !value || !dateFrom || new Date(value) >= new Date(dateFrom);
+    }),
   shortestDuration: Yup.string()
     .required("Shortest duration is required")
-    .test(
-      "is-less-than-longest",
-      "Shortest duration cannot be longer than longest duration",
-      function (value) {
-        const longestDuration = this.parent.longestDuration;
-        if (!longestDuration || !value) return true;
-        return parseDuration(value) <= parseDuration(longestDuration);
-      }
-    ),
+    .test("is-less-than-longest", "Shortest duration cannot be longer than longest duration", function (value) {
+      const longestDuration = this.parent.longestDuration;
+      if (!longestDuration || !value) return true;
+      return parseDuration(value) <= parseDuration(longestDuration);
+    }),
   longestDuration: Yup.string()
     .required("Longest duration is required")
-    .test(
-      "is-greater-than-shortest",
-      "Longest duration cannot be shorter than shortest duration",
-      function (value) {
-        const shortestDuration = this.parent.shortestDuration;
-        if (!shortestDuration || !value) return true;
-        return parseDuration(value) >= parseDuration(shortestDuration);
-      }
-    ),
+    .test("is-greater-than-shortest", "Longest duration cannot be shorter than shortest duration", function (value) {
+      const shortestDuration = this.parent.shortestDuration;
+      if (!shortestDuration || !value) return true;
+      return parseDuration(value) >= parseDuration(shortestDuration);
+    }),
   status: Yup.string().required("Status is required"),
 });
 
@@ -119,35 +86,37 @@ const statusOptions = [
   { value: "Inactive", label: "Inactive" },
 ];
 
-export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
+export default function LoanProductFilter({ isOpen, onClose, setHasActiveFilter }: ModalProps) {
     const dispatch = useDispatch<AppDispatch>();
   const formik = useFormik<FormValues>({
-    initialValues: {
-      loanType: "",
-      minAmount: "",
-      maxAmount: "",
-      shortestDuration: "",
-      longestDuration: "",
-      status: "",
-    },
+  initialValues: {
+  loanType: "",
+  dateFrom: "",
+  dateTo: "",
+  shortestDuration: "",
+  longestDuration: "",
+  status: "",
+},
+
     validationSchema,
-   onSubmit: (values, { resetForm }) => {
+onSubmit: (values, { resetForm }) => {
   const filters = {
     search: values.loanType,
     filter_by: values.status,
-    start_date: "", 
-    end_date: "",  
+    start_date: values.dateFrom,
+    end_date: values.dateTo,
     paginate: true,
     page: 1,
-    max_amount: parseNaira(values.maxAmount),
     shortest_duration: values.shortestDuration,
     longest_duration: values.longestDuration,
   };
 
   dispatch(_loan_products_all(filters));
-  resetForm(); // Reset form after submit
-  onClose();   // Close the modal
+  resetForm();
+      setHasActiveFilter(true);
+  onClose();
 },
+
 
   });
 
@@ -192,49 +161,49 @@ export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
             )}
           </div>
 
-          {/* Average Income Fields - updated implementation */}
-          <Title htmlFor="averageIncome">Average Income</Title>
-          <div className="mb-4 grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="minAmount">Min Amount:</Label>
-              <InputField
-                id="minAmount"
-                name="minAmount"
-                type="text" // Changed to text
-                value={formik.values.minAmount}
-                onChange={(e) => handleAmountChange("minAmount", e.target.value)}
-                placeholder="₦200,000"
-              />
-              {formik.touched.minAmount && formik.errors.minAmount && (
-                <div className="text-red-500 text-xs mt-1">
-                  {formik.errors.minAmount}
-                </div>
-              )}
-            </div>
+         {/* Date Range */}
+<Title htmlFor="dateRange">Date Range</Title>
+<div className="mb-4 grid grid-cols-2 gap-4">
+  <div>
+    <Label htmlFor="dateFrom">From:</Label>
+    <InputField
+      id="dateFrom"
+      name="dateFrom"
+      type="date"
+      value={formik.values.dateFrom}
+      onChange={formik.handleChange}
+      placeholder="DD-MM-YYYY"
+    />
+    {formik.touched.dateFrom && formik.errors.dateFrom && (
+      <div className="text-red-500 text-xs mt-1">{formik.errors.dateFrom}</div>
+    )}
+  </div>
 
-            <div>
-              <Label htmlFor="maxAmount">Max Amount:</Label>
-              <InputField
-                id="maxAmount"
-                name="maxAmount"
-                type="text" // Changed to text
-                value={formik.values.maxAmount}
-                onChange={(e) => handleAmountChange("maxAmount", e.target.value)}
-                placeholder="₦200,000"
-              />
-              {formik.touched.maxAmount && formik.errors.maxAmount && (
-                <div className="text-red-500 text-xs mt-1">
-                  {formik.errors.maxAmount}
-                </div>
-              )}
-            </div>
-          </div>
+  <div>
+    <Label htmlFor="dateTo">To:</Label>
+    <InputField
+      id="dateTo"
+      name="dateTo"
+      type="date"
+      value={formik.values.dateTo}
+      onChange={formik.handleChange}
+      placeholder="DD-MM-YYYY"
+    />
+    {formik.touched.dateTo && formik.errors.dateTo && (
+      <div className="text-red-500 text-xs mt-1">{formik.errors.dateTo}</div>
+    )}
+  </div>
+</div>
+
 
         {/* Duration Fields - updated implementation */}
           <Title htmlFor="duration">Duration</Title>
           <div className="mb-4 grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="shortestDuration">Shortest:</Label>
+
+
+
               <div className="flex items-center"> {/* Add a flex container */}
                 <InputField
                   id="shortestDuration"
@@ -244,7 +213,7 @@ export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
                   onChange={(e) => formik.setFieldValue("shortestDuration", e.target.value)} // Direct update to number
                   placeholder="3" // Updated placeholder
                 />
-                <span className="ml-2 text-gray-600">months</span> {/* Suffix */}
+                {/* <span className="ml-2 text-gray-600">months</span> Suffix */}
               </div>
               {formik.touched.shortestDuration && formik.errors.shortestDuration && (
                 <div className="text-red-500 text-xs mt-1">
@@ -255,16 +224,16 @@ export default function LoanProductFilter({ isOpen, onClose }: ModalProps) {
 
             <div>
               <Label htmlFor="longestDuration">Longest:</Label>
-              <div className="flex items-center"> {/* Add a flex container */}
+              <div className="flex items-center">
                 <InputField
                   id="longestDuration"
                   name="longestDuration"
-                  type="number" // Changed to number to allow only numeric input
-                  value={formik.values.longestDuration} // This will now hold just the number
-                  onChange={(e) => formik.setFieldValue("longestDuration", e.target.value)} // Direct update to number
-                  placeholder="12" // Updated placeholder
+                  type="number" 
+                  value={formik.values.longestDuration} 
+                  onChange={(e) => formik.setFieldValue("longestDuration", e.target.value)}
+                  placeholder="12"
                 />
-                <span className="ml-2 text-gray-600">months</span> {/* Suffix */}
+                {/* <span className="ml-2 text-gray-600">months</span> */}
               </div>
               {formik.touched.longestDuration && formik.errors.longestDuration && (
                 <div className="text-red-500 text-xs mt-1">

@@ -95,13 +95,13 @@ export default function Dashboard() {
   };
   useEffect(() => {
     dispatch(LoanHistory_stats({ year: selectedYear }));
-    dispatch(fetchLoanRequests({ page: 1, year: selectedYear }));
+    dispatch(fetchLoanRequests({ page: 1}));
     dispatch(fetchLoanDefaultRate());
     dispatch(Financial_stats(Year));
   }, [dispatch, selectedYear, activeTab]);
 
   const handlePageChange = (page: number) => {
-    dispatch(fetchLoanRequests({ page, year: selectedYear }));
+    dispatch(fetchLoanRequests({ page}));
   };
 
   const transformedLoanData: CustomerLoanData[] = lhrdata?.map(
@@ -293,8 +293,8 @@ if(lhrloading){
           />
 
           <Search
-            onFilterClick={handleFilterClick}
-            onSeeAllClick={handleSeeAllClick}
+            // onFilterClick={handleFilterClick}
+            // onSeeAllClick={handleSeeAllClick}
           />
         </>
       ) : null}

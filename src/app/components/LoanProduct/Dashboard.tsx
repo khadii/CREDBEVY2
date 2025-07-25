@@ -53,7 +53,7 @@ export default function Dashboard() {
     sort_by: "DESC",
     start_date: "",
     end_date: "",
-    single: false,
+    // single: false,
     limit: "",
     paginate: true,
     page: currentPage,

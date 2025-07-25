@@ -318,7 +318,7 @@ export default function Dashboard() {
             tabs={tabs}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            requests={LoanRequestAll_Data?.loan_requests.data}
+            requests={LoanRequestAll_Data?.loan_requests?.data}
             tableTitleProps={tableTitleProps}
             handleSearchClick={handleSearchClick}
             handleFilterClick={handleFilterClick}
@@ -339,7 +339,7 @@ export default function Dashboard() {
             handleSearchClick={handleSearchClick}
             handleFilterClick={handleFilterClick}
             handleSeeAllClick={handleSeeAllClick}
-            laon_table_data_all={LoanRequestAll_Data.loan_requests.data}
+            laon_table_data_all={LoanRequestAll_Data?.loan_requests?.data}
             setCurrentPage={setcurrentPageapproved}
             currentPage={currentPageapproved}
             totalPages={LoanRequestAll_Data?.loan_requests?.last_page}

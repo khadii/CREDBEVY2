@@ -1,12 +1,20 @@
 import React from "react";
-import Modal from "../wallet/modal";
-import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet";
+// import Modal from "../wallet/modal";
+// import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { AppDispatch } from "@/app/Redux/store"; // Adjust path as necessary for AppDispatch
+
+import { fetchLoanRequests } from "@/app/Redux/LoanHistory/loanRequests_thunk";
+import Modal from "../wallet/modal";
+import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet";
+// import { fetchLoanRequests } from "@/app/Redux/Loan_Product/loan_product_thunk"; // Adjust path to your thunk file
 
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setHasActiveFilter: (hasActive: boolean) => void; // Add this prop
 }
 
 const formatNaira = (value: string | number) => {
@@ -93,7 +101,9 @@ const statusOptions = [
   { value: "rejected", label: "Rejected" },
 ];
 
-export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) {
+export default function LoanHistoryFilterModal({ isOpen, onClose, setHasActiveFilter }: ModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const formik = useFormik<FormValues>({
     initialValues: {
       emailAddress: "",
@@ -104,12 +114,20 @@ export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) 
       status: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("User filter submitted with values:", {
-        ...values,
-        minAmountRequested: parseNaira(values.minAmountRequested),
-        maxAmountRequested: parseNaira(values.maxAmountRequested),
-      });
+    onSubmit: (values, { resetForm }) => {
+      const filters = {
+        email: values.emailAddress || undefined,
+        min_amount: values.minAmountRequested ? Number(parseNaira(values.minAmountRequested)) : undefined,
+        max_amount: values.maxAmountRequested ? Number(parseNaira(values.maxAmountRequested)) : undefined,
+        min_credit_score: values.minCreditScore ? Number(values.minCreditScore) : undefined,
+        max_credit_score: values.maxCreditScore ? Number(values.maxCreditScore) : undefined,
+        status: values.status || undefined,
+        page: 1, // Always reset to page 1 on new filter
+      };
+
+      dispatch(fetchLoanRequests(filters));
+      setHasActiveFilter(true); 
+      resetForm();
       onClose();
     },
   });
@@ -124,7 +142,6 @@ export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) 
       <div className="p-6 z-50">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold text-[#333333]">Filter</h2>
-        
         </div>
 
         <form onSubmit={formik.handleSubmit}>
@@ -156,7 +173,7 @@ export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) 
                 name="minAmountRequested"
                 type="text"
                 value={formik.values.minAmountRequested}
-                onChange={(e) => handleAmountChange("minAmountRequested", e.target.value)}
+                onChange={(e:any) => handleAmountChange("minAmountRequested", e.target.value)}
                 placeholder="₦0"
               />
               {formik.touched.minAmountRequested && formik.errors.minAmountRequested && (
@@ -172,7 +189,7 @@ export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) 
                 name="maxAmountRequested"
                 type="text"
                 value={formik.values.maxAmountRequested}
-                onChange={(e) => handleAmountChange("maxAmountRequested", e.target.value)}
+                onChange={(e:any) => handleAmountChange("maxAmountRequested", e.target.value)}
                 placeholder="₦500,000"
               />
               {formik.touched.maxAmountRequested && formik.errors.maxAmountRequested && (
@@ -227,7 +244,7 @@ export default function LoanHistoryFilterModal({ isOpen, onClose }: ModalProps) 
               id="status"
               name="status"
               value={formik.values.status}
-              onChange={(value) => formik.setFieldValue("status", value)}
+              onChange={(value:any) => formik.setFieldValue("status", value)}
               options={statusOptions}
               placeholder="Select Status"
             />

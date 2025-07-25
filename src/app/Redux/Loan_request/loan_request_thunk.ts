@@ -54,38 +54,72 @@ export const loan_request_stat = createAsyncThunk(
   }
 );
 
-interface FiltersProps {
+interface LoanRequestsFilters {
   search?: string;
-  sort_by?: string;
+  min_amount?: number | string;
+  max_amount?: number | string;
+  min_credit_score?: number | string;
+  max_credit_score?: number | string;
   start_date?: string;
   end_date?: string;
+  min_user_income?: number | string;
+  max_user_income?: number | string;
+  sort_by?: string;
   single?: boolean;
   limit?: string;
   pagina?: any;
-  filter_by: any;
-  approvalStatus: any;
-  page: any;
+  filter_by?: any;
+  approvalStatus?: any;
+  page?: any;
 }
 
 export const all_loan_requests = createAsyncThunk(
-  "all_loan_requests`",
-  async (filters: FiltersProps, { rejectWithValue }) => {
-    const { page } = filters;
+  "loan-requests/all-loan-requests",
+  async (filters: LoanRequestsFilters, { rejectWithValue }) => {
     try {
       const token = Cookies.get("authToken");
       if (!token) {
         handleUnauthorizedError();
         return rejectWithValue("Authentication token is missing. Please log in again.");
       }
-      const response = await axios.post(
-        `${BASE_URL}/api/partner/loan-requests/all-loan-requests?page=${page}`,
-        filters,
+
+      // Build query parameters object, excluding empty values
+      const queryParams: Record<string, string> = {};
+
+      // Add all filter parameters if they exist
+      if (filters.search && filters.search !== "") queryParams.search = filters.search;
+      if (filters.min_amount && filters.min_amount !== "") queryParams.min_amount = filters.min_amount.toString();
+      if (filters.max_amount && filters.max_amount !== "") queryParams.max_amount = filters.max_amount.toString();
+      if (filters.min_credit_score && filters.min_credit_score !== "") 
+        queryParams.min_credit_score = filters.min_credit_score.toString();
+      if (filters.max_credit_score && filters.max_credit_score !== "") 
+        queryParams.max_credit_score = filters.max_credit_score.toString();
+      if (filters.start_date && filters.start_date !== "") queryParams.start_date = filters.start_date;
+      if (filters.end_date && filters.end_date !== "") queryParams.end_date = filters.end_date;
+      if (filters.min_user_income && filters.min_user_income !== "") 
+        queryParams.min_user_income = filters.min_user_income.toString();
+      if (filters.max_user_income && filters.max_user_income !== "") 
+        queryParams.max_user_income = filters.max_user_income.toString();
+      if (filters.sort_by && filters.sort_by !== "") queryParams.sort_by = filters.sort_by;
+      if (filters.limit && filters.limit !== "") queryParams.limit = filters.limit;
+      if (filters.page) queryParams.page = filters.page.toString();
+
+      // Add optional parameters if they exist
+      if (filters.filter_by) queryParams.filter_by = filters.filter_by;
+      if (filters.approvalStatus) queryParams.approvalStatus = filters.approvalStatus;
+      if (filters.pagina) queryParams.pagina = filters.pagina;
+      if (filters.single !== undefined) queryParams.single = filters.single.toString();
+
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/loan-requests/all-loan-requests`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: queryParams,
         }
       );
+
       return response.data;
     } catch (error: any) {
       if (error.response) {

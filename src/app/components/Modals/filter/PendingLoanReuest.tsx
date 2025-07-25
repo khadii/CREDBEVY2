@@ -6,11 +6,11 @@ import * as Yup from "yup";
 import { _pending_loans } from "@/app/Redux/dashboard/dashboardThunk";
 import { AppDispatch } from "@/app/Redux/store";
 import { useDispatch } from "react-redux";
-import { all_loan_requests } from "@/app/Redux/Loan_request/loan_request_thunk";
 
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setHasActiveFilter: (hasActiveFilter:boolean) => void;
 }
 
 // Helper functions for Naira formatting (reused from previous implementation)
@@ -44,14 +44,14 @@ interface FormValues {
 const validationSchema = Yup.object().shape({
   dateFrom: Yup.date()
     .nullable()
-    .max(Yup.ref('dateTo'), "From date cannot be after To date")
-    .typeError("Invalid date"),
-    // .required("From date is required"),
+    .max(Yup.ref("dateTo"), "From date cannot be after To date")
+    .typeError("Invalid date")
+    .required("From date is required"),
   dateTo: Yup.date()
     .nullable()
-    .min(Yup.ref('dateFrom'), "To date cannot be before From date")
-    .typeError("Invalid date"),
-    // .required("To date is required"),
+    .min(Yup.ref("dateFrom"), "To date cannot be before From date")
+    .typeError("Invalid date")
+    .required("To date is required"),
 
   minAverageIncome: Yup.string()
     .test("is-number", "Must be a number", (value) => {
@@ -149,7 +149,11 @@ const validationSchema = Yup.object().shape({
     ),
 });
 
-export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalProps) {
+export default function PendingLoanRequestFilterModal({
+  isOpen,
+  onClose,
+  setHasActiveFilter
+}: ModalProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const formik = useFormik<FormValues>({
@@ -164,25 +168,25 @@ export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalPro
       maxCreditScore: "",
     },
     validationSchema,
-   onSubmit: (values, { resetForm }) => {
-  const filterPayload = {
-    end_date: values.dateTo,
-    start_date: values.dateFrom,
-    min_amount: parseNaira(values.minAmountRequested),
-    max_amount: parseNaira(values.maxAmountRequested),
-    min_credit_score: values.minCreditScore,
-    max_credit_score: values.maxCreditScore,
-    min_user_income: parseNaira(values.minAverageIncome),
-    max_user_income: parseNaira(values.maxAverageIncome),
-  };
+    onSubmit: (values, { resetForm }) => {
+      const filterPayload = {
+        end_date: values.dateTo,
+        start_date: values.dateFrom,
+        min_amount: parseNaira(values.minAmountRequested),
+        max_amount: parseNaira(values.maxAmountRequested),
+        min_credit_score: values.minCreditScore,
+        max_credit_score: values.maxCreditScore,
+        min_user_income: parseNaira(values.minAverageIncome),
+        max_user_income: parseNaira(values.maxAverageIncome),
+      };
 
-  dispatch(all_loan_requests(filterPayload));
+      dispatch(_pending_loans(filterPayload));
+      setHasActiveFilter(true)
 
-  console.log("Filter submitted with values:", filterPayload);
-  onClose();
-   resetForm();
-}
-
+      console.log("Filter submitted with values:", filterPayload);
+      onClose();
+      resetForm();
+    },
   });
 
   const handleAmountChange = (field: keyof FormValues, value: string) => {
@@ -194,7 +198,6 @@ export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalPro
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-6 z-50">
         <h2 className="text-2xl font-semibold text-[#333333] mb-6">Filter</h2>
-
 
         <form onSubmit={formik.handleSubmit}>
           {/* Date Range */}
