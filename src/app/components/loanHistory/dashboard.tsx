@@ -104,28 +104,29 @@ export default function Dashboard() {
     dispatch(fetchLoanRequests({ page}));
   };
 
-  const transformedLoanData: CustomerLoanData[] = lhrdata?.map(
-    (item: any, index: number) => ({
-      id: (index + 1).toString(),
-      uuid: item.loan_uuid,
-      name: `${item.first_name} ${item.last_name}`,
-      email: item.email || "N/A",
-      Amount_Requested: formatCurrency(item?.amount_requested) || "N/A",
-      credit_score: item.credit_score || "N/A",
-      date_time: formatDate(item.date_and_time),
-      status: mapRepaymentStatus(item.repayment_status),
-      image: item.image ? `data:image/jpeg;base64,${item.image}` : undefined,
-    })
-  );
 
-  const filteredLoanData =
-    activeTab === "All Loans"
-      ? transformedLoanData
-      : transformedLoanData?.filter((loan) => loan.status === activeTab);
+const transformedLoanData: CustomerLoanData[] = (lhrdata ?? []).map(
+  (item: any, index: number) => ({
+    id: (index + 1).toString(),
+    uuid: item.loan_uuid,
+    name: `${item.first_name ?? "N/A"} ${item.last_name ?? ""}`,
+    email: item.email || "N/A",
+    Amount_Requested: item?.amount_requested ? formatCurrency(item.amount_requested) : "N/A",
+    credit_score: item.credit_score || "N/A",
+    date_time: item.date_and_time ? formatDate(item.date_and_time) : "N/A",
+    status: mapRepaymentStatus(item.repayment_status),
+    image: item.image ? `data:image/jpeg;base64,${item.image}` : undefined,
+  })
+);
 
-  const activeCount = transformedLoanData?.filter(
-    (loan) => loan.status === "Active"
-  );
+// Filter loans based on tab, default to all
+const filteredLoanData = activeTab === "All Loans"
+  ? transformedLoanData
+  : transformedLoanData.filter((loan) => loan.status === activeTab);
+
+// Count active loans safely
+const activeCount = transformedLoanData.filter((loan) => loan.status === "Active");
+
 
   const tabs = [
     { name: "All Loans" },

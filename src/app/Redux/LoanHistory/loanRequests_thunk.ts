@@ -1,3 +1,4 @@
+// loanRequests_thunk.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -18,11 +19,13 @@ export interface LoanRequestsParams {
   start_date?: string;
   end_date?: string;
 }
+
 export const handleUnauthorizedError = () => {
   Cookies.remove("authToken");
-  // Optionally, you can redirect the user to the login page here.
+  // Optionally redirect to login page
   // window.location.href = '/login';
 };
+
 export const fetchLoanRequests = createAsyncThunk(
   "loan-requests/fetch",
   async (params: LoanRequestsParams, { rejectWithValue }) => {
@@ -33,42 +36,29 @@ export const fetchLoanRequests = createAsyncThunk(
         return rejectWithValue("Authentication token is missing");
       }
 
-      // Build query parameters
-      const queryParams: Record<string, string> = {};
-      
-      // Add all filter parameters
-      if (params.email) queryParams.email = params.email;
-      if (params.search) queryParams.search = params.search;
-      if (params.status) queryParams.status = params.status;
-      
-      // Handle numeric ranges
-      if (params.min_amount !== undefined) queryParams.min_amount = params.min_amount.toString();
-      if (params.max_amount !== undefined) queryParams.max_amount = params.max_amount.toString();
-      if (params.min_credit_score !== undefined) queryParams.min_credit_score = params.min_credit_score.toString();
-      if (params.max_credit_score !== undefined) queryParams.max_credit_score = params.max_credit_score.toString();
-      
-      // Pagination and sorting
-      if (params.page) queryParams.page = params.page.toString();
-      if (params.limit) queryParams.limit = params.limit.toString();
-      if (params.sort_by) queryParams.sort_by = params.sort_by;
-      
-      // Date ranges
-      if (params.start_date) queryParams.start_date = params.start_date;
-      if (params.end_date) queryParams.end_date = params.end_date;
-
       const response = await axios.get(
-        `${BASE_URL}/api/partner/loan-requests`,
+        `${BASE_URL}/api/partner/loan-history/all-loan-requests`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          params: queryParams
+          params: {
+            ...params,
+            // Convert all values to strings
+            ...(params.min_amount !== undefined && { min_amount: params.min_amount.toString() }),
+            ...(params.max_amount !== undefined && { max_amount: params.max_amount.toString() }),
+            ...(params.min_credit_score !== undefined && { min_credit_score: params.min_credit_score.toString() }),
+            ...(params.max_credit_score !== undefined && { max_credit_score: params.max_credit_score.toString() }),
+            ...(params.page !== undefined && { page: params.page.toString() }),
+            ...(params.limit !== undefined && { limit: params.limit.toString() }),
+          }
         }
       );
 
       return {
-        data: response.data.data,
-        pagination: response.data
+        data: response.data.data.loan_requests.data, // Access nested loan_requests.data
+        pagination: response.data.data.loan_requests, // The pagination object
+        total_count: response.data.data.total_count // The total count from the root
       };
     } catch (error: any) {
       if (error.response?.status === 401) {

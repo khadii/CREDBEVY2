@@ -1,15 +1,16 @@
+// loanRequests_slice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchLoanRequests } from "./loanRequests_thunk"; // Ensure this import is correct
-
+import { fetchLoanRequests } from "./loanRequests_thunk";
 
 interface LoanRequest {
   first_name: string;
   last_name: string;
-  average_income: number;
+  email: string;
+  average_income: string;
   credit_score: string;
-  interest_rate: number;
+  interest_rate: string;
   loan_duration: number;
-  amount_requested: number;
+  amount_requested: string;
   loan_name: string;
   loan_purpose: string;
   date_and_time: string;
@@ -22,11 +23,9 @@ interface LoanRequest {
   approval_expense_fee: number;
 }
 
-// Adjust the Pagination interface to match your API response exactly.
-// Based on typical Laravel/Lumen pagination, it usually looks like this:
 interface ApiPaginationResponse {
   current_page: number;
-  data: LoanRequest[]; // Note: This 'data' is the actual items, which your thunk separates.
+  data: LoanRequest[];
   first_page_url: string;
   from: number;
   last_page: number;
@@ -41,16 +40,14 @@ interface ApiPaginationResponse {
   per_page: number;
   prev_page_url: string | null;
   to: number;
-  total: number; // This is the total items
+  total: number;
 }
 
-
-// Your current state's Pagination interface:
-interface StatePagination { // Renamed to avoid conflict with the incoming API response structure
+interface StatePagination {
   currentPage: number;
   totalPages: number;
-  totalItems: number; // This will come from API's 'total'
-  perPage: number;    // This will come from API's 'per_page'
+  totalItems: number;
+  perPage: number;
   links: Array<{
     url: string | null;
     label: string;
@@ -64,16 +61,16 @@ interface StatePagination { // Renamed to avoid conflict with the incoming API r
   to: number;
 }
 
-// This interface describes the EXACT shape of what fetchLoanRequests thunk returns
 interface FetchLoanRequestsPayload {
-    data: LoanRequest[]; // This is `response.data.data` from your thunk
-    pagination: ApiPaginationResponse; // This is `response.data` from your thunk
+  data: LoanRequest[];
+  pagination: ApiPaginationResponse;
+  total_count: number;
 }
 
 interface LoanRequestsState {
   data: LoanRequest[];
-  pagination: StatePagination; // Updated to StatePagination
-  totalCount: number; // This property is correct
+  pagination: StatePagination;
+  totalCount: number;
   loading: boolean;
   error: string | null;
 }
@@ -93,7 +90,7 @@ const initialState: LoanRequestsState = {
     from: 0,
     to: 0,
   },
-  totalCount: 0, // Initial state for totalCount
+  totalCount: 0,
   loading: false,
   error: null,
 };
@@ -112,24 +109,23 @@ const loanRequestsSlice = createSlice({
       })
       .addCase(fetchLoanRequests.fulfilled, (state, action: PayloadAction<FetchLoanRequestsPayload>) => {
         state.loading = false;
-        state.data = action.payload.data; // Array of loan requests
-        state.totalCount = action.payload.pagination.total; // Corrected: Get 'total' from 'pagination'
+        state.data = action.payload.data;
+        state.totalCount = action.payload.total_count;
         
-        // Map the API pagination structure to your desired state.pagination structure
+        const apiPagination = action.payload.pagination;
         state.pagination = {
-          currentPage: action.payload.pagination.current_page,
-          totalPages: action.payload.pagination.last_page, // totalPages usually maps to last_page
-          totalItems: action.payload.pagination.total,
-          perPage: action.payload.pagination.per_page,
-          links: action.payload.pagination.links,
-          nextPageUrl: action.payload.pagination.next_page_url,
-          prevPageUrl: action.payload.pagination.prev_page_url,
-          firstPageUrl: action.payload.pagination.first_page_url,
-          lastPageUrl: action.payload.pagination.last_page_url,
-          from: action.payload.pagination.from,
-          to: action.payload.pagination.to,
+          currentPage: apiPagination.current_page,
+          totalPages: apiPagination.last_page,
+          totalItems: apiPagination.total,
+          perPage: apiPagination.per_page,
+          links: apiPagination.links,
+          nextPageUrl: apiPagination.next_page_url,
+          prevPageUrl: apiPagination.prev_page_url,
+          firstPageUrl: apiPagination.first_page_url,
+          lastPageUrl: apiPagination.last_page_url,
+          from: apiPagination.from,
+          to: apiPagination.to,
         };
-
       })
       .addCase(fetchLoanRequests.rejected, (state, action) => {
         state.loading = false;
