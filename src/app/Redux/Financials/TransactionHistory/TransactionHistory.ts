@@ -4,15 +4,14 @@ import Cookies from "js-cookie";
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface SearchFilters {
-  year: string; 
+  year: string;
   search: string;
-  start_date: string; 
-  end_date: string;  
-  min_amount: string; 
-  max_amount: string; 
-  page:any
+  start_date: string;
+  end_date: string;
+  min_amount: string;
+  max_amount: string;
+  page: any;
 }
-
 
 export const transactionhistory = createAsyncThunk(
   "transactionhistory",
@@ -22,15 +21,17 @@ export const transactionhistory = createAsyncThunk(
       if (!token) {
         return rejectWithValue("Authentication token is missing.");
       }
-const {page}=SearchFilters
-      const response = await axios.post(
-        `${BASE_URL}/api/partner/financials/transactionhistory?page=${page}`,
-        SearchFilters,
 
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/financials/transactionhistory`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: {
+            ...SearchFilters, // Spread all filter properties
+            page: SearchFilters.page // Explicitly include page for clarity
+          }
         }
       );
       return response.data;

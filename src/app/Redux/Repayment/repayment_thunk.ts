@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { handleUnauthorizedError } from "../LoanHistory/loanRequests_thunk";
+
    interface LoanRepaymentParams {
   search?: string;
   start_due_date?: string;  // New due date range filter
@@ -22,7 +22,30 @@ import { handleUnauthorizedError } from "../LoanHistory/loanRequests_thunk";
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-  
+
+// Assuming LoanRepaymentParams is defined elsewhere, but for completeness:
+interface LoanRepaymentParams {
+  search?: string;
+  start_due_date?: string;
+  end_due_date?: string;
+  start_disbursal_date?: string;
+  end_disbursal_date?: string;
+  min_loan_duration?: string | number | undefined
+  max_loan_duration?: string | number | undefined
+  single?: boolean;
+  sort_by?: string;
+  start_date?: string;
+  end_date?: string;
+  status?: string;
+  approval_status?: string;
+  limit?: string | number | undefined
+  paginate?: boolean;
+  page?: number;
+}
+
+// Assuming handleUnauthorizedError is defined elsewhere
+declare function handleUnauthorizedError(): void; // Placeholder
+
 export const loan_repayment = createAsyncThunk(
   "loan/repayments",
   async (params: LoanRepaymentParams, { rejectWithValue }) => {
@@ -32,34 +55,36 @@ export const loan_repayment = createAsyncThunk(
         return rejectWithValue("Authentication token is missing.");
       }
 
-      // Prepare the request payload
-      const payload: Record<string, any> = {};
+      // Construct URLSearchParams from the params object
+      const queryParams = new URLSearchParams();
 
-      // Add all parameters to payload if they exist
-      if (params.search) payload.search = params.search;
-      if (params.start_due_date) payload.start_due_date = params.start_due_date;
-      if (params.end_due_date) payload.end_due_date = params.end_due_date;
-      if (params.start_disbursal_date) payload.start_disbursal_date = params.start_disbursal_date;
-      if (params.end_disbursal_date) payload.end_disbursal_date = params.end_disbursal_date;
+      // Add all parameters to queryParams if they exist
+      if (params.search) queryParams.append('search', params.search);
+      if (params.start_due_date) queryParams.append('start_due_date', params.start_due_date);
+      if (params.end_due_date) queryParams.append('end_due_date', params.end_due_date);
+      if (params.start_disbursal_date) queryParams.append('start_disbursal_date', params.start_disbursal_date);
+      if (params.end_disbursal_date) queryParams.append('end_disbursal_date', params.end_disbursal_date);
       
-      // Handle numeric duration filters
-      if (params.min_loan_duration !== undefined) payload.min_loan_duration = Number(params.min_loan_duration);
-      if (params.max_loan_duration !== undefined) payload.max_loan_duration = Number(params.max_loan_duration);
+      // Handle numeric duration filters, convert to string for query params
+      if (params.min_loan_duration !== undefined) queryParams.append('min_loan_duration', String(params.min_loan_duration));
+      if (params.max_loan_duration !== undefined) queryParams.append('max_loan_duration', String(params.max_loan_duration));
       
       // Existing parameters
-      if (params.single !== undefined) payload.single = params.single;
-      if (params.sort_by) payload.sort_by = params.sort_by;
-      if (params.start_date) payload.start_date = params.start_date;
-      if (params.end_date) payload.end_date = params.end_date;
-      if (params.status) payload.status = params.status;
-      if (params.approval_status) payload.approval_status = params.approval_status;
-      if (params.limit !== undefined) payload.limit = Number(params.limit);
-      if (params.paginate !== undefined) payload.paginate = params.paginate;
-      if (params.page !== undefined) payload.page = params.page;
+      if (params.single !== undefined) queryParams.append('single', String(params.single)); // Convert boolean to string
+      if (params.sort_by) queryParams.append('sort_by', params.sort_by);
+      if (params.start_date) queryParams.append('start_date', params.start_date);
+      if (params.end_date) queryParams.append('end_date', params.end_date);
+      if (params.status) queryParams.append('status', params.status);
+      if (params.approval_status) queryParams.append('approval_status', params.approval_status);
+      if (params.limit !== undefined) queryParams.append('limit', String(params.limit));
+      if (params.paginate !== undefined) queryParams.append('paginate', String(params.paginate)); // Convert boolean to string
+      if (params.page !== undefined) queryParams.append('page', String(params.page));
 
-      const response = await axios.post(
-        `${BASE_URL}/api/partner/loan-repayments/all-loans`,
-        payload,
+      // Construct the full URL with query parameters
+      const url = `${BASE_URL}/api/partner/loan-repayments/all-loans?${queryParams.toString()}`;
+
+      const response = await axios.get( // Changed to axios.get
+        url,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,7 +94,7 @@ export const loan_repayment = createAsyncThunk(
 
       return {
         data: response.data.data,
-        pagination: response.data.meta || {} // Adjust according to your API response
+        pagination: response.data
       };
     } catch (error: any) {
       if (error.response?.status === 401) {
@@ -83,7 +108,6 @@ export const loan_repayment = createAsyncThunk(
     }
   }
 );
-
 
     interface UserProps {
         

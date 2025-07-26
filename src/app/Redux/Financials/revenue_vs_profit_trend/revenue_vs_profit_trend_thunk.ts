@@ -16,14 +16,13 @@ export const revenue_vs_profit_trend = createAsyncThunk(
         return rejectWithValue("Authentication token is missing.");
       }
 
-      const response = await axios.post(
+      const response = await axios.get(
         `${BASE_URL}/api/partner/financials/repayment_vs_default_trend`,
-        Year,
-
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: Year  // Pass the year as query parameters
         }
       );
       return response.data;

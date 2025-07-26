@@ -43,9 +43,7 @@ export default function ApprovedRequests({
         setActiveTab={setActiveTab}
       />
       <Search
-        onSearchClick={handleSearchClick}
-        onFilterClick={handleFilterClick}
-        onSeeAllClick={handleSeeAllClick}
+  
       />
       <LoanRequestWithPagination laon_table_data_all={laon_table_data_all} setCurrentPage={setCurrentPage} currentPage={currentPage} totalPages={totalPages} total_count={total_count} bulkAction={bulkAction} />
     </div>

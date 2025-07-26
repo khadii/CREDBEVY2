@@ -15,10 +15,7 @@ export default function User_management() {
     {error ?  <ErrorDisplay error={error} title={error}/>  : (
         <div className='w-full min-h-screen pb-[200px]'> 
         <Search
-         showSeeAll={showSeeAllLink} 
-      onSearchClick={() => console.log("Search clicked")}
-      onFilterClick={() => console.log("Filter clicked")}
-      onSeeAllClick={() => console.log("See All clicked")}
+     
     />
       <User_managementTable/>
     </div>

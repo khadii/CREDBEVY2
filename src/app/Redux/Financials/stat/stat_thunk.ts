@@ -16,14 +16,13 @@ export const Financial_stats = createAsyncThunk(
         return rejectWithValue("Authentication token is missing.");
       }
 
-      const response = await axios.post(
+      const response = await axios.get(
         `${BASE_URL}/api/partner/financials/stats`,
-        Year,
-
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: Year 
         }
       );
       return response.data;

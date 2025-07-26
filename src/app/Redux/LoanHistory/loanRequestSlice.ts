@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchLoanRequests } from "./loanRequests_thunk";
+import { fetchLoanRequests } from "./loanRequests_thunk"; // Ensure this import is correct
 
 
 interface LoanRequest {
@@ -22,11 +22,35 @@ interface LoanRequest {
   approval_expense_fee: number;
 }
 
-interface Pagination {
+// Adjust the Pagination interface to match your API response exactly.
+// Based on typical Laravel/Lumen pagination, it usually looks like this:
+interface ApiPaginationResponse {
+  current_page: number;
+  data: LoanRequest[]; // Note: This 'data' is the actual items, which your thunk separates.
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: Array<{
+    url: string | null;
+    label: string;
+    active: boolean;
+  }>;
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number; // This is the total items
+}
+
+
+// Your current state's Pagination interface:
+interface StatePagination { // Renamed to avoid conflict with the incoming API response structure
   currentPage: number;
   totalPages: number;
-  totalItems: number;
-  perPage: number;
+  totalItems: number; // This will come from API's 'total'
+  perPage: number;    // This will come from API's 'per_page'
   links: Array<{
     url: string | null;
     label: string;
@@ -40,10 +64,16 @@ interface Pagination {
   to: number;
 }
 
+// This interface describes the EXACT shape of what fetchLoanRequests thunk returns
+interface FetchLoanRequestsPayload {
+    data: LoanRequest[]; // This is `response.data.data` from your thunk
+    pagination: ApiPaginationResponse; // This is `response.data` from your thunk
+}
+
 interface LoanRequestsState {
   data: LoanRequest[];
-  pagination: Pagination;
-  totalCount: number;
+  pagination: StatePagination; // Updated to StatePagination
+  totalCount: number; // This property is correct
   loading: boolean;
   error: string | null;
 }
@@ -63,7 +93,7 @@ const initialState: LoanRequestsState = {
     from: 0,
     to: 0,
   },
-  totalCount: 0,
+  totalCount: 0, // Initial state for totalCount
   loading: false,
   error: null,
 };
@@ -72,7 +102,6 @@ const loanRequestsSlice = createSlice({
   name: "loanhistoryRequests",
   initialState,
   reducers: {
-    // You can add manual reducers here if needed
     resetLoanRequests: () => initialState,
   },
   extraReducers: (builder) => {
@@ -81,11 +110,26 @@ const loanRequestsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchLoanRequests.fulfilled, (state, action) => {
+      .addCase(fetchLoanRequests.fulfilled, (state, action: PayloadAction<FetchLoanRequestsPayload>) => {
         state.loading = false;
-        state.data = action.payload.data;
-        state.pagination = action.payload.pagination;
-        state.totalCount = action.payload.totalCount;
+        state.data = action.payload.data; // Array of loan requests
+        state.totalCount = action.payload.pagination.total; // Corrected: Get 'total' from 'pagination'
+        
+        // Map the API pagination structure to your desired state.pagination structure
+        state.pagination = {
+          currentPage: action.payload.pagination.current_page,
+          totalPages: action.payload.pagination.last_page, // totalPages usually maps to last_page
+          totalItems: action.payload.pagination.total,
+          perPage: action.payload.pagination.per_page,
+          links: action.payload.pagination.links,
+          nextPageUrl: action.payload.pagination.next_page_url,
+          prevPageUrl: action.payload.pagination.prev_page_url,
+          firstPageUrl: action.payload.pagination.first_page_url,
+          lastPageUrl: action.payload.pagination.last_page_url,
+          from: action.payload.pagination.from,
+          to: action.payload.pagination.to,
+        };
+
       })
       .addCase(fetchLoanRequests.rejected, (state, action) => {
         state.loading = false;

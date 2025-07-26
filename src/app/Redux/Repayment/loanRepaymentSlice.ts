@@ -20,9 +20,9 @@ interface PaginationLinks {
   active: boolean;
 }
 
-interface LoanRepaymentResponse {
+// This interface defines the pagination metadata, which is nested under 'pagination'
+interface PaginationMetaData {
   current_page: number;
-  data: LoanRepaymentItem[];
   first_page_url: string;
   from: number;
   last_page: number;
@@ -36,10 +36,15 @@ interface LoanRepaymentResponse {
   total: number;
 }
 
-
+// This interface defines the exact shape of what loan_repayment thunk returns
+interface LoanRepaymentPayload {
+  data: LoanRepaymentItem[];
+  pagination: PaginationMetaData; // Note: Renamed from LoanRepaymentResponse to avoid confusion if it's not the root.
+                                  // In your thunk, you called this 'response.data', which is the full pagination object.
+}
 
 interface LoanRepaymentState {
-  data: LoanRepaymentResponse | null;
+  data: LoanRepaymentPayload | null; // <-- Changed this type
   loading: boolean;
   error: string | null;
 }
@@ -49,8 +54,6 @@ const initialState: LoanRepaymentState = {
   loading: false,
   error: null,
 };
-
-
 
 const loanRepaymentSlice = createSlice({
   name: "loanRepayment",
@@ -70,6 +73,7 @@ const loanRepaymentSlice = createSlice({
       })
       .addCase(loan_repayment.fulfilled, (state, action) => {
         state.loading = false;
+        // action.payload now correctly matches LoanRepaymentPayload
         state.data = action.payload;
       })
       .addCase(loan_repayment.rejected, (state, action) => {

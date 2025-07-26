@@ -68,7 +68,7 @@ export const fetchLoanRequests = createAsyncThunk(
 
       return {
         data: response.data.data,
-        pagination: response.data.meta // Adjust according to your API response
+        pagination: response.data
       };
     } catch (error: any) {
       if (error.response?.status === 401) {

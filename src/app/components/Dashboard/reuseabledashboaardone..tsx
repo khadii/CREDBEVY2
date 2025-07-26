@@ -200,9 +200,9 @@ export default function Dashboardone({
           />
         </div>
         <Search
-          onSearchClick={onSearchClick}
-          onFilterClick={onFilterClick}
-          onSeeAllClick={onSeeAllClick}
+          // onSearchClick={onSearchClick}
+          // onFilterClick={onFilterClick}
+          // onSeeAllClick={onSeeAllClick}
         />
         <LoanRequest laon_table_data_all={laon_table_data_all} total_count={total_count} bulkAction={bulkAction} />
       </div>

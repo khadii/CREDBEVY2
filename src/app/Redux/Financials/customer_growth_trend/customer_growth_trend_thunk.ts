@@ -16,14 +16,13 @@ export const customer_growth_trend = createAsyncThunk(
         return rejectWithValue("Authentication token is missing.");
       }
 
-      const response = await axios.post(
+      const response = await axios.get(
         `${BASE_URL}/api/partner/financials/customer_growth_trend`,
-        Year,
-
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          params: Year 
         }
       );
       return response.data;

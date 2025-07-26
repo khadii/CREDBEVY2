@@ -171,9 +171,7 @@ export default function Repayment({
           />
         </div>
         <Search
-          onSearchClick={onSearchClick}
-          onFilterClick={onFilterClick}
-          onSeeAllClick={onSeeAllClick}
+    
           searchName="Search Repayment"
         />
         <Repayment_Table

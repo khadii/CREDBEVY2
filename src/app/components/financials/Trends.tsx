@@ -325,7 +325,7 @@ export default function Trends() {
               title={"All Customers"}
               description={"Number of Customers"}
               totalRevenue={customerGrowthData.totalCustomers}
-              revenueChange={"30.00"} // You should calculate this dynamically based on your data
+              revenueChange={"30.00"} 
               lineColor={"#0F4C5C"}
               defaultSelectedYear={selectedYear}
               selectedYear={selectedYear}

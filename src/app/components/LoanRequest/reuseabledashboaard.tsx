@@ -173,9 +173,7 @@ export default function Dashboard({
    
         </div>
         <Search
-          onSearchClick={onSearchClick}
-          onFilterClick={onFilterClick}
-          onSeeAllClick={onSeeAllClick}
+          
         />
         <LoanRequest laon_table_data_all={tableData} total_count={total_count} bulkAction={bulkAction}   />
       </div>

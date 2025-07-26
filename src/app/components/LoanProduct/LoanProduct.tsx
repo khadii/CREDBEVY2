@@ -183,9 +183,7 @@ export default function LoanProducts({
           />
         </div>
         <LoanRequestActions
-          onSearchClick={onSearchClick}
-          onFilterClick={onFilterClick}
-          onSeeAllClick={onSeeAllClick}
+     
         />
        <LoanProduct
           laon_table_data_all={laon_table_data_all}

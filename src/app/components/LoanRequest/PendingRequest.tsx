@@ -50,9 +50,7 @@ export default function PendingRequest({
         setActiveTab={setActiveTab}
       />
       <Search
-        onSearchClick={handleSearchClick}
-        onFilterClick={handleFilterClick}
-        onSeeAllClick={handleSeeAllClick}
+      
       />
       <LoanRequestWithPagination
         laon_table_data_all={requests}
