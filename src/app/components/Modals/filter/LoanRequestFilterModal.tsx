@@ -11,6 +11,7 @@ import { all_loan_requests } from "@/app/Redux/Loan_request/loan_request_thunk";
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setHasActiveFilter: (hasActiveFilter:boolean) => void;
 }
 
 // Helper functions for Naira formatting (reused from previous implementation)
@@ -149,7 +150,7 @@ const validationSchema = Yup.object().shape({
     ),
 });
 
-export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalProps) {
+export default function     LoanRequestFilterModal({ isOpen, onClose,setHasActiveFilter }: ModalProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const formik = useFormik<FormValues>({
@@ -179,6 +180,7 @@ export default function     LoanRequestFilterModal({ isOpen, onClose }: ModalPro
   dispatch(all_loan_requests(filterPayload));
 
   console.log("Filter submitted with values:", filterPayload);
+  setHasActiveFilter(true)
   onClose();
    resetForm();
 }

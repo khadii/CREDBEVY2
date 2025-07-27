@@ -54,7 +54,6 @@ export default function TransactionHistory() {
     dispatch(repayment_vs_default_trend());
     dispatch(
       transactionhistory({
-        year: "2025",
         search: "",
         start_date: "",
         end_date: "",

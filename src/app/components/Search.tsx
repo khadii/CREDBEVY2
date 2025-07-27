@@ -1,7 +1,7 @@
-"use client"; // Ensure this component is client-side rendered
+"use client";
 
 import React, { useState, useCallback } from "react";
-import { LucideSearch, ListFilter, XCircle } from "lucide-react"; // Import XCircle for clear button
+import { LucideSearch, ListFilter, XCircle } from "lucide-react"; 
 import { useDashboard } from "../Context/DahboardContext";
 import { usePathname } from "next/navigation";
 import LoanProductFilter from "./Modals/filter/loanProductFilter";
@@ -21,10 +21,12 @@ import { loan_repayment } from "../Redux/Repayment/repayment_thunk";
 import { fetchLoanRequests } from "../Redux/LoanHistory/loanRequests_thunk";
 import { fetchCustomerLoanRequests } from "../Redux/customer/customer_request_slice";
 import CustomerFilterModal from "./Modals/filter/customerFilter";
+import { all_loan_requests } from "../Redux/Loan_request/loan_request_thunk";
+import { transactionhistory } from "../Redux/Financials/TransactionHistory/TransactionHistory";
 
 
 interface LoanRequestActionsProps {
-  onSearchSubmit?: (searchTerm: string) => void; // Callback for search submission
+  onSearchSubmit?: (searchTerm: string) => void; 
   showSeeAll?: boolean;
   searchName?: string;
 }
@@ -33,7 +35,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   showSeeAll = true,
   searchName = "Search",
 }) => {
-  const { filter, setFilter } = useDashboard(); // Assuming useDashboard provides search and filter values
+  const { filter, setFilter } = useDashboard(); 
   const pathname = usePathname();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [hasActiveSearch, setHasActiveSearch] = useState(false);
@@ -46,7 +48,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   const isRepaymentFilterModal = pathname === "/dashboard/repayment";
   const isLoanHistoryFilterModal = pathname === "/dashboard/loan-history";
   const isFinancialFilterModal = pathname === "/dashboard/financials";
-  const isCustomerPage = pathname === "/dashboard/customers"; // New: Define for customer page
+  const isCustomerPage = pathname === "/dashboard/customers";
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -68,7 +70,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       setHasActiveSearch(true);
     }
     if (isLoanRequestPage) {
-      dispatch(_loan_products_all({ search: searchTerm }));
+      dispatch(all_loan_requests({ search: searchTerm }));
       setHasActiveSearch(true); 
     }
     if (isLoanProductsPage) {
@@ -83,8 +85,12 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       dispatch(fetchLoanRequests({ search: searchTerm }));
       setHasActiveSearch(true);
     }
-    if (isCustomerPage) { // New: Customer search
+    if (isCustomerPage) { 
       dispatch(fetchCustomerLoanRequests({ search: searchTerm }));
+      setHasActiveSearch(true);
+    }
+      if (isFinancialFilterModal) { 
+      dispatch(transactionhistory({ search: searchTerm }));
       setHasActiveSearch(true);
     }
   };
@@ -130,15 +136,14 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     }
 
     if (isLoanRequestPage) {
-      // Assuming _loan_products_all is used for Loan Requests
+      
       dispatch(
-        _loan_products_all({
-          search: "", // Clear search term
+       all_loan_requests ({
+          search: "", 
           sort_by: "DESC",
           start_date: "",
           end_date: "",
           limit: "",
-          paginate: true,
           page: 1,
         })
       );
@@ -161,7 +166,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       setHasActiveSearch(false);
     }
 
-    if (isLoanHistoryFilterModal) { // New: Loan History clear search
+    if (isLoanHistoryFilterModal) {
       dispatch(fetchLoanRequests({
         search: "",
         email: undefined,
@@ -175,11 +180,12 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         sort_by: undefined,
         start_date: undefined,
         end_date: undefined,
+        
       }));
       setHasActiveSearch(false);
     }
 
-    if (isCustomerPage) { // New: Customer clear search
+    if (isCustomerPage) { 
       dispatch(fetchCustomerLoanRequests({
         search: "",
         email: undefined,
@@ -191,38 +197,65 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       }));
       setHasActiveSearch(false);
     }
+    if (isFinancialFilterModal) { 
+      dispatch(transactionhistory({
+        search: "", 
+        min_amount: undefined,
+        max_amount: undefined,
+        start_date: undefined,
+        end_date: undefined,
+        status: undefined,
+        page: 1,
+      }));
+      setHasActiveSearch(false);
+    }
+  
   };
 
   const onClearFilter = () => {
     if (dashboard) {
       dispatch(
         _pending_loans({
-          search: search, // Keep current search term
-          min_amount: undefined, // Clear amount filters
+          search: search,
+          min_amount: undefined, 
           max_amount: undefined,
-          start_date: undefined, // Clear date filters
-          min_credit_score: undefined, // Clear credit score filters
+          start_date: undefined,
+          min_credit_score: undefined, 
           max_credit_score: undefined,
-          min_user_income: undefined, // Clear income filters
+          min_user_income: undefined,
           max_user_income: undefined,
+          
         })
       );
       setHasActiveFilter(false);
     }
     console.log("Filter reset.");
-
+ if (isLoanRequestPage) {
+   
+      dispatch(
+       all_loan_requests ({
+          search: "",
+          sort_by: "DESC",
+          start_date: "",
+          end_date: "",
+          limit: "",
+          page: 1,
+        })
+      );
+      setHasActiveFilter(false);
+    }
     if (isLoanProductsPage) {
       dispatch(
         _loan_products_all({
-          search: "", // Clear search term for simplicity on filter clear
+          search: "", 
           sort_by: "DESC",
           start_date: "",
           end_date: "",
           limit: "",
           paginate: true,
           page: 1,
-          filter_by: "", // Clear status filter
-          min_loan_duration: undefined, // Clear duration filters
+          filter_by: "", 
+          min_loan_duration: undefined, 
           max_loan_duration: undefined,
         })
       );
@@ -230,7 +263,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     }
     if (isRepaymentFilterModal) {
       dispatch(loan_repayment({
-        search: "", // Clear search as well for a full filter reset
+        search: "", 
         start_due_date: undefined,
         end_due_date: undefined,
         start_disbursal_date: undefined,
@@ -243,9 +276,9 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       }));
       setHasActiveFilter(false);
     }
-    if (isLoanHistoryFilterModal) { // New: Loan History clear filter
+    if (isLoanHistoryFilterModal) { 
       dispatch(fetchLoanRequests({
-        search: "", // Clear search as well for a full filter reset
+        search: "",
         email: undefined,
         min_amount: undefined,
         max_amount: undefined,
@@ -260,14 +293,27 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       }));
       setHasActiveFilter(false);
     }
-    if (isCustomerPage) { // New: Customer clear filter
+    if (isCustomerPage) { 
       dispatch(fetchCustomerLoanRequests({
-        search: "", // Clear search as well for a full filter reset
+        search: "", 
         email: undefined,
         min_credit_score: undefined,
         max_credit_score: undefined,
         start_date: undefined,
         end_date: undefined,
+        page: 1,
+      }));
+      setHasActiveFilter(false);
+    }
+
+    if (isFinancialFilterModal) { 
+      dispatch(transactionhistory({
+        search: "",
+        min_amount: undefined,
+        max_amount: undefined,
+        start_date: undefined,
+        end_date: undefined,
+        status: undefined,
         page: 1,
       }));
       setHasActiveFilter(false);
@@ -337,8 +383,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         <LoanRequestFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}
-          // You will need to add setHasActiveFilter to LoanRequestFilterModal's props
-          // and its onSubmit logic similar to LoanProductFilter
+         setHasActiveFilter={setHasActiveFilter}
         />
       )}
 
@@ -362,6 +407,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         <FinancialFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}
+            setHasActiveFilter={setHasActiveFilter}
         />
       )}
       {dashboard && (
@@ -371,7 +417,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
           setHasActiveFilter={setHasActiveFilter}
         />
       )}
-      {isCustomerPage && ( // New: Customer Filter Modal
+      {isCustomerPage && (
         <CustomerFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}

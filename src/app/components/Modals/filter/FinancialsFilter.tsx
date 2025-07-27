@@ -3,10 +3,16 @@ import Modal from "../wallet/modal"; // Assuming this path is correct
 import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet"; // Assuming these paths are correct
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { AppDispatch } from "@/app/Redux/store"; // Adjust path as necessary
+import { transactionhistory } from "@/app/Redux/Financials/TransactionHistory/TransactionHistory";
+
+
 
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setHasActiveFilter: (hasActive: boolean) => void; // Add this prop
 }
 
 // Helper functions for Naira formatting (reused from previous implementations)
@@ -27,21 +33,14 @@ const parseNaira = (value: string) => {
 };
 
 interface FormValues {
-  payee: string;
-  transactionType: string;
   minAmount: string;
   maxAmount: string;
-  transactionId: string;
   dateFrom: string;
   dateTo: string;
-  paymentMethod: string;
   status: string;
 }
 
 const validationSchema = Yup.object().shape({
-  payee: Yup.string().trim().nullable(),
-  transactionType: Yup.string().nullable(),
-
   minAmount: Yup.string()
     .test("is-number", "Must be a number", (value) => {
       return !value || !isNaN(Number(parseNaira(value)));
@@ -75,8 +74,6 @@ const validationSchema = Yup.object().shape({
       }
     ),
 
-  transactionId: Yup.string().trim().nullable(),
-
   dateFrom: Yup.date()
     .nullable()
     .max(Yup.ref('dateTo'), "From date cannot be after To date")
@@ -86,23 +83,8 @@ const validationSchema = Yup.object().shape({
     .min(Yup.ref('dateFrom'), "To date cannot be before From date")
     .typeError("Invalid date"),
 
-  paymentMethod: Yup.string().nullable(),
   status: Yup.string().nullable(),
 });
-
-const transactionTypeOptions = [
-  { value: "credit", label: "Credit" },
-  { value: "debit", label: "Debit" },
-  { value: "transfer", label: "Transfer" },
-  // Add more transaction types as needed
-];
-
-const paymentMethodOptions = [
-  { value: "bank_transfer", label: "Bank Transfer" },
-  { value: "card_payment", label: "Card Payment" },
-  { value: "ussd", label: "USSD" },
-  // Add more payment methods as needed
-];
 
 const transactionStatusOptions = [
   { value: "successful", label: "Successful" },
@@ -112,26 +94,34 @@ const transactionStatusOptions = [
   // Add more status options as needed
 ];
 
-export default function FinancialFilterModal({ isOpen, onClose }: ModalProps) {
+export default function FinancialFilterModal({ isOpen, onClose, setHasActiveFilter }: ModalProps) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const formik = useFormik<FormValues>({
     initialValues: {
-      payee: "",
-      transactionType: "",
       minAmount: "",
       maxAmount: "",
-      transactionId: "",
       dateFrom: "",
       dateTo: "",
-      paymentMethod: "",
       status: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Transaction filter submitted with values:", {
-        ...values,
-        minAmount: parseNaira(values.minAmount),
-        maxAmount: parseNaira(values.maxAmount),
-      });
+    onSubmit: (values, { resetForm }) => {
+      const filters = {
+        min_amount: values.minAmount ? parseNaira(values.minAmount) : undefined,
+        max_amount: values.maxAmount ? parseNaira(values.maxAmount) : undefined,
+        start_date: values.dateFrom || undefined,
+        end_date: values.dateTo || undefined,
+        status: values.status || undefined,
+        // page: 1,
+      };
+
+      // Remove undefined values from filters object
+      Object.keys(filters).forEach(key => filters[key as keyof typeof filters] === undefined && delete filters[key as keyof typeof filters]);
+
+      dispatch(transactionhistory(filters as any)); 
+      setHasActiveFilter(true);
+      resetForm();
       onClose();
     },
   });
@@ -147,42 +137,6 @@ export default function FinancialFilterModal({ isOpen, onClose }: ModalProps) {
           <h2 className="text-2xl font-semibold text-[#333333] mb-6">Filter</h2>
 
         <form onSubmit={formik.handleSubmit}>
-          {/* Payee */}
-          <div className="mb-4">
-            <Label htmlFor="payee">Payee:</Label>
-            <InputField
-              id="payee"
-              name="payee"
-              type="text"
-              value={formik.values.payee}
-              onChange={formik.handleChange}
-              placeholder="e.g. John Doe"
-            />
-            {formik.touched.payee && formik.errors.payee && (
-              <div className="text-red-500 text-xs mt-1">
-                {formik.errors.payee}
-              </div>
-            )}
-          </div>
-
-          {/* Type */}
-          <div className="mb-4">
-            <Label htmlFor="transactionType">Type:</Label>
-            <Dropdown
-              id="transactionType"
-              name="transactionType"
-              value={formik.values.transactionType}
-              onChange={(value) => formik.setFieldValue("transactionType", value)}
-              options={transactionTypeOptions}
-              placeholder="Select Type"
-            />
-            {formik.touched.transactionType && formik.errors.transactionType && (
-              <div className="text-red-500 text-xs mt-1">
-                {formik.errors.transactionType}
-              </div>
-            )}
-          </div>
-
           {/* Amount Range */}
           <Title>Amount</Title>
           <div className="mb-4 grid grid-cols-2 gap-4">
@@ -220,24 +174,6 @@ export default function FinancialFilterModal({ isOpen, onClose }: ModalProps) {
             </div>
           </div>
 
-          {/* Transaction ID */}
-          <div className="mb-4">
-            <Label htmlFor="transactionId">Transaction ID:</Label>
-            <InputField
-              id="transactionId"
-              name="transactionId"
-              type="text"
-              value={formik.values.transactionId}
-              onChange={formik.handleChange}
-              placeholder="e.g. TXN123456789"
-            />
-            {formik.touched.transactionId && formik.errors.transactionId && (
-              <div className="text-red-500 text-xs mt-1">
-                {formik.errors.transactionId}
-              </div>
-            )}
-          </div>
-
           {/* Date Range */}
           <Title>Date</Title>
           <div className="mb-4 grid grid-cols-2 gap-4">
@@ -271,24 +207,6 @@ export default function FinancialFilterModal({ isOpen, onClose }: ModalProps) {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Method Dropdown */}
-          <div className="mb-4">
-            <Label htmlFor="paymentMethod">Method:</Label>
-            <Dropdown
-              id="paymentMethod"
-              name="paymentMethod"
-              value={formik.values.paymentMethod}
-              onChange={(value) => formik.setFieldValue("paymentMethod", value)}
-              options={paymentMethodOptions}
-              placeholder="Select Method"
-            />
-            {formik.touched.paymentMethod && formik.errors.paymentMethod && (
-              <div className="text-red-500 text-xs mt-1">
-                {formik.errors.paymentMethod}
-              </div>
-            )}
           </div>
 
           {/* Status Dropdown */}
