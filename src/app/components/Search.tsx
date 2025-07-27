@@ -7,16 +7,20 @@ import { usePathname } from "next/navigation";
 import LoanProductFilter from "./Modals/filter/loanProductFilter";
 import LoanRequestFilterModal from "./Modals/filter/LoanRequestFilterModal";
 import RepaymentFilterModal from "./Modals/filter/RepaymentFilter";
-import LoanHistoryFilterModal from "./Modals/filter/LoanHistoryFilter"; // Import LoanHistoryFilterModal
+import LoanHistoryFilterModal from "./Modals/filter/LoanHistoryFilter";
 import FinancialFilterModal from "./Modals/filter/FinancialsFilter";
 import SearchInputModal from "./SearchInputModal";
 import PendingLoanRequestFilterModal from "./Modals/filter/PendingLoanReuest";
+
+
 import { _pending_loans } from "../Redux/dashboard/dashboardThunk";
 import { AppDispatch } from "../Redux/store";
 import { useDispatch } from "react-redux";
 import { _loan_products_all } from "../Redux/Loan_Product/loan_product_thunk";
 import { loan_repayment } from "../Redux/Repayment/repayment_thunk";
 import { fetchLoanRequests } from "../Redux/LoanHistory/loanRequests_thunk";
+import { fetchCustomerLoanRequests } from "../Redux/customer/customer_request_slice";
+import CustomerFilterModal from "./Modals/filter/customerFilter";
 
 
 interface LoanRequestActionsProps {
@@ -40,8 +44,10 @@ const Search: React.FC<LoanRequestActionsProps> = ({
   const isLoanRequestPage = pathname === "/dashboard/loan-request";
   const dashboard = pathname === "/dashboard";
   const isRepaymentFilterModal = pathname === "/dashboard/repayment";
-  const isLoanHistoryFilterModal = pathname === "/dashboard/loan-history"; // Define for loan history page
+  const isLoanHistoryFilterModal = pathname === "/dashboard/loan-history";
   const isFinancialFilterModal = pathname === "/dashboard/financials";
+  const isCustomerPage = pathname === "/dashboard/customers"; // New: Define for customer page
+
   const dispatch = useDispatch<AppDispatch>();
 
   const {
@@ -53,7 +59,8 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     startDate,
     minUserIncome,
     maxUserIncome,
-  } = useDashboard(); // These dashboard context values are likely for _pending_loans
+  } = useDashboard(); 
+
 
   const onSearchSubmit = (searchTerm: any) => {
     if (dashboard) {
@@ -61,10 +68,8 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       setHasActiveSearch(true);
     }
     if (isLoanRequestPage) {
-      // Assuming _loan_products_all is also used for Loan Requests for search
-      // You might need a specific thunk for Loan Requests if filters differ
       dispatch(_loan_products_all({ search: searchTerm }));
-      setHasActiveSearch(true); // Assuming this page also shows search status
+      setHasActiveSearch(true); 
     }
     if (isLoanProductsPage) {
       dispatch(_loan_products_all({ search: searchTerm }));
@@ -74,8 +79,12 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       dispatch(loan_repayment({ search: searchTerm }));
       setHasActiveSearch(true);
     }
-    if (isLoanHistoryFilterModal) { // New: Loan History search
+    if (isLoanHistoryFilterModal) { 
       dispatch(fetchLoanRequests({ search: searchTerm }));
+      setHasActiveSearch(true);
+    }
+    if (isCustomerPage) { // New: Customer search
+      dispatch(fetchCustomerLoanRequests({ search: searchTerm }));
       setHasActiveSearch(true);
     }
   };
@@ -92,7 +101,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     if (dashboard) {
       dispatch(
         _pending_loans({
-          search: "", // Clear search term
+          search: "",
           min_amount: minAmount,
           max_amount: maxAmount,
           start_date: startDate,
@@ -108,7 +117,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     if (isLoanProductsPage) {
       dispatch(
         _loan_products_all({
-          search: "", // Clear search term
+          search: "", 
           sort_by: "DESC",
           start_date: "",
           end_date: "",
@@ -139,7 +148,7 @@ const Search: React.FC<LoanRequestActionsProps> = ({
     if (isRepaymentFilterModal) {
       dispatch(loan_repayment({
         search: "",
-        start_due_date: undefined, // Reset all potential repayment filters
+        start_due_date: undefined,
         end_due_date: undefined,
         start_disbursal_date: undefined,
         end_disbursal_date: undefined,
@@ -166,6 +175,19 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         sort_by: undefined,
         start_date: undefined,
         end_date: undefined,
+      }));
+      setHasActiveSearch(false);
+    }
+
+    if (isCustomerPage) { // New: Customer clear search
+      dispatch(fetchCustomerLoanRequests({
+        search: "",
+        email: undefined,
+        min_credit_score: undefined,
+        max_credit_score: undefined,
+        start_date: undefined,
+        end_date: undefined,
+        page: 1,
       }));
       setHasActiveSearch(false);
     }
@@ -238,7 +260,18 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       }));
       setHasActiveFilter(false);
     }
-    // Add similar blocks for Loan Request, Loan History, Financial filters if they are tied to this component
+    if (isCustomerPage) { // New: Customer clear filter
+      dispatch(fetchCustomerLoanRequests({
+        search: "", // Clear search as well for a full filter reset
+        email: undefined,
+        min_credit_score: undefined,
+        max_credit_score: undefined,
+        start_date: undefined,
+        end_date: undefined,
+        page: 1,
+      }));
+      setHasActiveFilter(false);
+    }
   };
 
   return (
@@ -304,7 +337,8 @@ const Search: React.FC<LoanRequestActionsProps> = ({
         <LoanRequestFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}
- 
+          // You will need to add setHasActiveFilter to LoanRequestFilterModal's props
+          // and its onSubmit logic similar to LoanProductFilter
         />
       )}
 
@@ -332,6 +366,13 @@ const Search: React.FC<LoanRequestActionsProps> = ({
       )}
       {dashboard && (
         <PendingLoanRequestFilterModal
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          setHasActiveFilter={setHasActiveFilter}
+        />
+      )}
+      {isCustomerPage && ( // New: Customer Filter Modal
+        <CustomerFilterModal
           isOpen={isFilterOpen}
           onClose={() => setIsFilterOpen(false)}
           setHasActiveFilter={setHasActiveFilter}

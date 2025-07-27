@@ -11,7 +11,7 @@ import { loan_repayment } from "@/app/Redux/Repayment/repayment_thunk";
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  setHasActiveFilter: (hasActive: boolean) => void; // Add this prop
+  setHasActiveFilter: (hasActiveFilter:boolean) => void;
 }
 
 interface FormValues {
@@ -108,7 +108,7 @@ export default function RepaymentFilterModal({ isOpen, onClose, setHasActiveFilt
       };
 
       dispatch(loan_repayment(filters));
-      setHasActiveFilter(true); // Indicate that a filter is active
+      setHasActiveFilter(true);
       resetForm();
       onClose();
     },

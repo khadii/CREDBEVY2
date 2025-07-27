@@ -14,7 +14,7 @@ import { Dropdown, InputField, Label, Title } from "../wallet/fundWallet";
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  setHasActiveFilter: (hasActive: boolean) => void; // Add this prop
+  setHasActiveFilter: (hasActiveFilter:boolean) => void;
 }
 
 const formatNaira = (value: string | number) => {

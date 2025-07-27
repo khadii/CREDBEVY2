@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import SpinningFaceExact from "../credbevyLoader";
 import Image from "next/image";
 import { GoDotFill } from "react-icons/go";
+import ErrorDisplay from "../ErrorDisplay";
 
 type CreditRating = {
   text: string;
@@ -47,7 +48,7 @@ export default function ProfileCard({ id }: { id: any }) {
     setLoanDeclined
   } = useDashboard();
 
-  const { loading: LoanRequest_loading, data: LoanRequest_Data } = useSelector(
+  const { loading: LoanRequest_loading, data: LoanRequest_Data,error } = useSelector(
     (state: RootState) => state.loanRequest.single_loan_products_request
   );
 
@@ -113,12 +114,27 @@ export default function ProfileCard({ id }: { id: any }) {
     }
   }, [LoanRequest_Data?.loan?.request_details.status, LoanRequest_Data, setLoanApproved, setLoanDeclined]);
 
+  if (LoanRequest_loading || !LoanRequest_Data)  {
+    return (
+      <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
+       
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-6 w-full bg-gray-200 animate-pulse rounded"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
     <div
       className={`bg-[#FFFFFF] flex flex-col items-center rounded-lg text-center ${
         interested ? "h-[1100px]" : "h-[1100px]"
       } border-[1px]`}
+
     >
+      {error?<ErrorDisplay error={error} />:
+      <>
       <ApproveRequest
         isOpen={isModalOpenApproveRequest}
         onClose={() => setIsModalOpenApproveRequest(false)}
@@ -285,7 +301,7 @@ export default function ProfileCard({ id }: { id: any }) {
             </div>
           </div>
         ))}
-      </div>
+      </div></>}
     </div>
   );
 }

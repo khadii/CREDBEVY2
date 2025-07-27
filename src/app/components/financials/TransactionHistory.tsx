@@ -332,21 +332,20 @@ const transformRepaymentDefaultData = () => {
       <Search />
       {dataTra && (
         <FinancialTable
-          laon_table_data_all={dataTra.result?.data || []}
-          currentPage={currentPage}
-          totalPages={dataTra.result?.last_page || 1}
-          setCurrentPage={setCurrentPage}
-          titleProps={{
-            title: "Transaction History",
-            description: "All financial transactions recorded",
-            count: `${dataTra.count || 0} transactions`,
-          }}
-          bulkAction={{
-            label: "Bulk Action",
-            options: ["Export", "Print", "Archive"],
-            onSelect: (option: string) => console.log(option),
-          }}
-        />
+                laon_table_data_all={dataTra.result?.data || []}
+                currentPage={currentPage}
+                totalPages={dataTra.result?.last_page || 1}
+                setCurrentPage={setCurrentPage}
+                titleProps={{
+                  title: "Transaction History",
+                  description: "All financial transactions recorded",
+                  count: `${dataTra.count || 0} transactions`,
+                }}
+                bulkAction={{
+                  label: "Bulk Action",
+                  options: ["Export", "Print", "Archive"],
+                  onSelect: (option: string) => console.log(option),
+                }} count={`${dataTra.count || 0} transactions`}             />
       )}
     </div>
       </div>

@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Redux/store";
 import { Customers_stats } from "@/app/Redux/customer/customer_thunk";
 import { fetchCustomerLoanRequests } from "@/app/Redux/customer/customer_request_slice";
+import AnimatedLoader from "../animation";
+import ErrorDisplay from "../ErrorDisplay";
 
 export default function Customers() {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,22 +88,26 @@ export default function Customers() {
     );
   };
 
-  return (
-    <section className="bg-[#FAFAFA]">
-      <div className="">
-        {/* title */}
+ return (
+  <section className="bg-[#FAFAFA] relative">
+    {/* Error Display */}
+    {(statsError || customersError) ? (
+      <ErrorDisplay error={statsError || customersError} />
+    ) : (
+      <div>
+        {/* Title */}
         <p className="font-semibold text-4xl text-[#333333] mb-6 bg-[#FAFAFA]">
           Customers
         </p>
 
-        {/* year dropdown */}
+        {/* Year Dropdown */}
         <YearDropdown
           years={years}
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
         />
 
-        {/* stats cards */}
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {stats.map((stat, index) => (
             <Card
@@ -114,7 +120,7 @@ export default function Customers() {
           ))}
         </div>
 
-        {/* search and table */}
+        {/* Search and Table */}
         <Search showSeeAll={false} />
         <CustomersTable
           loan_table_data_all={customersData?.data || []}
@@ -125,6 +131,15 @@ export default function Customers() {
           bulkAction={1}
         />
       </div>
-    </section>
-  );
+    )}
+
+    {/* Loader overlays content if loading */}
+    {customersLoading && (
+      <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-50">
+        <AnimatedLoader isLoading={true} />
+      </div>
+    )}
+  </section>
+);
+
 }

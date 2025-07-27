@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import TableWithPagination from "../../table/tablewWthPagination";
 import { CustomCheckbox } from "../../CheckboxForTable/TablecheckBox";
 import { StatusWithOptionsCustomers } from "./Status";
+import { formatDate } from "@/app/lib/formatdate";
 
 interface CustomerLoanData {
   id: string;
   first_name: string;
   last_name: string;
   email: string;
-  phone: string;
+  telephone: string;
   credit_score: string;
-  date_time: string;
-  status: "Pending" | "Approved" | "Denied";
+  created_at: string;
+  approval_status: "Pending" | "Approved" | "Denied";
   uuid: string;
   image?: string;
 }
@@ -143,12 +144,12 @@ export const CustomersTable = ({
           <p className="truncate max-w-[120px]">{formatName(item)}</p>
         </div>
       </td>
-      <td className="truncate max-w-[200px] py-4 px-6">{item.email}</td>
-      <td className="truncate max-w-[120px] py-4 px-6">{item.phone}</td>
-      <td className="truncate max-w-[35px] py-4 px-6">{item.credit_score}</td>
-      <td className="truncate max-w-[110px] py-4 px-6">{item.date_time}</td>
+      <td className="truncate max-w-[200px] py-4 px-6">{item.email ?? 'N/A'}</td>
+      <td className="truncate max-w-[120px] py-4 px-6">{item.telephone ?? 'N/A'}</td>
+      <td className="truncate max-w-[35px] py-4 px-6">{item.credit_score ?? 'N/A'}</td>
+      <td className="truncate max-w-[110px] py-4 px-6">{formatDate(item.created_at )?? 'N/A'}</td>
       <td className="truncate max-w-[154px] py-4 px-4">
-        {renderStatus(item.status, item.uuid)}
+        {renderStatus(item.approval_status, item.uuid)}
       </td>
     </>
   );

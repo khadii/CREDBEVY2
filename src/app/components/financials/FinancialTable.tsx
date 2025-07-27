@@ -22,6 +22,7 @@ interface FinancialTableProps {
   totalPages: number;
   setCurrentPage: (page: number) => void;
   bulkAction?: any;
+  count:any
 }
 
 const FinancialTable: React.FC<FinancialTableProps> = ({
@@ -30,7 +31,7 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
   currentPage,
   totalPages,
   setCurrentPage,
-  bulkAction
+  bulkAction,count
 }) => {
   const loanHeaders = [
     "Payee",
@@ -44,7 +45,7 @@ const FinancialTable: React.FC<FinancialTableProps> = ({
 
   const titleProps = {
     mainTitle: "Transaction History",
-    count: 90 + "transactions",
+    count:count,
     subtitle: "List of transactions processed",
   };
 

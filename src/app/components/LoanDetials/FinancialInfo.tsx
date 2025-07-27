@@ -14,6 +14,7 @@ import SpinningFaceExact from "../credbevyLoader";
 import Prediction from "./prediction";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ErrorDisplay from "../ErrorDisplay";
 
 
 export default function FinancialInfo({ id }: { id: any }) {
@@ -327,17 +328,30 @@ export default function FinancialInfo({ id }: { id: any }) {
   //   return <div className="w-full justify-center items-center max-h-screen h-full flex min-h-screen"><SpinningFaceExact/></div>;
   // }
 
-  if (LoanRequest_SuccessError) {
-    return <div>Error: {LoanRequest_SuccessError}</div>;
-  }
 
+if (LoanRequest_loading || !LoanRequest_Data)  {
+    return (
+      <div className="pt-[34px] bg-white rounded-lg h-[1100px] w-full border-[1px] p-6">
+       
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-6 w-full bg-gray-200 animate-pulse rounded"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
+
     <div
       className={`pt-[34px] bg-white rounded-lg ${
         interested ? "h-[1100px]" : "h-[1100px]"
       } w-full border-[1px]`}
     >
-      <div className="flex mb-[42px] pl-[24px]">
+
+       {LoanRequest_SuccessError?<ErrorDisplay error={LoanRequest_SuccessError} />:
+
+           <><div className="flex mb-[42px] pl-[24px]">
         <Tabs
           tabs={tabs}
           activeTab={activeTab}
@@ -390,6 +404,7 @@ export default function FinancialInfo({ id }: { id: any }) {
           ))}
         </div>
       )}
+  </>}
     </div>
   );
 }

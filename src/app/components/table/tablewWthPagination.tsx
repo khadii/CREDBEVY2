@@ -77,7 +77,7 @@ const TableWithPagination = <T,>({
           )}
           <button
             className="bg-[#24262D] text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg flex items-center justify-center gap-2 text-xs font-extrabold w-full xs:w-auto"
-            onClick={() => bulkAction()}
+            onClick={() => bulkAction?.()}
           >
             Bulk Action <LucideChevronDown size={16} />
           </button>

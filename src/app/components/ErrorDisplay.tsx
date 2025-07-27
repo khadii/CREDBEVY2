@@ -6,7 +6,7 @@ interface ErrorDisplayProps {
    * The error message to display.
    * If not provided, a default message will be shown.
    */
-  error?: string;
+  error?: any;
   /**
    * The title for the error display.
    * Defaults to "Unable to Load Details" if not provided.

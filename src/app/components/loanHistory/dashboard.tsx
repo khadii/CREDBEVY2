@@ -231,89 +231,90 @@ const activeCount = transformedLoanData.filter((loan) => loan.status === "Active
     return formatCurrency(total);
   }, [revenueProfitData, selectedYear]);
 
+return (
+  <div className="w-full min-h-screen space-y-6 relative">
+    {/* Spinner at top or floating above content */}
+    {lhrloading && (
+      <div className="absolute top-0 left-0 right-0 z-50">
+        <AnimatedLoader isLoading={loading || lhrloading} />
+      </div>
+    )}
 
-if(lhrloading){
-  return (       <AnimatedLoader isLoading={loading||lhrloading}></AnimatedLoader>)
-}
-  return (
-    <div className="w-full min-h-screen space-y-6">
-      <LoanRequestHeaderWithTabs
-        title="Loan History"
-        tabs={tabs}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+    <LoanRequestHeaderWithTabs
+      title="Loan History"
+      tabs={tabs}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+    />
 
-      {activeTab === "All Loans" ? (
-        <>
-          <YearDropdown
-            years={years}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-          />
+    {activeTab === "All Loans" && (
+      <>
+        <YearDropdown
+          years={years}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {stats.map((stat, index) => (
-              <Card
-                key={index}
-                title={stat.title}
-                amount={stat.amount}
-                percentage={stat.percentage}
-                icon={stat.icon}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {stats.map((stat, index) => (
+            <Card
+              key={index}
+              title={stat.title}
+              amount={stat.amount}
+              percentage={stat.percentage}
+              icon={stat.icon}
+            />
+          ))}
+        </div>
 
-          <EqualHeightContainer
-            leftContent={
-              <BarChartCard
-                title="Overall Profitability"
-                description="Total Interest + Total Principal Earned"
-                totalAmount={totalRevenueAmount}
-                data={formattedRevenueData.length > 0 ? formattedRevenueData : [{ name: 'No Data', revenue: 0 }]}
-                highlightBar="Jun" 
-                highlightColor="#EC7910"
-                barSize={11}
-                showValuesOnTop={true}
-                tooltip={true}
-                selectedYear={selectedYear}
-                setSelectedYear={setSelectedYear}
-              />
-            }
-            rightContent={
-              <LoanApprovalChart
-                title="Default Rate"
-                description="Total unpaid loan metrics."
-                total={
-                  dataStat?.loanStats.loanDefaultRate?.total_defaulted_loans ??
-                  "N/A"
-                }
-                data={datas || []}
-              />
-            }
-          />
+        <EqualHeightContainer
+          leftContent={
+            <BarChartCard
+              title="Overall Profitability"
+              description="Total Interest + Total Principal Earned"
+              totalAmount={totalRevenueAmount}
+              data={
+                formattedRevenueData.length > 0
+                  ? formattedRevenueData
+                  : [{ name: "No Data", revenue: 0 }]
+              }
+              highlightBar="Jun"
+              highlightColor="#EC7910"
+              barSize={11}
+              showValuesOnTop={true}
+              tooltip={true}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+            />
+          }
+          rightContent={
+            <LoanApprovalChart
+              title="Default Rate"
+              description="Total unpaid loan metrics."
+              total={
+                dataStat?.loanStats.loanDefaultRate?.total_defaulted_loans ??
+                "N/A"
+              }
+              data={datas || []}
+            />
+          }
+        />
 
-          <Search
-            // onFilterClick={handleFilterClick}
-            // onSeeAllClick={handleSeeAllClick}
-          />
-        </>
-      ) : null}
+        <Search />
+      </>
+    )}
 
-      <HistoryTable
-        loan_table_data_all={filteredLoanData}
-        currentPage={pagination?.currentPage || 1}
-        setCurrentPage={handlePageChange}
-        totalPages={pagination?.totalPages || 1}
-        total_count={totalCount}
-        bulkAction={bulkAction}
-      />
+    <HistoryTable
+      loan_table_data_all={filteredLoanData}
+      currentPage={pagination?.currentPage || 1}
+      setCurrentPage={handlePageChange}
+      totalPages={pagination?.totalPages || 1}
+      total_count={totalCount}
+      bulkAction={bulkAction}
+    />
+  </div>
+);
 
-  
-    </div>
-
-
-  );
 }
 
 // Sample Data and helper function remain the same...
