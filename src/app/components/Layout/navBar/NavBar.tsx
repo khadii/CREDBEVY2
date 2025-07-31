@@ -23,7 +23,9 @@ export default function TopBar() {
       router.push("/");
     }
   }, [error, router]);
-
+   const { isNotificationsModalOpen,
+     setIsNotificationsModalOpen
+  } = useDashboard();
   const user = data?.data;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -32,8 +34,12 @@ export default function TopBar() {
     if (!user) {
       dispatch(fetchUserData());
     }
+     if(user){
+        setPinIsSet(user.policy_accepted===true?false:true)
+      }
   }, [dispatch, user]);
-  const { logout, setLogout } = useDashboard();
+  const { logout, setLogout, pinIsSet,
+        setPinIsSet } = useDashboard();
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -57,7 +63,15 @@ export default function TopBar() {
     return <div className="flex justify-center p-4">Getting Information...</div>;
   }
 
-  // if (error) {
+    // const {
+      
+    // } = useDashboard();
+  //   useEffect(()=>{
+  //     if(user){
+  //       setPinIsSet(user.policy_accepted===true?false:true)
+  //     }
+  //   },[user,data,user.policy_accepted])
+  // // if (error) {
   //   return (
   //    router.push('/')
   //   );
@@ -87,6 +101,7 @@ export default function TopBar() {
         <button
           className="relative focus:outline-none"
           aria-label="Notifications"
+          onClick={()=>setIsNotificationsModalOpen(true)}
         >
           <Bell className="text-gray-500" size={20} />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -163,12 +178,12 @@ export default function TopBar() {
               <div className="space-y-[16px]">
                 {" "}
                 {/* Reduced space between items for better hover cohesion */}
-                <a
-                  href="#"
+                <div
+               onClick={()=>setIsNotificationsModalOpen(true)}
                   className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center"
                 >
                   <Bell size={20} className="mr-3" /> Notification
-                </a>
+                </div>
                 <a
                   href="/dashboard/settings"
                   className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center"

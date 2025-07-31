@@ -15,6 +15,8 @@ import LogoutModal from "../Modals/LogoutModal";
 import PrivacyPolicy from "../Modals/Privacy_policy";
 import FundWallet from "../Modals/wallet/fundWallet";
 import { WithdrawModal } from "../Modals/wallet/WithdrawModal";
+import NotificationModal from "../Modals/NotificationModal";
+import SetPinModal from "../Welcomepin";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, error } = useSelector(
@@ -45,6 +47,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     setFundWallet,
     withdrawal,
     setWithdrawal,
+    isNotificationsModalOpen,
+     setIsNotificationsModalOpen,
+     pinIsSet,
+      setPinIsSet
   } = useDashboard();
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
@@ -54,6 +60,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       setShowPrivacyPolicy(!userdata?.data.policy_accepted);
     }
   }, [userloading, userdata]);
+
 
   return (
     <div className="w-full">
@@ -90,6 +97,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           closeModal={() => setWithdrawal(false)}
         />
       )}
+        <SetPinModal
+        isOpen={pinIsSet}
+        onClose={setPinIsSet}
+        // onSubmitPin={handlePinSubmission}
+      />
+          <div> <NotificationModal isNotificationsModalOpen={isNotificationsModalOpen} setIsNotificationsModalOpen={setIsNotificationsModalOpen}/></div>
     </div>
   );
 }

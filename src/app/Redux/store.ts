@@ -52,7 +52,11 @@ import loanHistoryRequestsSliceReducer from './LoanHistory/loanRequestSlice'
 import historyloanDefaultRateReducer from './LoanHistory/loanDefaultRate'
 import invitationReducer from './invitation_slice'
 import historysingleLoanRequestReducere from './LoanHistory/singleLoanRequestSlice'
-
+import notificationsReducer from './Notification/Notification'
+import  setPinReducer from './SETpIN/pinslice'
+import setpasswordReducer from './setPassword/setPassword_slice'
+import passwordUpdateReducer from './PasswordReset/passWordResetSlice'
+import pinreducer from './updatePin/updatePinSlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -107,6 +111,11 @@ export const store = configureStore({
        historyloanDefaultRate:historyloanDefaultRateReducer,
        historysingleLoanRequest:historysingleLoanRequestReducere,
            invitation: invitationReducer,
+           notifications:notificationsReducer,
+             setPin: setPinReducer,
+             password:setpasswordReducer,
+             passwordUpdate:passwordUpdateReducer,
+             pin:pinreducer
   },
 });
 

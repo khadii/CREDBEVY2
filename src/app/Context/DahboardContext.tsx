@@ -30,8 +30,8 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
             const [withdrawal,setWithdrawal]=useState(false)
   const [authPin, setAuhPin] = useState();
   const [pendingRequestCount, setPendingRequestCount] = useState<number>(0);
-
-  
+  const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
+  const [pinIsSet, setPinIsSet] = useState(false);
   const tabs = [
     { name: "All Request" },
     { name: "Pending Request", count: pendingRequestCount },
@@ -139,6 +139,10 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
   setMinUserIncome={setMinUserIncome}
   maxUserIncome={maxUserIncome}
   setMaxUserIncome={setMaxUserIncome}
+  isNotificationsModalOpen={isNotificationsModalOpen}
+   setIsNotificationsModalOpen={setIsNotificationsModalOpen}
+   pinIsSet={pinIsSet}
+    setPinIsSet={setPinIsSet}
       />
     </Provider>
   );
