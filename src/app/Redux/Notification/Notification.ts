@@ -1,15 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchAllNotifications, markNotificationAsRead } from "./NotificationsThunk";
 
-
 interface NotificationData {
   message: string;
+  user_name?: string;
+  loan_amount?: string;
+  loan_id?: string;
   timestamp: string;
+  status?: string;
 }
 
-interface Notification {
+export interface Notification {
   id: string;
   type: 'request' | 'transactions' | 'accounts' | 'others';
+  title: string | null;
+  module: string | null;
+  module_id: string | null;
   data: NotificationData;
   read_at: string | null;
   created_at: string;
@@ -95,22 +101,22 @@ export const { clearNotifications } = notificationSlice.actions;
 
 // Selectors
 export const selectAllNotifications = (state: { notifications: NotificationState }) => 
-  state.notifications?.notifications;
+  state.notifications.notifications;
 
 export const selectUnreadNotifications = (state: { notifications: NotificationState }) => 
   state.notifications.notifications.filter(notification => !notification.read_at);
 
 export const selectUnreadCount = (state: { notifications: NotificationState }) => 
-  state.notifications?.unreadCount;
+  state.notifications.unreadCount;
 
 export const selectNotificationsLoading = (state: { notifications: NotificationState }) => 
-  state.notifications?.loading;
+  state.notifications.loading;
 
 export const selectNotificationsError = (state: { notifications: NotificationState }) => 
   state.notifications.error;
 
 export const selectMarkAsReadLoading = (state: { notifications: NotificationState }) =>
-  state.notifications?.markAsReadLoading;
+  state.notifications.markAsReadLoading;
 
 export const selectMarkAsReadError = (state: { notifications: NotificationState }) =>
   state.notifications.markAsReadError;

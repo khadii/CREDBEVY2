@@ -11,48 +11,70 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { LuSettings } from "react-icons/lu";
 import { useDashboard } from "@/app/Context/DahboardContext";
 import { useRouter } from "next/navigation";
+// Import the unread count selector
+import { selectUnreadCount } from "@/app/Redux/Notification/Notification";
+import { fetchAllNotifications } from "@/app/Redux/Notification/NotificationsThunk";
 
 export default function TopBar() {
-    const router = useRouter();
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, data } = useSelector(
     (state: RootState) => state.user
   );
+ 
+  const unreadCount = useSelector(selectUnreadCount);
+
   useEffect(() => {
     if (error === "Unauthorized") {
       router.push("/");
     }
   }, [error, router]);
-   const { isNotificationsModalOpen,
-     setIsNotificationsModalOpen
+
+  const {
+    isNotificationsModalOpen,
+    setIsNotificationsModalOpen
   } = useDashboard();
   const user = data?.data;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Fetch user data only once when component mounts
+  // Fetch user data and notifications when component mounts
   useEffect(() => {
     if (!user) {
       dispatch(fetchUserData());
     }
-     if(user){
-        setPinIsSet(user.policy_accepted===true?false:true)
-      }
+    if (user) {
+      setPinIsSet(user.is_pin_set === true ? false : true);
+    }
+    dispatch(fetchAllNotifications());
   }, [dispatch, user]);
-  const { logout, setLogout, pinIsSet,
-        setPinIsSet } = useDashboard();
+
+useEffect(() => {
+  const pollInterval = 15000; 
+  const intervalId = setInterval(() => {
+    dispatch(fetchAllNotifications()); 
+  }, pollInterval);
+
+  return () => clearInterval(intervalId); 
+}, [dispatch]);
+
+  const { logout, setLogout, pinIsSet, setPinIsSet } = useDashboard();
+
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = () => {
-      if (isDropdownOpen) {
-        setIsDropdownOpen(false);
+    const handleClickOutside = (event: MouseEvent) => {
+      const dropdownElement = document.getElementById("dropdown-menu");
+      const profileButton = event.target as HTMLElement;
+      
+      // Check if the click is outside the dropdown and not on the profile button
+      if (isDropdownOpen && dropdownElement && !dropdownElement.contains(event.target as Node) && !profileButton.closest(".profile-button")) {
+          setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isDropdownOpen]);
 
-  // Memoize user avatar URL to prevent unnecessary regenerations
+  // Memoize user avatar URL
   const userAvatarUrl = useMemo(() => {
     const firstName = user?.first_name || "U";
     const lastName = user?.last_name || "s";
@@ -63,22 +85,8 @@ export default function TopBar() {
     return <div className="flex justify-center p-4">Getting Information...</div>;
   }
 
-    // const {
-      
-    // } = useDashboard();
-  //   useEffect(()=>{
-  //     if(user){
-  //       setPinIsSet(user.policy_accepted===true?false:true)
-  //     }
-  //   },[user,data,user.policy_accepted])
-  // // if (error) {
-  //   return (
-  //    router.push('/')
-  //   );
-  // }
-
   return (
-    <div className="flex  relative items-center justify-between h-full min-h-[72px] w-full bg-white px-4 sm:px-6 md:pr-[76px] md:pl-[41px]">
+    <div className="flex relative items-center justify-between h-full min-h-[72px] w-full bg-white px-4 sm:px-6 md:pr-[76px] md:pl-[41px]">
       {/* Search Bar */}
       <div className="hidden sm:flex items-center p-2 rounded-md bg-white w-full max-w-xs">
         <LucideSearch size={16} color="#8A8B9F" />
@@ -101,10 +109,15 @@ export default function TopBar() {
         <button
           className="relative focus:outline-none"
           aria-label="Notifications"
-          onClick={()=>setIsNotificationsModalOpen(true)}
+          onClick={() => setIsNotificationsModalOpen(true)}
         >
           <Bell className="text-gray-500" size={20} />
-          <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+          {/* Conditional Red Badge with Count */}
+          {unreadCount > 0 && (
+            <span className="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center p-1">
+              {unreadCount}
+            </span>
+          )}
         </button>
 
         {/* Divider */}
@@ -114,13 +127,13 @@ export default function TopBar() {
         ></div>
 
         {/* User Profile */}
-        <div className=" flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setIsDropdownOpen(!isDropdownOpen);
             }}
-            className="flex items-center space-x-2 focus:outline-none"
+            className="flex items-center space-x-2 focus:outline-none profile-button"
           >
             <img
               src={userAvatarUrl}
@@ -131,14 +144,12 @@ export default function TopBar() {
               width={32}
               height={32}
             />
-
             <div className="hidden sm:block">
-            <p className="text-[10px] font-bold text-[#333333]">
-  {user
-    ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
-    : "User Name"}
-</p>
-
+              <p className="text-[10px] font-bold text-[#333333]">
+                {user
+                  ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
+                  : "User Name"}
+              </p>
               <p className="text-[8px] text-[#A1A6B0]">
                 {user?.email || "user@example.com"}
               </p>
@@ -147,7 +158,7 @@ export default function TopBar() {
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-2 top-20 w-[240px] bg-white rounded-md shadow-lg py-[35px] z-50">
+            <div id="dropdown-menu" className="absolute right-2 top-20 w-[240px] bg-white rounded-md shadow-lg py-[35px] z-50">
               {/* User Info */}
               <div className="px-6 mb-[32px] flex items-center">
                 <img
@@ -162,12 +173,11 @@ export default function TopBar() {
                   height={32}
                 />
                 <div>
-                 <p className="text-[10px] font-bold text-[#333333]">
-  {user
-    ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
-    : "User Name"}
-</p>
-
+                  <p className="text-[10px] font-bold text-[#333333]">
+                    {user
+                      ? `${user.first_name.charAt(0).toUpperCase()}${user.first_name.slice(1)} ${user.last_name.charAt(0).toUpperCase()}${user.last_name.slice(1)}`
+                      : "User Name"}
+                  </p>
                   <p className="text-[8px] font-semibold text-[#A1A6B0] truncate mt-[8px]">
                     {user?.email || "user@example.com"}
                   </p>
@@ -176,13 +186,16 @@ export default function TopBar() {
 
               {/* Menu Items */}
               <div className="space-y-[16px]">
-                {" "}
-                {/* Reduced space between items for better hover cohesion */}
                 <div
-               onClick={()=>setIsNotificationsModalOpen(true)}
-                  className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center"
+                  onClick={() => setIsNotificationsModalOpen(true)}
+                  className="block px-6 py-3 text-sm font-semibold text-[#8A8B9F] hover:bg-[#F5F5F5] hover:text-[#333333] transition-colors duration-200 flex items-center cursor-pointer"
                 >
                   <Bell size={20} className="mr-3" /> Notification
+                  {unreadCount > 0 && (
+                    <span className="ml-auto bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
                 </div>
                 <a
                   href="/dashboard/settings"

@@ -11,10 +11,10 @@ interface ResetPinPayload {
 }
 
 export const resetTransactionPin = createAsyncThunk<
-  void, // Return type
-  ResetPinPayload, // Input type
+  void,
+  ResetPinPayload, 
   {
-    rejectValue: string; // Type for rejectWithValue
+    rejectValue: string; 
   }
 >(
   'pin/reset',
