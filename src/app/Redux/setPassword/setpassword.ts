@@ -7,6 +7,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 interface SetPasswordPayload {
   token: string;
   password: string;
+  password_confirmation :string
 }
 
 export const setPasswordWithToken = createAsyncThunk<
@@ -17,11 +18,11 @@ export const setPasswordWithToken = createAsyncThunk<
   }
 >(
   'password/setWithToken',
-  async ({ token, password }: SetPasswordPayload, { rejectWithValue }) => {
+  async ({ token, password,password_confirmation  }: SetPasswordPayload, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${BASE_URL}/api/partner/invitation/set-password/${token}`,
-        { password },
+        { password,password_confirmation},
         {
           headers: {
             'Content-Type': 'application/json',

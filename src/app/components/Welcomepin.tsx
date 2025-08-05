@@ -11,6 +11,7 @@ import { setPin } from '../Redux/SETpIN/pin_thunk';
 import { selectSetPinLoading, selectSetPinSuccess, selectSetPinError, selectSetPinMessage, resetSetPinState } from '../Redux/SETpIN/pinslice';
 import { AppDispatch } from '../Redux/store';
 import toast from 'react-hot-toast'; // For displaying notifications
+import { fetchUserData } from '../Redux/auth/userdata';
 
 
 interface SetPinModalProps {
@@ -52,6 +53,7 @@ const SetPinModal: React.FC<SetPinModalProps> = ({ isOpen, onClose }) => {
       toast.success(message);
       onClose();
       dispatch(resetSetPinState()); 
+            dispatch(fetchUserData());
     }
     if (error) {
       // Display an error toast notification
@@ -79,9 +81,11 @@ const SetPinModal: React.FC<SetPinModalProps> = ({ isOpen, onClose }) => {
 
     // Check if the thunk was fulfilled (successful API call)
     if (setPin.fulfilled.match(resultAction)) {
-      // If the payload indicates no error, reset the form
+
+
       if (!resultAction.payload.error) {
         resetForm();
+              dispatch(resetSetPinState());
       }
     }
   };

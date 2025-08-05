@@ -20,10 +20,17 @@ export const LogsSlice = createAsyncThunk(
       if (!token) {
         return rejectWithValue({ message: "Authentication token is missing." });
       }
-      const {page}=params
-      const response = await axios.post(
-        `${BASE_URL}/api/partner/settings/logs-management/get-logs?page=${page}`,
-        params,
+
+      // Convert params object to query string
+      const queryParams = new URLSearchParams();
+      
+      if (params.search) queryParams.append('search', params.search);
+      if (params.audit_level) queryParams.append('audit_level', params.audit_level);
+      if (params.status) queryParams.append('status', params.status);
+      queryParams.append('page', params.page.toString());
+
+      const response = await axios.get(
+        `${BASE_URL}/api/partner/settings/logs-management/get-logs?${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

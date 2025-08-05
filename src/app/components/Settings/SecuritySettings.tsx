@@ -115,7 +115,7 @@ const SecuritySettings = () => {
     <div className="max-w-[822px] min-h-screen pb-[76px] space-y-6">
       {/* Password Section */}
       <form onSubmit={passwordFormik.handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6">
-        <h2 className="text-[20px] font-bold text-[#333333] mb-6">Password</h2>
+        <h2 className="text-[20px] font-bold text-[#333333] mb-6">Reset Login Password</h2>
         <div className="space-y-6">
           <InputFieldPassword
             label="Current Password"
@@ -161,7 +161,7 @@ const SecuritySettings = () => {
 
       {/* PIN Section */}
       <form onSubmit={pinFormik.handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6">
-        <h2 className="text-[20px] font-bold text-[#333333] mb-6">Reset PIN</h2>
+        <h2 className="text-[20px] font-bold text-[#333333] mb-6">Reset Transaction PIN</h2>
         <div className="space-y-6">
           <InputFieldPin
             label="Current PIN"

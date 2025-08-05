@@ -6,37 +6,40 @@ import * as Yup from 'yup';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import InputFieldPassword from './FormInputs/InputFieldPassword';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'next/navigation';
-import NotificationModal from './Modals/NotificationModal';
-import { setPasswordWithToken } from '../Redux/setPassword/setpassword';
-import { selectPasswordLoading, selectPasswordError, selectPasswordSuccess } from '../Redux/setPassword/setPassword_slice';
 import { AppDispatch } from '../Redux/store';
 import toast from 'react-hot-toast';
+import { setPasswordWithToken } from '../Redux/setPassword/setpassword';
+import { selectPasswordLoading, selectPasswordError } from '../Redux/setPassword/setPassword_slice';
 
 interface FormValues {
   newPassword: string;
   confirmPassword: string;
 }
 
-const WelcomeWizard = ({ token }: { token: any }) => {
+const passwordSchema = Yup.object().shape({
+  newPassword: Yup.string()
+    .required('Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[a-z]/, 'Must contain at least one lowercase letter')
+    .matches(/[A-Z]/, 'Must contain at least one uppercase letter')
+    .matches(/\d/, 'Must contain at least one number')
+    .matches(
+      /[@$!%*?&]/,
+      'Must contain at least one special character (@$!%*?&)'
+    ),
+  confirmPassword: Yup.string()
+    .required('Please confirm your password')
+    .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
+});
+
+const WelcomeWizard = ({ token }: { token: string | null }) => {
   const [step, setStep] = useState(1);
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(selectPasswordLoading);
   const error = useSelector(selectPasswordError);
-  const success = useSelector(selectPasswordSuccess);
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
-
-  // Form validation schema for password reset
-  const passwordSchema = Yup.object().shape({
-    newPassword: Yup.string()
-      .required('New password is required')
-      .min(8, 'Password must be at least 8 characters'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword')], 'Passwords must match')
-      .required('Confirm password is required'),
-  });
 
   const handleSubmit = async (
     values: FormValues,
@@ -51,18 +54,20 @@ const WelcomeWizard = ({ token }: { token: any }) => {
         toast.error('Token is missing. Please try the password reset link again.');
         return;
       }
-      
+
       try {
-        await dispatch(setPasswordWithToken({
-          token,
-          password: values.newPassword
-        })).unwrap();
-        
+        await dispatch(
+          setPasswordWithToken({
+            token,
+            password: values.newPassword,
+            password_confirmation: values.confirmPassword,
+          })
+        ).unwrap();
+
         toast.success('Password set successfully!');
         nextStep();
-      } catch (err: any) {
-        // console.error('Failed to set password:', err);
-        toast.error(error|| 'Failed to set password. Please try again.');
+      } catch (err) {
+        toast.error(error || 'Failed to set password. Please try again.');
       } finally {
         setSubmitting(false);
       }
@@ -91,34 +96,46 @@ const WelcomeWizard = ({ token }: { token: any }) => {
             newPassword: '',
             confirmPassword: '',
           }}
-          validationSchema={step === 2 ? passwordSchema : null}
+          validationSchema={step === 2 ? passwordSchema : undefined}
           onSubmit={handleSubmit}
-          validateOnMount={false}
-          validateOnChange={true}
-          validateOnBlur={true}
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, isValid, handleSubmit }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            isSubmitting,
+            isValid,
+            handleSubmit,
+          }) => (
             <Form className="px-8 py-6" onSubmit={handleSubmit}>
               {/* Step 1: Welcome */}
               {step === 1 && (
                 <div className="text-center py-4">
-                  <h2 className="text-3xl font-extrabold text-[#156064] mb-6">Welcome to Credbevy</h2>
+                  <h2 className="text-3xl font-extrabold text-[#156064] mb-6">
+                    Welcome to Credbevy
+                  </h2>
                   <p className="text-gray-600 mb-8">
-                    We're excited to have you on board. Let's get you set up with a new password.
+                    We're excited to have you on board. Let's get you set up
+                    with a new password.
                   </p>
                 </div>
               )}
 
               {/* Step 2: Reset Password */}
               {step === 2 && (
-                <div className='py-2'>
-                  <h2 className="text-2xl font-bold text-[#156064] mb-6 text-center">Set Password</h2>
+                <div className="py-2">
+                  <h2 className="text-2xl font-bold text-[#156064] mb-6 text-center">
+                    Set Password
+                  </h2>
                   <div className="space-y-4">
                     <InputFieldPassword
                       label="Password"
                       placeholder="Enter your new password"
                       value={values.newPassword}
                       onChange={handleChange}
+                      // onBlur={handleBlur}
                       error={touched.newPassword && errors.newPassword}
                       required
                       name="newPassword"
@@ -128,6 +145,7 @@ const WelcomeWizard = ({ token }: { token: any }) => {
                       placeholder="Confirm your new password"
                       value={values.confirmPassword}
                       onChange={handleChange}
+                      // onBlur={handleBlur}
                       error={touched.confirmPassword && errors.confirmPassword}
                       required
                       name="confirmPassword"
@@ -140,12 +158,23 @@ const WelcomeWizard = ({ token }: { token: any }) => {
               {step === 3 && (
                 <div className="text-center py-8">
                   <div className="flex justify-center mb-6">
-                    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      width="200"
+                      height="200"
+                      viewBox="0 0 200 200"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <circle cx="100" cy="100" r="90" fill="#E6F7F7" />
-                      <path d="M80 130L60 110L53 117L80 144L147 77L140 70L80 130Z" fill="#156064" />
+                      <path
+                        d="M80 130L60 110L53 117L80 144L147 77L140 70L80 130Z"
+                        fill="#156064"
+                      />
                     </svg>
                   </div>
-                  <h2 className="text-3xl font-extrabold text-[#156064] mb-4">Congratulations!</h2>
+                  <h2 className="text-3xl font-extrabold text-[#156064] mb-4">
+                    Congratulations!
+                  </h2>
                   <p className="text-gray-600 mb-8 text-lg">
                     You're all set to use the Credbevy dashboard.
                   </p>
@@ -178,7 +207,9 @@ const WelcomeWizard = ({ token }: { token: any }) => {
                     {[1, 2].map((i) => (
                       <div
                         key={i}
-                        className={`w-2 h-2 rounded-full ${step >= i ? 'bg-[#156064]' : 'bg-gray-300'}`}
+                        className={`w-2 h-2 rounded-full ${
+                          step >= i ? 'bg-[#156064]' : 'bg-gray-300'
+                        }`}
                       />
                     ))}
                   </div>
@@ -194,9 +225,11 @@ const WelcomeWizard = ({ token }: { token: any }) => {
                   ) : (
                     <button
                       type="submit"
-                      disabled={!isValid || isSubmitting || loading}
+                      disabled={!isValid || isSubmitting }
                       className={`ml-auto bg-[#156064] text-white font-medium py-2 px-6 rounded hover:bg-[#0e4a4d] transition-colors ${
-                        !isValid || loading ? 'opacity-50 cursor-not-allowed' : ''
+                        !isValid || loading
+                          ? 'opacity-50 cursor-not-allowed'
+                          : ''
                       }`}
                     >
                       {loading ? 'Submitting...' : 'Submit'}

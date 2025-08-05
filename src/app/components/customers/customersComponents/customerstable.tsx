@@ -43,8 +43,8 @@ export const CustomersTable = ({
 
   const titleProps = {
     mainTitle: "Customers",
-    count: total_count + " Loans",
-    subtitle: "List of all loans and their status",
+    count: total_count + " Customers",
+    subtitle: "List of all Customers",
   };
 
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
