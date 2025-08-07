@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import AnimatedLoader from "../animation";
 import { _pending_loans } from "@/app/Redux/dashboard/dashboardThunk";
-import { resetRejectState } from "@/app/Redux/Loan_request/loanConditon";
 
 interface ModalProps {
   isOpen: boolean;
@@ -31,14 +30,14 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     user_info_status
   } = useSelector((state: RootState) => state.loanRequest.single_loan_products_request);
 
-  // useEffect(() => {
-  //   const currentRequestParams = {
-  //     id: [selectedIds],
-  //   };
-  //   if (isOpen) {
-  //     dispatch(_single_loan_products_request(currentRequestParams));
-  //   }
-  // }, [isOpen, selectedIds, dispatch]);
+  useEffect(() => {
+    const currentRequestParams = {
+      id: [selectedIds],
+    };
+    if (isOpen) {
+      dispatch(_single_loan_products_request(currentRequestParams));
+    }
+  }, [isOpen, selectedIds, dispatch]);
 
   // Reset state when modal closes or when operations complete
   useEffect(() => {
@@ -46,7 +45,6 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       toast.success(declineData?.message || 'Request declined successfully');
       refreshData();
       setInterested(false);
-     dispatch(resetRejectState())
       handleClose();
          dispatch(_pending_loans({
   search: "",
@@ -57,7 +55,6 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
     if (declineError) {
       toast.error(declineError);
-      dispatch(resetRejectState())
       handleClose();
     }
   }, [declineSuccess, declineError, declineData]);
