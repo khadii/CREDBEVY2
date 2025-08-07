@@ -52,7 +52,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   const handleClose = () => {
     resetAll();
-    setState(1);
+    // setState(1);
     onClose();
   };
 
