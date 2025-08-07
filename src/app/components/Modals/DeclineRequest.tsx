@@ -46,7 +46,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       toast.success(declineData?.message || 'Request declined successfully');
       refreshData();
       setInterested(false);
-      resetRejectState()
+     dispatch(resetRejectState())
       handleClose();
          dispatch(_pending_loans({
   search: "",
@@ -57,7 +57,7 @@ const DeclineRequest: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
     if (declineError) {
       toast.error(declineError);
-      resetRejectState()
+      dispatch(resetRejectState())
       handleClose();
     }
   }, [declineSuccess, declineError, declineData]);
