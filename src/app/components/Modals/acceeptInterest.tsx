@@ -23,10 +23,9 @@ interface ModalProps {
 }
 
 const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } =
-    useDashboard();
+  const { authPin, setAuhPin, selectedIds, refreshData, setInterested } = useDashboard();
   const [pin, setPin] = useState(["", "", "", ""]);
-  const [errors, setErrors] = useState({ pin: '' });
+  const [errors, setErrors] = useState({ pin: "" });
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -40,12 +39,13 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     message: pinMessage,
   } = useSelector((state: RootState) => state.Pin.accept);
 
-  const { approveLoading, approveSuccess, approveError, approveData } =
-    useSelector((state: RootState) => state.loanCondition);
+  const { approveLoading, approveSuccess, approveError, approveData } = useSelector(
+    (state: RootState) => state.loanCondition
+  );
 
   const resetAll = () => {
     setPin(["", "", "", ""]);
-    setErrors({ pin: '' });
+    setErrors({ pin: "" });
     setBorderRed(false);
     dispatch(resetPinState());
   };
@@ -73,7 +73,7 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (pinSuccess) {
       resetAll();
-      
+
       const pinPayload = {
         pin: pin.map((digit) => Number(digit)),
       };
@@ -86,38 +86,34 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
       dispatch(approve_loan(currentRequestParams));
     }
-    
+
     if (pinError) {
       toast.error(pinError);
       setBorderRed(true);
       dispatch(resetPinState());
     }
-  }, [pinSuccess, pinError, pinMessage, dispatch]);
+  }, [pinSuccess, pinError, pinMessage, dispatch, selectedIds, setAuhPin]);
 
-useEffect(() => {
-  if (approveSuccess && state === 2) {
-    const productData = getProductCookie();
-    dispatch(_single_loan_products_request({ id: productData }));
-    refreshData();
-    toast.success(approveData?.message || "Loan approved successfully");
-    setState(3);
-    dispatch(resetApproveState());
-  }
-
-  if (approveError) {
-    const productData = getProductCookie();
-    toast.error(approveError);
-    refreshData();
-    dispatch(_single_loan_products_request({ id: productData }));
-    setInterested(true);
-    handleClose();
-    dispatch(resetApproveState());
-  }
-}, [approveSuccess, approveError, dispatch, state]);
+  useEffect(() => {
+    if (approveSuccess && state === 2) {
+      const productData = getProductCookie();
+      dispatch(_single_loan_products_request({ id: productData }));
+      refreshData();
+      toast.success(approveData?.message || "Loan approved successfully");
+      setState(3); // Transition to success modal
+    } else if (approveError && state === 2) {
+      const productData = getProductCookie();
+      toast.error(approveError);
+      refreshData();
+      dispatch(_single_loan_products_request({ id: productData }));
+      setInterested(true);
+      handleClose();
+    }
+  }, [approveSuccess, approveError, dispatch, refreshData, setInterested, state]);
 
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
-      setErrors({ pin: '' });
+      setErrors({ pin: "" });
     }
     if (!/^\d?$/.test(value)) return;
 
@@ -131,7 +127,7 @@ useEffect(() => {
   };
 
   const validate = (): boolean => {
-    const newErrors = { pin: '' };
+    const newErrors = { pin: "" };
     const emptyIndex = pin.findIndex((digit) => digit === "");
 
     if (emptyIndex !== -1) {
@@ -149,7 +145,7 @@ useEffect(() => {
     try {
       const pinPayload = {
         pin: pin.map((digit) => Number(digit)),
-        actionType: 'accept' as const
+        actionType: "accept" as const,
       };
 
       await dispatch(ConfirmPin(pinPayload));
@@ -175,7 +171,7 @@ useEffect(() => {
                 setOpen={onClose}
                 setState={setState}
                 titleName={"Accept Request"}
-                buttonName={"Accept Request"} 
+                buttonName={"Accept Request"}
               />
             )}
             {state === 2 && (
@@ -210,9 +206,7 @@ useEffect(() => {
                             type="password"
                             maxLength={1}
                             value={digit}
-                            onChange={(e) =>
-                              handleChange(index, e.target.value)
-                            }
+                            onChange={(e) => handleChange(index, e.target.value)}
                             className={`w-[50px] h-[50px] md:w-[80px] md:h-[80px] border-[4px] ${
                               errors.pin && digit === ""
                                 ? "border-red-500 focus:ring-red-500"
@@ -224,12 +218,10 @@ useEffect(() => {
                     </div>
                   </div>
                   {errors.pin && (
-                    <p className="text-red-500 mb-4 text-center">
-                      {errors.pin}
-                    </p>
+                    <p className="text-red-500 mb-4 text-center">{errors.pin}</p>
                   )}
 
-        <div className="flex flex-col sm:flex-row sm:space-x-[96px] space-y-4 sm:space-y-0 justify-center">
+                  <div className="flex flex-col sm:flex-row sm:space-x-[96px] space-y-4 sm:space-y-0 justify-center">
                     <button
                       onClick={handleClose}
                       className="px-[40px] md:px-[81px] py-[10px] border border-[#333333] rounded-[4px] text-[12px] font-bold text-[#333333]"
