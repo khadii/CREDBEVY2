@@ -94,27 +94,29 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     }
   }, [pinSuccess, pinError, pinMessage, dispatch]);
 
-  useEffect(() => {
-    if (approveSuccess) {
-      const productData = getProductCookie();
-      dispatch(_single_loan_products_request({ id: productData }));
-      refreshData();
-      toast.success(approveData?.message || "Loan approved successfully");
-      setState(3);
+useEffect(() => {
+  if (approveSuccess) {
+    const productData = getProductCookie();
+    dispatch(_single_loan_products_request({ id: productData }));
+    refreshData();
+    toast.success(approveData?.message || "Loan approved successfully");
+    setState(3); // Move to success step (step 3)
     dispatch(resetApproveState());
-    }
+  }
 
-    if (approveError) {
-      const productData = getProductCookie();
-      toast.error(approveError );
-      refreshData();
-      dispatch(_single_loan_products_request({ id: productData }));
-      setInterested(true);
-      handleClose();
- dispatch(resetApproveState());
-    }
-  }, [approveSuccess,approveError,dispatch]);
-
+  if (approveError) {
+    const productData = getProductCookie();
+    toast.error(approveError); // Show error message
+    refreshData();
+    dispatch(_single_loan_products_request({ id: productData }));
+    setInterested(true);
+    // Do NOT call handleClose() or setState(3)
+    // Just reset the PIN (optional)
+    setPin(["", "", "", ""]);
+    setBorderRed(true); // Highlight error (optional)
+    dispatch(resetApproveState());
+  }
+}, [approveSuccess, approveError, dispatch]);
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
       setErrors({ pin: '' });
