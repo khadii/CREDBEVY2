@@ -95,28 +95,26 @@ const PinModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   }, [pinSuccess, pinError, pinMessage, dispatch]);
 
 useEffect(() => {
-  if (approveSuccess) {
+  if (approveSuccess && state === 2) {
     const productData = getProductCookie();
     dispatch(_single_loan_products_request({ id: productData }));
     refreshData();
     toast.success(approveData?.message || "Loan approved successfully");
-    setState(3); // Move to success step (step 3)
+    setState(3);
     dispatch(resetApproveState());
   }
 
   if (approveError) {
     const productData = getProductCookie();
-    toast.error(approveError); // Show error message
+    toast.error(approveError);
     refreshData();
     dispatch(_single_loan_products_request({ id: productData }));
     setInterested(true);
-    // Do NOT call handleClose() or setState(3)
-    // Just reset the PIN (optional)
-    setPin(["", "", "", ""]);
-    setBorderRed(true); // Highlight error (optional)
+    handleClose();
     dispatch(resetApproveState());
   }
-}, [approveSuccess, approveError, dispatch]);
+}, [approveSuccess, approveError, dispatch, state]);
+
   const handleChange = (index: number, value: string) => {
     if (errors.pin) {
       setErrors({ pin: '' });
