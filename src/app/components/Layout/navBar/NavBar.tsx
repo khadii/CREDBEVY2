@@ -49,12 +49,13 @@ export default function TopBar() {
   }, [dispatch, user]);
 
 useEffect(() => {
-  const pollInterval = 15000; 
-  const intervalId = setInterval(() => {
-    dispatch(fetchAllNotifications()); 
-  }, pollInterval);
+  // const pollInterval = 15000; 
+  // const intervalId = setInterval(() => {
+    dispatch(
+      fetchAllNotifications()); 
+  // }, pollInterval);
 
-  return () => clearInterval(intervalId); 
+  // return () => clearInterval(intervalId); 
 }, [dispatch]);
 
   const { logout, setLogout, pinIsSet, setPinIsSet } = useDashboard();
