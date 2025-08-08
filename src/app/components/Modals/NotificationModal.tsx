@@ -44,12 +44,12 @@ const App = ({ isNotificationsModalOpen, setIsNotificationsModalOpen }: { isNoti
     }
   }, [dispatch, isNotificationsModalOpen]);
   useEffect(() => {
-  const pollInterval = 15000; 
-  const intervalId = setInterval(() => {
+  // const pollInterval = 15000; 
+  // const intervalId = setInterval(() => {
     dispatch(fetchAllNotifications()); 
-  }, pollInterval);
+  // }, pollInterval);
 
-  return () => clearInterval(intervalId); 
+  // return () => clearInterval(intervalId); 
 }, [dispatch]);
 
 
